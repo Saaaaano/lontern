@@ -1,0 +1,276 @@
+@import "basedsetting";
+
+$basecolor:#E6E5EF;
+$subcolor:#3E3A3A;
+$pointcolor:#CED7DC;
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.index_main {
+    @include main_set;
+    min-height: 100%;
+
+    .title_logo {
+    text-align: left;
+    margin-left: 50px;
+    top: 0px;
+    }
+    .menu{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        .newSession{
+            display: inline-block;
+            button{
+                @include btn;
+                margin-left: 10px;
+            }
+        }
+        .user {
+            display: inline-block;
+            color:$subcolor;
+            margin-right:10px;
+            margin-bottom: 5px;
+            button{
+                @include btn;
+            }
+        }
+    }
+    
+
+    .band {
+        text-align: left;
+        background-color: $subcolor;
+        color: $pointcolor;
+        padding: 3px 20px;
+    }
+
+    .session_list{
+        border: inset 1px $pointcolor;
+        width:1000px;
+        text-align: left;
+        border-collapse: collapse;
+        font-size: 14px;
+        
+        th {
+            border:solid 1px $pointcolor;
+            padding: 3px 10px;
+            background-color: $pointcolor;
+            &.session_name {
+            width: 300px;  
+            }
+            &.session_num{
+            width:50px;
+            }
+            &.session_system{
+                width: 100px;
+            }
+        }
+        td{
+            border:solid 1px $pointcolor;
+            padding: 3px 10px;
+        }
+    }
+    .upbtn{
+        padding-top: 100px;
+        padding-bottom: 40px;
+        button{
+        @include btn;
+        }
+    }
+    
+}
+
+.login_main{
+    margin:0;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    .login_logo{
+        margin: 0px;
+    }
+    .login_space{
+        background-color: $basecolor;
+        width: 200px;
+        margin-left: 46%;
+        transform: translate(-50%);
+        padding: 30px;
+        border-radius: 20px;
+        color: $subcolor;
+        input{
+            margin-bottom: 30px;
+            border-color: $pointcolor;
+            border-radius: 2px;
+            
+        }
+        .login_btn_space{
+            text-align: center;
+            .login_btn{
+                @include btn;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        }
+        
+    }
+   
+    
+}
+
+.sessionIndex_main{
+    @include main_set;
+    .header{
+        @include header;
+    }
+    table{
+        margin-top: 30px;
+        margin-left: 50px;
+        text-align: left;
+    }
+    .overview{
+        
+        text-align: left;
+        margin: 20px 50px;
+        a {
+            margin-left: 20px;
+            margin-bottom: 5px;
+        }
+        .overview_main{
+            padding: 10px;
+            border: 1px solid #3E3A3A;
+            box-sizing: border-box;
+            box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 3px;
+        }
+    }
+    .apply_contents{
+        display: flex;
+        margin: 100px 300px 0px;
+        padding: 15px 30px;
+        background-color: #FFFFFF;
+        justify-content: center;
+        border-radius: 20px;
+        box-shadow: 0.5px 0.5px 2px $subcolor;
+        text-align: left;
+        .icon{
+            text-align: center;
+            margin-right: 30px;
+            .uploadbtn{
+                border:none;
+                background-color: white;
+            }
+        }
+        .center{
+            text-align: right;
+            .applybtn{
+                @include btn;
+            }
+        }
+        
+    }
+    .topbtn{
+        button{
+            @include btn;
+            margin: 30px 10px 30px;
+        }
+    }
+}
+
+.session_main{
+    @include main_set;
+    .header{
+        @include header;
+        margin-bottom: 30px;
+    }
+    .say_space{
+        display: flex;
+        justify-content: center;
+        
+        img{
+            margin-right: 30px;
+            margin-top: 60px;
+        }
+        .say_box{
+            @include bubble;
+            
+        }
+        .say_box:before {
+            @include bubble_before;
+        }
+        .to_sel{
+            margin-left: 20px;
+        }
+        .name {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        textarea{
+            border-radius: 5px;
+            padding: 5px;
+
+        }
+        .say_btn{
+            text-align: right;
+            .check {
+                margin-left: 15px
+            }
+            .say_submit{
+                @include btn;
+            }
+        }
+        
+    }
+    .topbtn {
+        button{
+            @include btn;
+            margin: 30px 10px;
+        }
+    }
+    
+}
+
+.say_preview_main{
+    @include main_set;
+    padding-bottom:30px;
+    .header{
+        @include header;
+    }
+    .preview{
+        display: flex;
+        justify-content: center;
+        margin: 30px 50px;
+        img {
+            margin-right: 30px;
+        }
+        .speech_data{
+            text-align: left;
+            padding-left: 10px;
+            .date{
+                font-size: 8px;
+                color: gray;
+            }
+        }
+        .speech {
+            @include bubble;
+            width: 500px;
+        }
+        .speech::before{
+            @include bubble_before;
+        }
+        .say_btn{
+            /*text-align: right;*/
+            margin-top: 10px;
+            margin-right: 10px;
+            .say_submit{
+                @include btn;
+                
+            }
+        }
+    }
+    
+    
+}

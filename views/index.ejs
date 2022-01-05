@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>lontern</title>
+    <link rel="stylesheet" href="/css/stylesheet.css">
+</head>
+
+<body>
+    <%# テーブルにデータをセットする関数 %>
+    <% function tableset(status){ %> 
+        <% rooms.forEach((rooms)=> {
+            var i = 0;
+            if(rooms.status == status) {%>
+                <tr>
+                    <td>
+                        <a href="/sessionIndex?sessionname=<%=rooms.name%>">
+                            <%= rooms.name %>
+                        </a></td>
+                    <td>
+                        <%= rooms.system %>
+                    </td>
+                    <% sessionmembers.forEach((sessionmembers)=> {
+                        if(sessionmembers.sessionname == rooms.name){
+                            i++;
+                        }
+                    }) %>
+                    <td>
+                        <%= i %>/<%= rooms.personNum %> 人
+                    </td>
+                    <td>
+                        <%= rooms.Owner %>(GM)
+                            <% sessionmembers.forEach((sessionmembers)=> {
+                                if(sessionmembers.sessionname == rooms.name){ %>
+                                , <%= sessionmembers.name %>
+                                    <%} });%>
+                    </td>
+                </tr>
+            <% }; %>
+        <% }); %>
+    <% }; %>
+    <div class="index_main">
+        <div class="title_logo">
+            <img src="/images/lontern_logo.png" width="400px" height="115.36px">
+        </div>
+        <div class="menu">
+            <div class="newSession">
+                <button class="sessionCreate" onclick="">新規セッション</button>
+            </div>
+            <div class="user">
+                <a ><% var found = members.find((v) => v.login_id === userid.user); %> <%= found.name %></a>
+                <button onclick="location.href='/logout'">ログアウト</button>
+            </div>
+        </div>
+        <div class="band">
+            <a>募集中</a> 
+        </div>
+        <table class="session_list"> 
+            <tr>
+            <th class="session_name">セッション名</th>
+            <th class="session_system">システム</th>
+            <th class="session_num">人数</th>
+            <th class="session_participant">参加者</th>
+            </tr>
+            <% tableset("募集中") %>
+            
+        </table>
+        <div class="band">
+            <a>進行中</a>
+        </div>
+        <table class="session_list">
+            <tr>
+                <th class="session_name">セッション名</th>
+                <th class="session_system">システム</th>
+                <th class="session_num">人数</th>
+                <th class="session_participant">参加者</th>
+            </tr>
+            <% tableset("進行中") %>
+        </table>
+        <div class="band">
+            <a>終了</a>
+        </div>
+        <table class="session_list">
+            <tr>
+                <th class="session_name">セッション名</th>
+                <th class="session_system">システム</th>
+                <th class="session_num">人数</th>
+                <th class="session_participant">参加者</th>
+            </tr>
+            <% tableset("終了") %>
+        </table>
+        <div class="upbtn"><button onclick="location.href='/index'">TOPに戻る</button></div>
+    </div>
+
+</body>
+
+<footer>
+
+</footer>
+</html>

@@ -49,7 +49,7 @@
                 <button class="sessionCreate" onclick="">新規セッション</button>
             </div>
             <div class="user">
-                <a ><% var found = members.find((v) => v.login_id === userid.user); %> <%= found.name %></a>
+                <a > <%= members.name %></a>
                 <button onclick="location.href='/logout'">ログアウト</button>
             </div>
         </div>

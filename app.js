@@ -100,10 +100,10 @@ app.post('/login',
 // トップページ
 app.get('/index', isAuthenticated, (req, res) => {
     connection.query(
-        'SELECT * FROM rooms; SELECT * FROM sessionmembers; SELECT login_id, name FROM members',
+        'SELECT * FROM rooms; SELECT * FROM sessionmembers; SELECT name FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, results) => {
-            //console.log(results);
-            res.render('index.ejs', { rooms: results[0], sessionmembers: results[1], members: results[2], userid: req.session.passport});
+            //console.log(results[2], req.session.passport);
+            res.render('index.ejs', { rooms: results[0], sessionmembers: results[1], members: results[2][0]});
         }
     )    
 });
@@ -116,7 +116,14 @@ app.get('/logout', function (req, res) {
 
 // セッションページのIndex
 app.get('/sessionIndex', function(req, res){
-    res.render('session_index.ejs');
+    connection.query(
+        'SELECT * FROM rooms WHERE name = ?', [req.query.sessionname],
+        (error,results) => {
+            //console.log(results[0]);
+            res.render('session_index.ejs', {rooms: results[0]});
+        }
+    )
+    //console.log(req.query.sessionname);
 })
 
 // セッションページ

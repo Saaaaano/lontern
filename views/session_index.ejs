@@ -10,7 +10,7 @@
 <body>
     <div class="sessionIndex_main">
         <div class="header">
-            お人形遊び
+            <%= rooms.name %>
         </div>
         <table>
             <colgroup>
@@ -20,65 +20,70 @@
             <tr>
                 <td>セッション名</td>
                 <td>:</td>
-                <td>お人形遊び</td>
+                <td><%= rooms.name %></td>
+            </tr>
+            <tr>
+                <td>システム</td>
+                <td>:</td>
+                <td>
+                    <%= rooms.system %>
+                </td>
             </tr>
             <tr>
                 <td>主催者</td>
                 <td>:</td>
-                <td>sano</td>
-            </tr>
-            <tr>
-                <td>パスワード</td>
-                <td>:</td>
-                <td>なし</td>
+                <td><%= rooms.Owner %></td>
             </tr>
             <tr>
                 <td>参加人数</td>
                 <td>:</td>
-                <td>4人</td>
+                <td><%= rooms.personNum %>人</td>
+            </tr>
+            <tr>
+                <td>パスワード</td>
+                <td>:</td>
+                <td>
+                    <% if (rooms.pass==null){ %>
+                        なし
+                        <% } else { %>
+                            あり
+                    <%}%>
+                </td>
             </tr>
             <tr>
                 <td>観戦</td>
                 <td>:</td>
-                <td>許可</td>
+                <td><% if (rooms.spectator==0){ %>
+                        不可
+                    <% } else { %>
+                        許可
+                    <%}%>
+                </td>
             </tr>
             <tr>
                 <td>匿名発言</td>
                 <td>:</td>
-                <td>有効</td>
+                <td><% if (rooms.anonymous==0){ %>
+                        不可
+                    <% } else { %>
+                        許可
+                    <%}%>
+                </td>
             </tr>
             <tr>
                 <td>秘話発言</td>
                 <td>:</td>
-                <td>有効</td>
+                <td><% if (rooms.secret==0){ %>
+                        不可
+                    <% } else { %>
+                        許可
+                    <%}%>
+                </td>
             </tr>
         </table>
         <div class="overview">
             <a>セッション概要</a>
-            <div class="overview_main">
-                インセイン お人形遊び<br>
-                <br>
-                ここは、ぼくとにんぎょうたちの、たのしくて、へいわで、しあわせな、らくえん。<br>
-                <br>
-                レギュレーション<br>
-                シナリオタイプ:特殊型<br>
-                セッティング:暗黒のヴィクトリア<br>
-                PL人数:4人<br>
-                リミット:2<br>
-                使用ルールブック「インセイン」「インセイン2デッドループ」<br>
-                <br>
-                トレーラー<br>
-                貴方達は、PC1のお屋敷で、仲良く皆で暮らしている。<br>
-                PC2,PC3,PC4は、PC1によって作られた動く人形(ドール)だ。<br>
-                時には喧嘩もするかもしれない。でもすぐに仲直りする。だってドール達は主人が大好きで、主人もドール達を愛しているんだから。<br>
-                ああ、なんて幸せな生活！<br>
-                「本当に？」<br>
-                <br>
-                ＊オリジナルシナリオ<br>
-                ＊胸糞注意<br>
-                ＊オリシのため矛盾点やバランス崩壊が起こる可能性があります。<br>
-                ＊エモい展開が好きな人向け<br>
-            </div>
+            <div class="overview_main"><%=rooms.overview%></div>
         </div>
         <div class="apply">
             <div class="apply_contents">
@@ -100,7 +105,7 @@
             </div>
         </div>
         <div class="topbtn">
-            <button onclick="location.href='index.html'">TOPに戻る</button>
+            <button onclick="location.href='/index'">TOPに戻る</button>
         </div>
     </div>
 </body>

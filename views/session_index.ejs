@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>lontern</title>
-    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="/css/stylesheet.css">
 </head>
 <body>
     <div class="sessionIndex_main">
@@ -85,28 +85,48 @@
             <a>セッション概要</a>
             <div class="overview_main"><%=rooms.overview%></div>
         </div>
-        <div class="apply">
-            <div class="apply_contents">
-                <div class="icon">
-                    <img src="image/icon.png" width="145" height="150">
-                    <input class="uploadbtn" type="button" value="画像を選択">
+        <% 
+            //console.log(members);
+            var idid = 0;
+            for(let i = 0; i < members.length; i++){
+                if(members[i].memberId == you.id){
+                    idid = 1;
+                    break;
+                }
+            }
+            //console.log(idid);
+            if(idid == 1){ 
+        %>
+            <div class="sessionbtn"><button onclick="location.href='/session/<%=rooms.name%>'">セッションページへ</button></div>
+        <%}else{%>          
+            <div class="apply">
+                <div class="apply_contents">
+                    <form class="inputinfo" action="/apply" method="post" enctype="multipart/form-data">
+                        <div class="icon">
+                        <label class="uploadbtn">
+                            <a class="preview" id="preview">
+                                <img src="/images/Noimage.png" width="150px" height="150px">
+                            </a>
+                            <input type="file" id="icon" accept="image/*" name="icon" required>
+                            </label>
+                        </div>
+                        <div>
+                            <label><p>名前:</p>
+                            <input name="character_name" size="22" required></label>
+                            <label><p>自己紹介(任意):</p>
+                            <textarea name="introduction" rows="4" cols="24"></textarea></label>
+                            <p><label><input type="checkbox" name="kansen"> 観戦</label></p>
+                            <input class="sessionname" name="sessionname" size="22" value="<%= rooms.name %>">
+                            <div class="center"><input class="applybtn" type="submit" value="参加する"></div>
+                        </div>
+                    </form>
                 </div>
-                <form class="inputinfo">
-                    <div>名前:</div>
-                    <input name="name" size="22">
-                    <div>自己紹介(任意):</div>
-                    <textarea name="introduction" rows="4" cols="24"></textarea>
-                    <div>
-                        <input type="checkbox" name="kansen">
-                        観戦
-                    </div>
-                    <div class="center"><input class="applybtn" type="submit" formaction="session.html" value="参加する"></div>
-                </form>
             </div>
-        </div>
+        <%}%>
         <div class="topbtn">
             <button onclick="location.href='/index'">TOPに戻る</button>
         </div>
     </div>
+    <script type="text/javascript" src="icon.js"></script>
 </body>
 </html>

@@ -2,18 +2,26 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql'); // mysql読み込み
 // ログイン認証用モジュール
-var passport = require('passport')
+const passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
 app.use(passport.initialize()); //passportの初期化
 // セッションの有効化
-var session = require('express-session');
+const session = require('express-session');
 // /login に POST されたら、その情報を受取って認証処理に渡すようにする。
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
+// fileUpload
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+require('date-utils');
+const path = require('path');
+var fs = require('fs');
+const res = require('express/lib/response');
 
 
 // mysqlへの接続情報
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: false }));
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -83,8 +91,14 @@ function isAuthenticated(req, res, next) {
 /*------------------------------------------------------------ */
 // ログインページ
 app.get('/login', (req, res) => {
+    //console.log(req)
     res.render('login.ejs');
 });
+
+app.get('/', (req, res) => {
+    res.render('login.ejs');
+});
+
 
 // ログインボタンを押したら
 app.post('/login',
@@ -115,26 +129,125 @@ app.get('/logout', function (req, res) {
 });
 
 // セッションページのIndex
-app.get('/sessionIndex', function(req, res){
+app.get('/sessionIndex', isAuthenticated,function(req, res){
     connection.query(
-        'SELECT * FROM rooms WHERE name = ?', [req.query.sessionname],
+        'SELECT * FROM rooms WHERE name = (?); SELECT * FROM sessionmembers WHERE sessionname = (?); SELECT id FROM members WHERE login_id = ?', [req.query.sessionname, req.query.sessionname, req.session.passport.user],
         (error,results) => {
-            //console.log(results[0]);
-            res.render('session_index.ejs', {rooms: results[0]});
+            //console.log(results[1][0]);
+            res.render('session_index.ejs', { rooms: results[0][0], members: results[1], you: results[2][0]});
         }
     )
     //console.log(req.query.sessionname);
 })
 
+// 参加フォームの情報を受取る
+app.post('/apply', (req, res) => {
+    //画像の保存
+    var now = new Date();
+    var time = now.toFormat('YYYYMMDDHH24MISS');
+    //画像ファイル（アイコン）の拡張子を取り出し、時間とsession変数で名前をつけ直す。これによりuserが全く同じ名前のファイルをアップしてきても大丈夫
+    var icon_ext = path.extname(req.files.icon.name);
+    var new_iconname = time + req.files.icon.md5 + icon_ext;
+    
+    //画像ファイルを保存するパスを設定
+    var target_path_i = './public/images/upload_icon/' + new_iconname;
+    //ファイルをサーバーに保存した後、ファイル名をDBの保存、今後ファイルを取り出す際はDBから名前を取ってきてサーバーに保存してある画像ファイルとひもづける
+    fs.writeFile(target_path_i, req.files.icon.data, (err) => {
+        if (err) {
+            throw err
+        } else {
+            connection.query(
+
+                'SELECT id, name FROM members WHERE login_id = ?', [req.session.passport.user],
+                (error, nameid) => {
+                    var data = { 'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character', 'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname};
+                    connection.query('INSERT INTO sessionmembers SET ?', data,
+                        function (error, results, fields) {
+                            res.redirect('/session/' + req.body.sessionname);
+                        }
+                    );
+            });
+        }
+    });
+});
+
 // セッションページ
-app.get('/session', function (req, res) {
-    res.render('session.ejs');
+app.get('/session/:session', isAuthenticated, (req, res) => {
+    connection.query(
+        'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
+        (error, nameid)=>{
+            connection.query(
+                'SELECT * FROM sessioncomment WHERE sessionname = ?; SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?', [req.params.session, nameid[0].id, req.params.session],
+                (error, results) => {
+                    res.render('session.ejs', {comment:results[0], character: results[1][0]});
+                }
+            )
+        }
+    )
+    
+    //console.log(req.params.session);
+    
 })
 
+app.post('/say/:session', (req, res) => {
+    connection.query(
+        'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
+        (error, nameid) => {
+            connection.query(
+                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?', [nameid[0].id, req.params.session],
+                (error,results) => {
+                    
+                    var now = new Date();   //発言日時の出力
+                    var time = now.toFormat('YYYY/MM/DD HH24:MI:SS');
+                    var comment = req.body.comment;
+                    var regexp = new RegExp(/#+[^  ]+\s+/, 'g');
+                    var regexp2 = new RegExp(/\r\n|\r|\n/g);
+                    console.log(regexp.multiline);
+                    var tag = "";
+                    if (regexp.test(comment)){
+                        var bar = comment.match(regexp);
+                        //console.log(bar);
+                        var tagAllay = [];
+                        bar.forEach((s) => {
+                            if (regexp2.test(s)){
+                                s2 = s.replace(/\r?\n/g, ' ');
+                                var bar2 = s2.match(regexp);
+                                bar2.forEach((s3) => {
+                                    tagAllay.push(s3)
+                                });
+                            }else{
+                                tagAllay.push(s)
+                            }
+                        });
+                        tag = tagAllay[0].replace(' ', '');
+                        for (let i = 1; i < tagAllay.length; i++) {
+                            tag = tag + ',' + tagAllay[i].replace(' ', '');
+                        }
+                    }
+                    
+                    //console.log(tagAllay);
+                    
+                    
+                    var data = { 'name': results[0].name, 'character_name': results[0].character_name, 'section': req.body.say, 'send_to': req.body.to, 'comment': comment, 'comment_vol': req.body.vol_size, 'tag': tag, 'comment_at': time, 'memberId': results[0].memberId, 'sessionname': req.params.session };
+                    connection.query(
+                        'INSERT INTO sessioncomment SET ?', data,
+                        (error, result)=> {
+                            console.log(data);
+                            res.redirect('/session/' + req.params.session);
+                        }
+                    );
+                }
+            )
+        }
+    )
+    
+    
+})
+/*
 // 発言前のプレビューページ
 app.get('/sessionPreview', function (req, res) {
     res.render('session_preview.ejs');
 })
-
+*/
 // サーバーを起動するコードを貼り付けてください
 app.listen(3000);

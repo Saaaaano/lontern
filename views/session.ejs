@@ -5,43 +5,60 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>lontern</title>
-    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
 </head>
 <body>
     <div class="session_main">
-        <div class="header">お人形遊び</div>
+        <div class="header"><%=character.sessionname%></div>
+        <%
+        for(let i = 0;i < comment.length;i++){%>
+            <div class="preview">
+                <img src="/images/upload_icon/<%=character.image%>" width="110" height="110">
+                <div>
+                    <div class="speech_data">
+                        <%=i+1%>. <%=comment[i].character_name%>
+                            <a class="date">
+                                <%=comment[i].comment_at%>
+                            </a>
+                    </div>
+                    <div class="speech"><%=comment[i].comment%></div>
+                </div>
+            </div>
+        <%}%> 
+        
+
         <div class="say_space">
-            <img src="image/icon.png" width="110" height="120">
+            <img src="/images/upload_icon/<%=character.image%>" width="110" height="110">
             <div class="say_box">
-                <form action="cgi-bin/abc.cgi" method="post">
-                    <p class="name">名前</p>
+                <form action="/say/<%=character.sessionname%>" method="post">
+                    <p class="name"><%=character.character_name%></p>
                     <p class="say_select">
-                        <a>発言種別:</a>
+                        <label><a>発言種別:</a>
                         <select name="say">
                             <option value="nomal">セリフ</option>
                             <option value="seclet">秘匿</option>
                             <option value="anonymous">匿名</option>
                             <option value="action">アクション</option>
                             <option value="solo">独り言</option>
-                        </select>
-                        <a class="to_sel">To:</a>
+                        </select></label>
+                        <label><a class="to_sel">To:</a>
                         <select name="to">
-                            <option value="default">選択してください</option>
+                            <option value="all">選択してください</option>
                             <option value="player1">sano</option>
-                        </select>
+                        </select></label>
                     </p>
-                    <textarea name="introduction" rows="10" cols="80"></textarea>
+                    <textarea name="comment" rows="10" cols="80" required></textarea>
                     <p>
-                        <input name="vol_size" value="nomal" type="radio" checked="checked">通常
-                        <input name="vol_size" value="big" type="radio">大声
-                        <input name="vol_size" value="small" type="radio">小声
+                        <label><input name="vol_size" value="nomal" type="radio" checked="checked">通常</label>
+                        <label><input name="vol_size" value="big" type="radio">大声</label>
+                        <label><input name="vol_size" value="small" type="radio">小声</label>
                     </p>
-                    <p class="say_btn"><input class="say_submit" type="submit" formaction="say_preview.html" value="発言"></p>
+                    <p class="say_btn"><input class="say_submit" type="submit" value="発言"></p>
                 </form>
             </div>         
         </div>
         <div class="topbtn">
-            <button onclick="location.href='index.html'">TOPに戻る</button>
+            <button onclick="location.href='/index'">TOPに戻る</button>
         </div>
     </div>
 </body>

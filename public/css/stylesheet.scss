@@ -148,6 +148,11 @@ $pointcolor:#CED7DC;
             white-space: pre-wrap;
         }
     }
+    .sessionbtn{
+        button {
+            @include btn;
+        }
+    }
     .apply_contents{
         display: flex;
         margin: 100px 300px 0px;
@@ -157,12 +162,24 @@ $pointcolor:#CED7DC;
         border-radius: 20px;
         box-shadow: 0.5px 0.5px 2px $subcolor;
         text-align: left;
+        
+        .inputinfo{
+            display: flex;
+        }
         .icon{
+            display: inline-block;
             text-align: center;
             margin-right: 30px;
+            .preview{
+                width:150px;
+                height:150px;
+            }
             .uploadbtn{
-                border:none;
-                background-color: white;
+                
+                 /* inputは隠す */
+                input {
+                    display: none;
+                }
             }
         }
         .center{
@@ -170,6 +187,9 @@ $pointcolor:#CED7DC;
             .applybtn{
                 @include btn;
             }
+        }
+        .sessionname{
+            display: none;
         }
         
     }
@@ -187,6 +207,39 @@ $pointcolor:#CED7DC;
         @include header;
         margin-bottom: 30px;
     }
+    .preview{
+        display: flex;
+        justify-content: center;
+        margin: 30px 50px;
+        img {
+            margin-right: 30px;
+        }
+        .speech_data{
+            text-align: left;
+            padding-left: 10px;
+            .date{
+                font-size: 8px;
+                color: gray;
+            }
+        }
+        .speech {
+            @include bubble;
+            width: 500px;
+            white-space: pre-wrap;
+        }
+        .speech::before{
+            @include bubble_before;
+        }
+        .say_btn{
+            /*text-align: right;*/
+            margin-top: 10px;
+            margin-right: 10px;
+            .say_submit{
+                @include btn;
+                
+            }
+        }
+    }
     .say_space{
         display: flex;
         justify-content: center;
@@ -201,6 +254,7 @@ $pointcolor:#CED7DC;
         }
         .say_box:before {
             @include bubble_before;
+            top: 40%;
         }
         .to_sel{
             margin-left: 20px;

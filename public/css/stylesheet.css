@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0px;
   padding: 0px;
@@ -229,6 +230,22 @@
   white-space: pre-wrap;
 }
 
+.sessionIndex_main .sessionbtn button {
+  background-color: #CED7DC;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
+          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  padding: 2px 5px;
+}
+
+.sessionIndex_main .sessionbtn button:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
 .sessionIndex_main .apply_contents {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -245,14 +262,29 @@
   text-align: left;
 }
 
+.sessionIndex_main .apply_contents .inputinfo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .sessionIndex_main .apply_contents .icon {
+  display: inline-block;
   text-align: center;
   margin-right: 30px;
 }
 
+.sessionIndex_main .apply_contents .icon .preview {
+  width: 150px;
+  height: 150px;
+}
+
 .sessionIndex_main .apply_contents .icon .uploadbtn {
-  border: none;
-  background-color: white;
+  /* inputは隠す */
+}
+
+.sessionIndex_main .apply_contents .icon .uploadbtn input {
+  display: none;
 }
 
 .sessionIndex_main .apply_contents .center {
@@ -273,6 +305,10 @@
           box-shadow: none;
   position: relative;
   top: 0.5px;
+}
+
+.sessionIndex_main .apply_contents .sessionname {
+  display: none;
 }
 
 .sessionIndex_main .topbtn button {
@@ -310,6 +346,78 @@
   margin-bottom: 30px;
 }
 
+.session_main .preview {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 30px 50px;
+}
+
+.session_main .preview img {
+  margin-right: 30px;
+}
+
+.session_main .preview .speech_data {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.session_main .preview .speech_data .date {
+  font-size: 8px;
+  color: gray;
+}
+
+.session_main .preview .speech {
+  position: relative;
+  display: inline-block;
+  padding: 15px 20px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #555;
+  font-size: 14px;
+  background: #FFFFFF;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  text-align: left;
+  width: 500px;
+  white-space: pre-wrap;
+}
+
+.session_main .preview .speech::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  border: 7px solid transparent;
+  border-right: 15px solid #FFFFFF;
+}
+
+.session_main .preview .say_btn {
+  /*text-align: right;*/
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.session_main .preview .say_btn .say_submit {
+  background-color: #CED7DC;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
+          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  padding: 2px 5px;
+}
+
+.session_main .preview .say_btn .say_submit:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
 .session_main .say_space {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -342,11 +450,11 @@
 .session_main .say_space .say_box:before {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 20px;
   left: -20px;
-  margin-top: -10px;
   border: 7px solid transparent;
   border-right: 15px solid #FFFFFF;
+  top: 40%;
 }
 
 .session_main .say_space .to_sel {
@@ -465,9 +573,8 @@
 .say_preview_main .preview .speech::before {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 20px;
   left: -20px;
-  margin-top: -10px;
   border: 7px solid transparent;
   border-right: 15px solid #FFFFFF;
 }

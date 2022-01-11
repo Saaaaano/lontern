@@ -207,13 +207,27 @@ $pointcolor:#CED7DC;
         @include header;
         margin-bottom: 30px;
     }
+    .page{
+        margin-top: 10px;
+        padding-top: 30px;
+        text-align: left;
+        padding-left: 150px;
+    }
+    .action{
+        border:1px solid #3E3A3A;
+        margin: 10px 150px;
+        padding:3px 10px;
+        text-align: left;
+        font-size: 80%;
+    }
     .preview{
         display: flex;
         justify-content: center;
-        margin: 30px 50px;
+        margin: 10px 50px;
         img {
             margin-right: 30px;
         }
+        
         .speech_data{
             text-align: left;
             padding-left: 10px;
@@ -222,13 +236,36 @@ $pointcolor:#CED7DC;
                 color: gray;
             }
         }
-        .speech {
+        .speech_nomal, .speech_anonymous{
             @include bubble;
             width: 500px;
             white-space: pre-wrap;
-        }
-        .speech::before{
+            &::before{
             @include bubble_before;
+            }
+        }
+        
+        .speech_solo{
+            @include bubble;
+            width: 500px;
+            white-space: pre-wrap;
+            background: gray;
+            color: #FFFFFF;
+        }
+        .speech_solo::before{
+            @include bubble_before;
+            border-right: 15px solid gray;
+        }
+        .speech_secret{
+            @include bubble;
+            width: 500px;
+            white-space: pre-wrap;
+            background: #932e44;
+            color: #FFFFFF;
+        }
+        .speech_secret::before{
+            @include bubble_before;
+            border-right: 15px solid #932e44;
         }
         .say_btn{
             /*text-align: right;*/
@@ -243,7 +280,7 @@ $pointcolor:#CED7DC;
     .say_space{
         display: flex;
         justify-content: center;
-        
+        margin-top: 100px;
         img{
             margin-right: 30px;
             margin-top: 60px;

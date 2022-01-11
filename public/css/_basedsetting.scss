@@ -28,6 +28,12 @@
     color: $pointcolor;
     text-align: left;
     padding: 5px 20px;
+    position: fixed;
+    top:0px;
+    width: 960px;
+    margin: 0 auto;
+    padding: 0 auto;
+    z-index: 1000;
 }
 
 @mixin bubble{
@@ -49,7 +55,6 @@
     position: absolute;
     top: 20px;
     left: -20px;
-    
     border: 7px solid transparent;
     border-right: 15px solid #FFFFFF;
 }

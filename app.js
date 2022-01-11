@@ -131,10 +131,10 @@ app.get('/logout', function (req, res) {
 // セッションページのIndex
 app.get('/sessionIndex', isAuthenticated,function(req, res){
     connection.query(
-        'SELECT * FROM rooms WHERE name = (?); SELECT * FROM sessionmembers WHERE sessionname = (?); SELECT id FROM members WHERE login_id = ?', [req.query.sessionname, req.query.sessionname, req.session.passport.user],
+        'SELECT * FROM rooms WHERE name = (?); SELECT * FROM sessionmembers WHERE sessionname = (?); SELECT id FROM members WHERE login_id = ?; SELECT id FROM sessioncomment WHERE sessionname = (?)', [req.query.sessionname, req.query.sessionname, req.session.passport.user, req.query.sessionname],
         (error,results) => {
             //console.log(results[1][0]);
-            res.render('session_index.ejs', { rooms: results[0][0], members: results[1], you: results[2][0]});
+            res.render('session_index.ejs', { rooms: results[0][0], members: results[1], you: results[2][0], page: Math.ceil(results[3].length / 20)});
         }
     )
     //console.log(req.query.sessionname);
@@ -157,13 +157,15 @@ app.post('/apply', (req, res) => {
             throw err
         } else {
             connection.query(
-
-                'SELECT id, name FROM members WHERE login_id = ?', [req.session.passport.user],
+                'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
                 (error, nameid) => {
                     var data = { 'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character', 'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname};
-                    connection.query('INSERT INTO sessionmembers SET ?', data,
+                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sessionname],
                         function (error, results, fields) {
-                            res.redirect('/session/' + req.body.sessionname);
+                            var pageNum = Math.ceil(results[1].length / 20 );
+                            console.log(results[1].length);
+                            console.log(pageNum);
+                            res.redirect('/session/' + req.body.sessionname + '/' + pageNum);
                         }
                     );
             });
@@ -172,14 +174,37 @@ app.post('/apply', (req, res) => {
 });
 
 // セッションページ
-app.get('/session/:session', isAuthenticated, (req, res) => {
+app.get('/session/:session/:articleNum', isAuthenticated, (req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, nameid)=>{
             connection.query(
-                'SELECT * FROM sessioncomment WHERE sessionname = ?; SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?', [req.params.session, nameid[0].id, req.params.session],
+                'SELECT * FROM sessionmembers JOIN sessioncomment ON  sessionmembers.memberId = sessioncomment.memberId WHERE sessionmembers.sessionname = ? AND sessioncomment.sessionname = ?; SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM sessionmembers WHERE sessionname = ?; SELECT * FROM rooms WHERE name = ?', [req.params.session, req.params.session, nameid[0].id, req.params.session, req.params.session, req.params.session],
                 (error, results) => {
-                    res.render('session.ejs', {comment:results[0], character: results[1][0]});
+                    var comments = results[0];
+                    //console.log(comments[53]);
+                    var nomalNum = 0;
+                    var chat = [];
+                    var articleNum = String(req.params.articleNum)
+                    //console.log(comments.length);
+                    for (var i = 0; i < comments.length; i++){
+                        //console.log("i: " + i)
+                        if (nomalNum >= (articleNum * 20 - 1)) {
+                            break;
+                        }
+                        if (comments[i].section == "nomal") {
+                            //console.log("nomal")
+                            nomalNum++;
+                        }
+                        if (articleNum == 1 || (articleNum * 20 - 19) < nomalNum) {
+                            //console.log("chat");
+                            chat.push(comments[i]);
+                        }
+                        
+                    }
+                   // console.log("chat:"+chat);
+                    //console.log("articleNum:" +articleNum);
+                    res.render('session.ejs', { comment: chat, character: results[1][0], members: results[2], room: results[3][0], articleNum: [articleNum,comments.length]});
                 }
             )
         }
@@ -189,7 +214,7 @@ app.get('/session/:session', isAuthenticated, (req, res) => {
     
 })
 
-app.post('/say/:session', (req, res) => {
+app.post('/say/:session/:articleNum', (req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, nameid) => {
@@ -224,7 +249,9 @@ app.post('/say/:session', (req, res) => {
                             tag = tag + ',' + tagAllay[i].replace(' ', '');
                         }
                     }
-                    
+                    if (req.body.say == "action"){
+                        comment = results[0].character_name + "は、" + comment;
+                    }
                     //console.log(tagAllay);
                     
                     
@@ -233,7 +260,7 @@ app.post('/say/:session', (req, res) => {
                         'INSERT INTO sessioncomment SET ?', data,
                         (error, result)=> {
                             console.log(data);
-                            res.redirect('/session/' + req.params.session);
+                            res.redirect('/session/' + req.params.session + '/' + req.params.articleNum);
                         }
                     );
                 }

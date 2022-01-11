@@ -4,7 +4,7 @@ function previewFile(file) {
 
     // FileReaderオブジェクトを作成
     const reader = new FileReader();
-    preview.innerHTML += '<img src="/images/Noimage.png" width="150" height="150">';
+   // preview.innerHTML = '<img src="/images/Noimage.png" width="150" height="150">';
 
     // ファイルが読み込まれたときに実行する
     reader.onload = function (e) {

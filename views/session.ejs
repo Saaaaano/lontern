@@ -10,33 +10,100 @@
 <body>
     <div class="session_main">
         <div class="header"><%=character.sessionname%></div>
+        <div class="page">
+            <%var pageNum = Math.ceil(articleNum[1] / 20);
+            for (let p = 1; p <= pageNum; p++){
+                if(p == articleNum[0]){%>
+                    <a><%=p%></a><a> | </a>
+                    <%continue;%>
+                <%}%>
+                <a href="/session/<%=character.sessionname%>/<%=p%>"><%=p%></a><a> | </a>
+            <%}%>
+        </div>
         <%
+        var nomal = 0;
+        if(articleNum[0] >= 2){
+            nomal = articleNum[0] * 20 - 20;
+        }
         for(let i = 0;i < comment.length;i++){%>
-            <div class="preview">
-                <img src="/images/upload_icon/<%=character.image%>" width="110" height="110">
+            <% if(comment[i].section == "secret"){  //自分が送ったものと自分宛て以外の秘話は表示スキップ
+                if(comment[i].send_to != character.character_name){
+                    if(comment[i].memberId == character.memberId){
+                        ;
+                    }else{
+                        continue;
+                    }
+                }
+            }else if(comment[i].section == "action"){%> <%# アクションは別処理%>
+                <div class="action">
+                    <%=comment[i].comment%>
+                </div>
+                <% continue;
+            }else if(comment[i].section == "solo"){ //自分が送った秘話以外はスキップ
+                if(comment[i].character_name != character.character_name){
+                    continue;
+                }
+            }%>
+            <div class="preview">   <%# 発言表示%>
+                <a>
+                    <%if (comment[i].section== "anonymous"){%>
+                        <img src="/images/anonymous.png" width="110" height="110">
+                    <%}else{%>
+                        <img src="/images/upload_icon/<%=comment[i].image%>" width="110" height="110">
+                    <%}%>
+                </a>
                 <div>
-                    <div class="speech_data">
-                        <%=i+1%>. <%=comment[i].character_name%>
-                            <a class="date">
-                                <%=comment[i].comment_at%>
-                            </a>
+                    <div class="speech_data" id="speechData">
+                        <%
+                        switch (comment[i].section) {
+                        case "solo":%>
+                            [独り言] <%=comment[i].character_name%>
+                            <%break;
+                        case "nomal":%>
+                            <%=nomal+1%>. <%=comment[i].character_name%>
+                            <%break;
+                        case "secret":%>
+                            [秘話] <%=comment[i].character_name%> → <%=comment[i].send_to%>
+                            <%break;
+                        case "anonymous":%>
+                            [匿名]
+                            <%break;
+                        }%>
+                        
+                        
+                        <a class="date">
+                            <%=comment[i].comment_at%>
+                        </a>
                     </div>
-                    <div class="speech"><%=comment[i].comment%></div>
+                    <% switch (comment[i].comment_vol) { 
+                        case "big" :%>
+                            <div class="speech_<%=comment[i].section%>"><big><strong><%=comment[i].comment%></strong></big></div>
+                            <%break;%>
+                        <%case "small" :%>
+                            <div class="speech_<%=comment[i].section%>"><small><font color="gray"><%=comment[i].comment%></font></small></div>
+                            <%break;%>
+                        <%case "nomal" :%>
+                            <div class="speech_<%=comment[i].section%>"><%=comment[i].comment%></div>
+                            <%break;
+                    }%>
                 </div>
             </div>
+            <%nomal++;%>
         <%}%> 
         
+        
+            
 
         <div class="say_space">
             <img src="/images/upload_icon/<%=character.image%>" width="110" height="110">
             <div class="say_box">
-                <form action="/say/<%=character.sessionname%>" method="post">
-                    <p class="name"><%=character.character_name%></p>
+                <form action="/say/<%=character.sessionname%>/<%=articleNum[0]%>" method="post">
+                    <p class="name"><big><strong><%=character.character_name%></strong></big></p>
                     <p class="say_select">
                         <label><a>発言種別:</a>
                         <select name="say">
                             <option value="nomal">セリフ</option>
-                            <option value="seclet">秘匿</option>
+                            <option value="secret">秘匿</option>
                             <option value="anonymous">匿名</option>
                             <option value="action">アクション</option>
                             <option value="solo">独り言</option>
@@ -44,7 +111,12 @@
                         <label><a class="to_sel">To:</a>
                         <select name="to">
                             <option value="all">選択してください</option>
-                            <option value="player1">sano</option>
+                            <option value="GM"><%=room.Owner%>(GM)</option>
+                            <% var i = 0; 
+                            members.forEach((member) => {
+                                i++;%>
+                                <option value="player<%=i%>"><%=member.character_name%></option>
+                            <%})%>
                         </select></label>
                     </p>
                     <textarea name="comment" rows="10" cols="80" required></textarea>
@@ -61,5 +133,6 @@
             <button onclick="location.href='/index'">TOPに戻る</button>
         </div>
     </div>
+    <script type="text/javascript" src="/js/session.js"></script>
 </body>
 </html>

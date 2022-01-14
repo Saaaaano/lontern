@@ -1,0 +1,65 @@
+doctype html 
+html(lang="ja")
+    head 
+        meta(charset="utf-8")
+        title lontern 
+        link(rel="stylesheet" href="/css/stylesheet.css")
+    body 
+        //- テーブルに値をセットする関数
+        mixin tableset(status)
+            tr 
+                th(class="session_name") セッション名
+                th(class="session_system") システム
+                th(class="session_num") 人数
+                th(class="session_participant") 参加者
+            each room in rooms 
+                - var i = 0;
+                if room.status == status 
+                    tr
+                        td 
+                            a(href="/sessionIndex?sessionname=" + room.name) #{room.name}
+                        td 
+                            a #{room.system}
+                        each sessionmember in sessionmembers 
+                            if sessionmember.sessionname == room.name && sessionmember.permission != 'audience'
+                                - i++
+                        td #{i}/#{room.personNum}人
+                        td #{room.Owner}(GM)
+                            each sessionmember in sessionmembers 
+                                if sessionmember.sessionname == room.name 
+                                    a , #{sessionmember.name}
+                                    if sessionmember.permission =='audience'
+                                        a (観戦)
+                                    
+        
+        div(class="index_main")
+            div(class="title_logo")
+                img(src="/images/lontern_logo.png" widtj="400px" height="115.36px")
+            div(class="menu")
+                div(class="newSession")
+                    button(onclick="") 新規セッション
+                div(class="user")
+                    a #{members.name}
+                    button(onclick="location.href='/logout'") ログアウト
+            div(class="band")
+                a 募集中
+            table(class="session_list")
+                +tableset('募集中')
+            div(class="band")
+                a 進行中
+            table(class="session_list")
+                +tableset('進行中')
+            div(class="band")
+                a 終了
+            table(class="session_list")
+                +tableset('終了')
+            div(class="upbtn")
+                button(onclick="location.href='/index'") TOPに戻る
+            
+
+                    
+
+
+
+
+        

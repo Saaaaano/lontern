@@ -10,7 +10,7 @@
   width: 1000px;
   margin: 0 auto;
   padding: 0 auto;
-  background-color: #E6E5EF;
+  background-color: #e6e5ef;
   text-align: center;
   min-height: 100%;
 }
@@ -36,11 +36,11 @@
 }
 
 .index_main .menu .newSession button {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
   margin-left: 10px;
 }
@@ -54,18 +54,19 @@
 
 .index_main .menu .user {
   display: inline-block;
-  color: #3E3A3A;
+  color: #3e3a3a;
   margin-right: 10px;
   margin-bottom: 5px;
 }
 
 .index_main .menu .user button {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
+  margin-left: 5px;
 }
 
 .index_main .menu .user button:active {
@@ -77,13 +78,13 @@
 
 .index_main .band {
   text-align: left;
-  background-color: #3E3A3A;
-  color: #CED7DC;
+  background-color: #3e3a3a;
+  color: #ced7dc;
   padding: 3px 20px;
 }
 
 .index_main .session_list {
-  border: inset 1px #CED7DC;
+  border: inset 1px #ced7dc;
   width: 1000px;
   text-align: left;
   border-collapse: collapse;
@@ -91,9 +92,9 @@
 }
 
 .index_main .session_list th {
-  border: solid 1px #CED7DC;
+  border: solid 1px #ced7dc;
   padding: 3px 10px;
-  background-color: #CED7DC;
+  background-color: #ced7dc;
 }
 
 .index_main .session_list th.session_name {
@@ -109,7 +110,7 @@
 }
 
 .index_main .session_list td {
-  border: solid 1px #CED7DC;
+  border: solid 1px #ced7dc;
   padding: 3px 10px;
 }
 
@@ -119,11 +120,11 @@
 }
 
 .index_main .upbtn button {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
 }
 
@@ -148,19 +149,19 @@
 }
 
 .login_main .login_space {
-  background-color: #E6E5EF;
+  background-color: #e6e5ef;
   width: 200px;
   margin-left: 46%;
   -webkit-transform: translate(-50%);
           transform: translate(-50%);
   padding: 30px;
   border-radius: 20px;
-  color: #3E3A3A;
+  color: #3e3a3a;
 }
 
 .login_main .login_space input {
   margin-bottom: 30px;
-  border-color: #CED7DC;
+  border-color: #ced7dc;
   border-radius: 2px;
 }
 
@@ -169,11 +170,11 @@
 }
 
 .login_main .login_space .login_btn_space .login_btn {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
   margin-top: 0px;
   margin-bottom: 0px;
@@ -192,13 +193,13 @@
   width: 1000px;
   margin: 0 auto;
   padding: 0 auto;
-  background-color: #E6E5EF;
+  background-color: #e6e5ef;
   text-align: center;
 }
 
 .sessionIndex_main .header {
-  background-color: #3E3A3A;
-  color: #CED7DC;
+  background-color: #3e3a3a;
+  color: #ced7dc;
   text-align: left;
   padding: 5px 20px;
   position: fixed;
@@ -213,6 +214,7 @@
   margin-top: 30px;
   margin-left: 50px;
   text-align: left;
+  padding-top: 30px;
 }
 
 .sessionIndex_main .overview {
@@ -237,11 +239,11 @@
 }
 
 .sessionIndex_main .sessionbtn button {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
 }
 
@@ -263,8 +265,8 @@
       -ms-flex-pack: center;
           justify-content: center;
   border-radius: 20px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   text-align: left;
 }
 
@@ -293,16 +295,26 @@
   display: none;
 }
 
+.sessionIndex_main .apply_contents .atention {
+  color: red;
+  font-size: 3px;
+  line-height: 0.1px;
+}
+
+.sessionIndex_main .apply_contents .kansen {
+  display: none;
+}
+
 .sessionIndex_main .apply_contents .center {
   text-align: right;
 }
 
 .sessionIndex_main .apply_contents .center .applybtn {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
 }
 
@@ -318,11 +330,11 @@
 }
 
 .sessionIndex_main .topbtn button {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
   margin: 30px 10px 30px;
 }
@@ -340,13 +352,13 @@
   width: 1000px;
   margin: 0 auto;
   padding: 0 auto;
-  background-color: #E6E5EF;
+  background-color: #e6e5ef;
   text-align: center;
 }
 
 .session_main .header {
-  background-color: #3E3A3A;
-  color: #CED7DC;
+  background-color: #3e3a3a;
+  color: #ced7dc;
   text-align: left;
   padding: 5px 20px;
   position: fixed;
@@ -488,11 +500,11 @@
 }
 
 .session_main .preview .say_btn .say_submit {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
 }
 
@@ -566,11 +578,11 @@
 }
 
 .session_main .say_space .say_btn .say_submit {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
 }
 
@@ -582,11 +594,11 @@
 }
 
 .session_main .topbtn button {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
   margin: 30px 10px;
 }
@@ -604,14 +616,14 @@
   width: 1000px;
   margin: 0 auto;
   padding: 0 auto;
-  background-color: #E6E5EF;
+  background-color: #e6e5ef;
   text-align: center;
   padding-bottom: 30px;
 }
 
 .say_preview_main .header {
-  background-color: #3E3A3A;
-  color: #CED7DC;
+  background-color: #3e3a3a;
+  color: #ced7dc;
   text-align: left;
   padding: 5px 20px;
   position: fixed;
@@ -678,11 +690,11 @@
 }
 
 .say_preview_main .preview .say_btn .say_submit {
-  background-color: #CED7DC;
+  background-color: #ced7dc;
   border: none;
   border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3E3A3A;
-          box-shadow: 0.5px 0.5px 2px #3E3A3A;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
 }
 

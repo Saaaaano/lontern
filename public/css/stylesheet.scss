@@ -1,8 +1,8 @@
 @import "basedsetting";
 
-$basecolor:#E6E5EF;
-$subcolor:#3E3A3A;
-$pointcolor:#CED7DC;
+$basecolor:#e6e5ef;
+$subcolor:#3e3a3a;
+$pointcolor:#ced7dc;
 
 * {
     margin: 0px;
@@ -36,6 +36,7 @@ $pointcolor:#CED7DC;
             margin-bottom: 5px;
             button{
                 @include btn;
+                margin-left: 5px;
             }
         }
     }
@@ -130,6 +131,7 @@ $pointcolor:#CED7DC;
         margin-top: 30px;
         margin-left: 50px;
         text-align: left;
+        padding-top: 30px;
     }
     .overview{
         
@@ -181,6 +183,14 @@ $pointcolor:#CED7DC;
                     display: none;
                 }
             }
+        }
+        .atention{
+            color: red;
+            font-size: 3px;
+            line-height: 0.1px;
+        }
+        .kansen{
+            display: none;
         }
         .center{
             text-align: right;

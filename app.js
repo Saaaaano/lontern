@@ -38,7 +38,6 @@ connection.connect((err) => {
     console.log('success');
 });
 
-
 // IDとパスワードによる認証
 passport.use(new LocalStrategy(
     (username, password, done) => {
@@ -92,11 +91,11 @@ function isAuthenticated(req, res, next) {
 // ログインページ
 app.get('/login', (req, res) => {
     //console.log(req)
-    res.render('login.ejs');
+    res.render('login.pug');
 });
 
 app.get('/', (req, res) => {
-    res.render('login.ejs');
+    res.render('login.pug');
 });
 
 
@@ -117,7 +116,7 @@ app.get('/index', isAuthenticated, (req, res) => {
         'SELECT * FROM rooms; SELECT * FROM sessionmembers; SELECT name FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, results) => {
             //console.log(results[2], req.session.passport);
-            res.render('index.ejs', { rooms: results[0], sessionmembers: results[1], members: results[2][0]});
+            res.render('index.pug', { rooms: results[0], sessionmembers: results[1], members: results[2][0]});
         }
     )    
 });
@@ -134,7 +133,7 @@ app.get('/sessionIndex', isAuthenticated,function(req, res){
         'SELECT * FROM rooms WHERE name = (?); SELECT * FROM sessionmembers WHERE sessionname = (?); SELECT id FROM members WHERE login_id = ?; SELECT id FROM sessioncomment WHERE sessionname = (?)', [req.query.sessionname, req.query.sessionname, req.session.passport.user, req.query.sessionname],
         (error,results) => {
             //console.log(results[1][0]);
-            res.render('session_index.ejs', { rooms: results[0][0], members: results[1], you: results[2][0], page: Math.ceil(results[3].length / 20)});
+            res.render('sessionIndex.pug', { rooms: results[0][0], members: results[1], you: results[2][0], page: Math.ceil(results[3].length / 20)});
         }
     )
     //console.log(req.query.sessionname);
@@ -163,8 +162,11 @@ app.post('/apply', (req, res) => {
                     connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sessionname],
                         function (error, results, fields) {
                             var pageNum = Math.ceil(results[1].length / 20 );
-                            console.log(results[1].length);
-                            console.log(pageNum);
+                            //console.log(results[1].length);
+                            //console.log(pageNum);
+                            if(pageNum == 0){
+                                pageNum = 1;
+                            }
                             res.redirect('/session/' + req.body.sessionname + '/' + pageNum);
                         }
                     );
@@ -204,7 +206,7 @@ app.get('/session/:session/:articleNum', isAuthenticated, (req, res) => {
                     }
                    // console.log("chat:"+chat);
                     //console.log("articleNum:" +articleNum);
-                    res.render('session.ejs', { comment: chat, character: results[1][0], members: results[2], room: results[3][0], articleNum: [articleNum,comments.length]});
+                    res.render('session.ejs', { comment: chat, character: results[1][0], members: results[2], room: results[3][0], articleNum: [articleNum, comments.length,]});
                 }
             )
         }
@@ -227,7 +229,7 @@ app.post('/say/:session/:articleNum', (req, res) => {
                     var comment = req.body.comment;
                     var regexp = new RegExp(/#+[^  ]+\s+/, 'g');
                     var regexp2 = new RegExp(/\r\n|\r|\n/g);
-                    console.log(regexp.multiline);
+                    //console.log(regexp.multiline);
                     var tag = "";
                     if (regexp.test(comment)){
                         var bar = comment.match(regexp);
@@ -259,7 +261,7 @@ app.post('/say/:session/:articleNum', (req, res) => {
                     connection.query(
                         'INSERT INTO sessioncomment SET ?', data,
                         (error, result)=> {
-                            console.log(data);
+                            //console.log(data);
                             res.redirect('/session/' + req.params.session + '/' + req.params.articleNum);
                         }
                     );

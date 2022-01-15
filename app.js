@@ -206,7 +206,7 @@ app.get('/session/:session/:articleNum', isAuthenticated, (req, res) => {
                     }
                    // console.log("chat:"+chat);
                     //console.log("articleNum:" +articleNum);
-                    res.render('session.ejs', { comment: chat, character: results[1][0], members: results[2], room: results[3][0], articleNum: [articleNum, comments.length,]});
+                    res.render('session.pug', { comment: chat, character: results[1][0], members: results[2], room: results[3][0], articleNum: [articleNum, comments.length,]});
                 }
             )
         }

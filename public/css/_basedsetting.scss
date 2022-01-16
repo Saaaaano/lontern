@@ -8,6 +8,7 @@
     padding: 0 auto;
     background-color: $basecolor;
     text-align: center;
+    color: $subcolor;
 }
 
 @mixin btn{
@@ -16,6 +17,7 @@
     border-radius: 5px;
     box-shadow: 0.5px 0.5px 2px $subcolor;
     padding: 2px 5px;
+    color: $subcolor;
     &:active {
         box-shadow: none;
         position: relative;
@@ -26,14 +28,19 @@
 @mixin header{
     background-color: $subcolor;
     color: $pointcolor;
-    text-align: left;
     padding: 5px 20px;
     position: fixed;
     top:0px;
     width: 960px;
     margin: 0 auto;
-    padding: 0 auto;
     z-index: 1000;
+    .pagetitle{
+            text-align: left;
+            float: left;
+    }
+    .topbtn{
+        text-align: right;           
+    }
 }
 
 @mixin bubble{

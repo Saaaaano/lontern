@@ -14,9 +14,9 @@ $pointcolor:#ced7dc;
     min-height: 100%;
 
     .title_logo {
-    text-align: left;
-    margin-left: 50px;
-    top: 0px;
+        text-align: left;
+        margin-left: 50px;
+        top: 0px;
     }
     .menu{
         display: flex;
@@ -151,9 +151,14 @@ $pointcolor:#ced7dc;
         }
     }
     .sessionbtn{
-        button {
-            @include btn;
-        }
+       a {
+           @include btn;
+           text-decoration: none;
+       }
+       padding-bottom: 30px;
+    }
+    .apply {
+        padding-bottom: 30px;
     }
     .apply_contents{
         display: flex;
@@ -203,12 +208,6 @@ $pointcolor:#ced7dc;
         }
         
     }
-    .topbtn{
-        button{
-            @include btn;
-            margin: 30px 10px 30px;
-        }
-    }
 }
 
 .session_main{
@@ -254,6 +253,18 @@ $pointcolor:#ced7dc;
             @include bubble_before;
             }
         }
+
+        .speech_audience{
+            @include bubble;
+            width: 500px;
+            white-space: pre-wrap;
+            color: #FFFFFF;
+            background: rgb(139, 104, 39);
+            &::before{
+                @include bubble_before;
+                border-right: 15px solid rgb(139, 104, 39);
+            }
+        }
         
         .speech_solo{
             @include bubble;
@@ -261,22 +272,24 @@ $pointcolor:#ced7dc;
             white-space: pre-wrap;
             background: gray;
             color: #FFFFFF;
-        }
-        .speech_solo::before{
+            &::before{
             @include bubble_before;
             border-right: 15px solid gray;
+            }
         }
+        
         .speech_secret{
             @include bubble;
             width: 500px;
             white-space: pre-wrap;
             background: #932e44;
             color: #FFFFFF;
+            &::before{
+                @include bubble_before;
+                border-right: 15px solid #932e44;
+            }
         }
-        .speech_secret::before{
-            @include bubble_before;
-            border-right: 15px solid #932e44;
-        }
+        
         .say_btn{
             /*text-align: right;*/
             margin-top: 10px;
@@ -291,6 +304,7 @@ $pointcolor:#ced7dc;
         display: flex;
         justify-content: center;
         margin-top: 100px;
+        padding-bottom: 30px;
         img{
             margin-right: 30px;
             margin-top: 60px;
@@ -325,14 +339,7 @@ $pointcolor:#ced7dc;
             }
         }
         
-    }
-    .topbtn {
-        button{
-            @include btn;
-            margin: 30px 10px;
-        }
-    }
-    
+    }    
 }
 
 .say_preview_main{
@@ -373,6 +380,54 @@ $pointcolor:#ced7dc;
             }
         }
     }
-    
-    
+}
+
+.sessionCreateMain{
+    @include main_set;
+    padding-bottom:30px;
+    .header{
+        @include header;
+    }
+    form{
+        padding-top: 70px;
+        .inputarea{
+            display: inline-block;
+            justify-content: center;
+            text-align: left;
+        }
+        input[type="number"]{
+            width: 40px;
+        }
+        input[type="radio"]{
+            margin-left: 5px;
+            margin-right: 10px;
+        }
+        .radiolabel{
+            margin-right: 10px;
+        }
+        .item{
+            margin-right: 20px;
+        }
+        .inputlabel{
+            display: inline-block;
+            text-align: left;
+            width: 110px;
+            margin-top: 10px;
+        }
+        .overviwew{
+            display: inline-block;
+            text-align: left;
+            margin-top: 30px;
+            textarea {
+                padding: 10px 5px;
+            }
+        }
+        .center{
+            text-align: center;
+            margin-top: 20px;
+            input{
+                @include btn;
+            }
+        }
+    }
 }

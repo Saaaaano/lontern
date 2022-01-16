@@ -24,7 +24,11 @@ html(lang="ja")
                         a #{setting}
 
         div(class="sessionIndex_main")
-            div(class="header") #{rooms.name}
+            div(class="header") 
+                div(class="pagetitle") #{rooms.name}
+                div(class="topbtn")
+                    a(href="/index") 
+                        img(src="/images/lontern_logo_w.png" width="100px")
             table 
                 colgroup 
                     col(width="100")
@@ -80,7 +84,6 @@ html(lang="ja")
                                     input(class="sessionname" name="sessionname" size="22" value=rooms.name)
                                     div(class="center")
                                         input(class="applybtn" type="submit" value="参加する")
-            div(class="topbtn")
-                button(onclick="location.href='/index'") TOPに戻る
+
         script(type="text/javascript" src="js/icon.js") 
         script(type="text/javascript" src="js/session.js")                           

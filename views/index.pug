@@ -37,7 +37,7 @@ html(lang="ja")
                 img(src="/images/lontern_logo.png" widtj="400px" height="115.36px")
             div(class="menu")
                 div(class="newSession")
-                    button(onclick="") 新規セッション
+                    button(onclick="location.href='/sessionCreate'") 新規セッション
                 div(class="user")
                     a #{members.name}
                     button(onclick="location.href='/logout'") ログアウト
@@ -54,7 +54,7 @@ html(lang="ja")
             table(class="session_list")
                 +tableset('終了')
             div(class="upbtn")
-                button(onclick="location.href='/index'") TOPに戻る
+                button(onclick="location.href='/index'") 上部に戻る
             
 
                     

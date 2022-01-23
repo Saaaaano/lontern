@@ -87,6 +87,9 @@ function isAuthenticated(req, res, next) {
     }
 }
 
+
+
+
 /*------------------------------------------------------------ */
 // ログインページ
 app.get('/login', (req, res) => {
@@ -127,16 +130,20 @@ app.get('/logout', function (req, res) {
     res.redirect('/login');
 });
 
+const perPage = 20;
 // セッションページのIndex
 app.get('/sessionIndex', isAuthenticated,function(req, res){
     connection.query(
         'SELECT * FROM rooms WHERE name = (?); SELECT * FROM sessionmembers WHERE sessionname = (?); SELECT id FROM members WHERE login_id = ?;' +  
-        'SELECT id FROM sessioncomment WHERE sessionname = (?) AND section = "nomal"',
+        'SELECT id FROM sessioncomment WHERE sessionname = (?)',
         [req.query.sessionname, req.query.sessionname, req.session.passport.user, req.query.sessionname],
         (error,results) => {
             //console.log(results[1][0]);
             
-            res.render('sessionIndex.pug', { rooms: results[0][0], members: results[1], you: results[2][0], page: Math.ceil(results[3].length / 20)});
+            pageNum = Math.ceil(results[3].length / perPage);
+            //console.log(pageNum);
+            
+            res.render('sessionIndex.pug', { rooms: results[0][0], members: results[1], you: results[2][0], page: pageNum });
         }
     )
     //console.log(req.query.sessionname);
@@ -163,15 +170,11 @@ app.post('/apply', (req, res) => {
                 (error, nameid) => {
                     var data = {'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character',
                                 'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname};
-                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ? AND section = "nomal"', [data, req.body.sessionname, ],
+                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sessionname, ],
                         function (error, results, fields) {
-                            var pageNum = Math.ceil(results[1].length / 20 );
-                            console.log(results[1].length);
-                            console.log(results[1].length);
-                            console.log(pageNum);
-                            if(pageNum == 0){
-                                pageNum = 1;
-                            }
+                            
+                            pageNum = Math.ceil(results[1].length / perPage);
+                            //console.log(all + " & " + pageNum)
                             res.redirect('/session/' + req.body.sessionname + '/' + pageNum);
                         }
                     );
@@ -179,6 +182,49 @@ app.post('/apply', (req, res) => {
         }
     });
 });
+
+app.get('/editor', isAuthenticated, (req,res)=>{
+    connection.query(
+        'SELECT * FROM rooms WHERE name = ?; SELECT * FROM sessionmembers WHERE sessionname = ? AND attribute = "npc"', [req.query.name, req.query.name],
+        (error, results) => {
+            res.render('editor.pug', {room: results[0][0], npcs:results[1]});
+        }
+    )
+})
+
+app.post('/npcApply',(req,res)=>{
+    
+    //画像の保存
+    var now = new Date();
+    var time = now.toFormat('YYYYMMDDHH24MISS');
+    //画像ファイル（アイコン）の拡張子を取り出し、時間とsession変数で名前をつけ直す。これによりuserが全く同じ名前のファイルをアップしてきても大丈夫
+    var icon_ext = path.extname(req.files.icon.name);
+    var new_iconname = time + req.files.icon.md5 + icon_ext;
+
+    //画像ファイルを保存するパスを設定
+    var target_path_i = './public/images/upload_icon/' + new_iconname;
+    //ファイルをサーバーに保存した後、ファイル名をDBの保存、今後ファイルを取り出す際はDBから名前を取ってきてサーバーに保存してある画像ファイルとひもづける
+    fs.writeFile(target_path_i, req.files.icon.data, (err) => {
+        if (err) {
+            throw err
+        } else {
+            connection.query(
+                'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
+                (error, nameid) => {
+                    var data = {
+                        'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'npc',
+                        'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
+                    };
+                    connection.query('INSERT INTO sessionmembers SET ?', [data],
+                        function (error, results, fields) {
+                            res.redirect('/editor?name=' + req.body.sessionname);
+                        }
+                    );
+                }
+            );
+        }
+    });
+})
 
 // セッションページ
 app.get('/session/:session/:pageNum', isAuthenticated, (req, res) => {
@@ -190,7 +236,7 @@ app.get('/session/:session/:pageNum', isAuthenticated, (req, res) => {
                 'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM sessionmembers WHERE sessionname = ?; SELECT * FROM rooms WHERE name = ?',
                 [req.params.session, req.params.session, nameid[0].id, req.params.session, req.params.session, req.params.session],
                 (error, results) => {
-                    res.render('session.pug', { comments: results[0], character: results[1][0], members: results[2], room: results[3][0], pageNum:req.params.pageNum, you: nameid[0].id});
+                    res.render('session.pug', { comments: results[0], character: results[1][0], members: results[2], room: results[3][0], pageNum: req.params.pageNum, you: nameid[0].id, preArticleId:req.query.articleId});
                 }
             )
         }

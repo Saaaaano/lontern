@@ -252,10 +252,36 @@
 }
 
 .sessionIndex_main .sessionbtn {
-  padding-bottom: 30px;
+  margin-bottom: 5px;
 }
 
 .sessionIndex_main .sessionbtn a {
+  background-color: #ced7dc;
+  border: 1px solid #a7afb3;
+  border-radius: 5px 5px 0px 0px;
+  padding: 2px 14px;
+  color: #3e3a3a;
+  text-decoration: none;
+  -webkit-box-shadow: 0.5px 0px 1px #3e3a3a;
+          box-shadow: 0.5px 0px 1px #3e3a3a;
+}
+
+.sessionIndex_main .sessionbtn a:hover {
+  background-color: #a7afb3;
+}
+
+.sessionIndex_main .sessionbtn a:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.sessionIndex_main .sessionbtn2 {
+  margin-bottom: 5px;
+}
+
+.sessionIndex_main .sessionbtn2 a {
   background-color: #ced7dc;
   border: none;
   border-radius: 5px;
@@ -266,7 +292,33 @@
   text-decoration: none;
 }
 
-.sessionIndex_main .sessionbtn a:active {
+.sessionIndex_main .sessionbtn2 a:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.sessionIndex_main .editor {
+  padding-bottom: 30px;
+}
+
+.sessionIndex_main .editor a {
+  background-color: #ced7dc;
+  border: 1px solid #a7afb3;
+  border-radius: 0px 0px 5px 5px;
+  padding: 2px 70px;
+  color: #3e3a3a;
+  text-decoration: none;
+  -webkit-box-shadow: 0.5px 0.5px 1px #3e3a3a;
+          box-shadow: 0.5px 0.5px 1px #3e3a3a;
+}
+
+.sessionIndex_main .editor a:hover {
+  background-color: #a7afb3;
+}
+
+.sessionIndex_main .editor a:active {
   -webkit-box-shadow: none;
           box-shadow: none;
   position: relative;
@@ -398,6 +450,10 @@
   padding: 3px 10px;
   text-align: left;
   font-size: 80%;
+}
+
+.session_main .article {
+  padding-top: 50px;
 }
 
 .session_main .preview {
@@ -640,6 +696,40 @@
   top: 0.5px;
 }
 
+.session_main .pagination {
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.session_main .pagination li {
+  margin: 1px;
+  padding: 1px 8px;
+}
+
+.session_main .pagination li a {
+  display: block;
+  text-decoration: none;
+  color: #3e3a3a;
+  margin: 1px;
+  padding: 3px;
+}
+
+.session_main .pagination li a:hover {
+  color: gray;
+}
+
+.session_main .pagination .navi-active {
+  background-color: #ced7dc;
+  border-radius: 50%;
+}
+
 .say_preview_main {
   height: 100%;
   min-height: 100%;
@@ -842,5 +932,295 @@
           box-shadow: none;
   position: relative;
   top: 0.5px;
+}
+
+.editorMain {
+  height: 100%;
+  min-height: 100%;
+  width: 1000px;
+  margin: 0 auto;
+  padding: 0 auto;
+  background-color: #e6e5ef;
+  text-align: center;
+  color: #3e3a3a;
+  /*tabの形状*/
+  /*エリアの表示非表示と形状*/
+  /*areaにis-activeというクラスがついた時の形状*/
+}
+
+.editorMain .header {
+  background-color: #3e3a3a;
+  color: #ced7dc;
+  padding: 5px 20px;
+  position: fixed;
+  top: 0px;
+  width: 960px;
+  margin: 0 auto;
+  z-index: 1000;
+}
+
+.editorMain .header .pagetitle {
+  text-align: left;
+  float: left;
+}
+
+.editorMain .header .topbtn {
+  text-align: right;
+}
+
+.editorMain .tab {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  padding-top: 50px;
+  list-style-type: none;
+}
+
+.editorMain .tab li a {
+  display: block;
+  background: #a7afb3;
+  margin: 0 2px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #3e3a3a;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.editorMain .tab li.active a {
+  background: #ced7dc;
+}
+
+.editorMain .area {
+  display: none;
+  /*はじめは非表示*/
+  opacity: 0;
+  /*透過0*/
+  background: #ced7dc;
+  padding: 50px 20px;
+}
+
+.editorMain .area.is-active {
+  display: block;
+  /*表示*/
+  -webkit-animation-name: displayAnime;
+          animation-name: displayAnime;
+  /*ふわっと表示させるためのアニメーション*/
+  /*animation-duration: 1s;*/
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes displayAnime {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes displayAnime {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.editorMain .edsession .inputarea {
+  display: inline-block;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: left;
+}
+
+.editorMain .edsession input[type="number"] {
+  width: 40px;
+}
+
+.editorMain .edsession input[type="radio"] {
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.editorMain .edsession .radiolabel {
+  margin-right: 10px;
+}
+
+.editorMain .edsession .item {
+  margin-right: 20px;
+}
+
+.editorMain .edsession .inputlabel {
+  display: inline-block;
+  text-align: left;
+  width: 110px;
+  margin-top: 10px;
+}
+
+.editorMain .edsession .overviwew {
+  display: inline-block;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.editorMain .edsession .overviwew textarea {
+  padding: 10px 5px;
+}
+
+.editorMain .edsession .center {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.editorMain .edsession .center input {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+  background-color: #e6e5ef;
+}
+
+.editorMain .edsession .center input:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.editorMain .apply {
+  margin-top: 100px;
+  padding-bottom: 30px;
+  width: 1000px;
+}
+
+.editorMain .apply_contents {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 100px 300px 0px;
+  padding: 15px 30px;
+  background-color: #FFFFFF;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 20px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  text-align: left;
+}
+
+.editorMain .apply_contents .inputinfo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.editorMain .apply_contents .icon {
+  display: inline-block;
+  text-align: center;
+  margin-right: 30px;
+}
+
+.editorMain .apply_contents .icon .preview {
+  width: 150px;
+  height: 150px;
+}
+
+.editorMain .apply_contents .icon .uploadbtn {
+  /* inputは隠す */
+}
+
+.editorMain .apply_contents .icon .uploadbtn input {
+  display: none;
+}
+
+.editorMain .apply_contents .kansen {
+  display: none;
+}
+
+.editorMain .apply_contents .center {
+  text-align: right;
+}
+
+.editorMain .apply_contents .center .applybtn {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+}
+
+.editorMain .apply_contents .center .applybtn:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.editorMain .apply_contents .sessionname {
+  display: none;
+}
+
+.editorMain .npcview {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.editorMain .npcview .npccontents {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 30px;
+  text-align: left;
+}
+
+.editorMain .npcview .npccontents .icon {
+  display: inline-block;
+  margin-right: 30px;
+  margin-top: 20px;
+}
+
+.editorMain .npcview .npccontents .icon h3 {
+  text-align: center;
+}
+
+.editorMain .npcview .npccontents .data .intro {
+  margin-top: 30px;
+  width: 500px;
+  position: relative;
+  display: inline-block;
+  padding: 15px 20px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #555;
+  font-size: 14px;
+  background: #FFFFFF;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.editorMain .npcview .npccontents .data .intro::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  border: 7px solid transparent;
+  border-right: 15px solid #FFFFFF;
 }
 /*# sourceMappingURL=stylesheet.css.map */

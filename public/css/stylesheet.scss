@@ -152,10 +152,51 @@ $pointcolor:#ced7dc;
     }
     .sessionbtn{
        a {
-           @include btn;
-           text-decoration: none;
+            background-color: $pointcolor;
+            border:1px solid #a7afb3;;
+            border-radius: 5px 5px 0px 0px;
+            padding: 2px 14px;
+            color: $subcolor;
+            text-decoration: none;
+            box-shadow: 0.5px 0px 1px $subcolor;
+            &:hover{
+                background-color: #a7afb3;
+            }
+            &:active {
+                box-shadow: none;
+                position: relative;
+                top: 0.5px;
+            }
        }
-       padding-bottom: 30px;
+       margin-bottom: 5px;
+    }
+    .sessionbtn2{
+       a {
+            @include btn;
+            text-decoration: none;
+       }
+       margin-bottom: 5px;
+    }
+
+    .editor{
+        a{
+            background-color: $pointcolor;
+            border:1px solid #a7afb3;
+            border-radius: 0px 0px 5px 5px;
+            padding: 2px 70px;
+            color: $subcolor;
+            text-decoration: none;
+            box-shadow: 0.5px 0.5px 1px $subcolor;
+            &:hover{
+                background-color: #a7afb3;
+            }
+            &:active {
+                box-shadow: none;
+                position: relative;
+                top: 0.5px;
+            }
+        }
+        padding-bottom: 30px;
     }
     .apply {
         padding-bottom: 30px;
@@ -229,10 +270,14 @@ $pointcolor:#ced7dc;
         text-align: left;
         font-size: 80%;
     }
+    .article{
+        padding-top: 50px;
+    }
     .preview{
         display: flex;
         justify-content: center;
         margin: 10px 50px;
+        
         img {
             margin-right: 30px;
         }
@@ -339,7 +384,39 @@ $pointcolor:#ced7dc;
             }
         }
         
-    }    
+    }
+    
+
+    .pagination{
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        li{
+            margin: 1px;
+            padding: 1px 8px;
+            a{
+            display: block;
+            text-decoration: none;
+            color: $subcolor;
+            margin: 1px;
+            padding:3px;
+                &:hover{
+                    color: gray;
+                }
+            }
+        }
+        
+        .navi-active{
+            background-color: $pointcolor;
+            border-radius: 50%
+        }
+            
+    }
+
+    
+     
 }
 
 .say_preview_main{
@@ -380,6 +457,7 @@ $pointcolor:#ced7dc;
             }
         }
     }
+    
 }
 
 .sessionCreateMain{
@@ -429,5 +507,181 @@ $pointcolor:#ced7dc;
                 @include btn;
             }
         }
+    }
+}
+
+.editorMain{
+    @include main_set;
+    .header{
+        @include header;
+    }
+    /*tabの形状*/
+    .tab{
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: 50px;
+        list-style-type:none;
+        li a{
+            display: block;
+            background: #a7afb3;
+            margin:0 2px;
+            padding:10px 20px;
+            text-decoration: none;
+            color: $subcolor;
+            border-radius: 5px 5px 0px 0px;
+            
+            
+        }
+        li.active a{
+            background:$pointcolor;
+        }
+    }
+    
+        /*エリアの表示非表示と形状*/
+    .area {
+        display: none;/*はじめは非表示*/
+        opacity: 0;/*透過0*/
+        background: $pointcolor;
+        padding:50px 20px;
+    }
+
+    /*areaにis-activeというクラスがついた時の形状*/
+    .area.is-active {
+        display: block;/*表示*/
+        animation-name: displayAnime;/*ふわっと表示させるためのアニメーション*/
+        /*animation-duration: 1s;*/
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes displayAnime{
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .edsession{
+        .inputarea{
+            display: inline-block;
+            justify-content: center;
+            text-align: left;
+        }
+        input[type="number"]{
+            width: 40px;
+        }
+        input[type="radio"]{
+            margin-left: 5px;
+            margin-right: 10px;
+        }
+        .radiolabel{
+            margin-right: 10px;
+        }
+        .item{
+            margin-right: 20px;
+        }
+        .inputlabel{
+            display: inline-block;
+            text-align: left;
+            width: 110px;
+            margin-top: 10px;
+        }
+        .overviwew{
+            display: inline-block;
+            text-align: left;
+            margin-top: 30px;
+            textarea {
+                padding: 10px 5px;
+            }
+        }
+        .center{
+            text-align: center;
+            margin-top: 20px;
+            input{
+                @include btn;
+                background-color: $basecolor;
+            }
+        }
+    }
+    .apply {
+        margin-top: 100px;
+        padding-bottom: 30px;
+        width: 1000px;
+    }
+    .apply_contents{
+        display: flex;
+        margin: 100px 300px 0px;
+        padding: 15px 30px;
+        background-color: #FFFFFF;
+        justify-content: center;
+        border-radius: 20px;
+        box-shadow: 0.5px 0.5px 2px $subcolor;
+        text-align: left;
+        
+        .inputinfo{
+            display: flex;
+        }
+        .icon{
+            display: inline-block;
+            text-align: center;
+            margin-right: 30px;
+            .preview{
+                width:150px;
+                height:150px;
+            }
+            .uploadbtn{
+                
+                 /* inputは隠す */
+                input {
+                    display: none;
+                }
+            }
+        }
+        .kansen{
+            display: none;
+        }
+        .center{
+            text-align: right;
+            .applybtn{
+                @include btn;
+                
+            }
+        }
+        .sessionname{
+            display: none;
+        }
+    }
+
+    .npcview{
+        //padding-bottom: 0px;
+        display: flex;
+        justify-content: space-evenly;
+        .npccontents{
+            display: flex;
+            padding: 0px 30px;
+            //
+            text-align: left;
+            .icon{
+                display: inline-block;
+                //text-align: center;
+                margin-right: 30px;
+                margin-top: 20px;
+                h3{
+                    text-align: center;
+                }
+            }
+            .data{   
+                .intro{
+                    margin-top: 30px;
+                    width: 500px;
+                    @include bubble;
+                    &::before{
+                        @include bubble_before;
+                    }
+                }
+            }
+        }
+        
     }
 }

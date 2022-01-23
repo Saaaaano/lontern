@@ -46,15 +46,24 @@ html(lang="ja")
                 a セッション概要
                 div(class="overview_main") #{rooms.overview} 
             - var idid = 0
+            - var didApply = 0
             - for(let i = 0; i < members.length; i++)
                 if members[i].memberId == you.id
                     - idid = 1
+                    - didApply = 1
                     break 
             if rooms.status == "進行中" || rooms.status == "終了"
                 - idid = 1
             
-            div(class="sessionbtn")
-                a(href='/session/' + rooms.name + '/' + page) セッションページへ
+            if didApply == 1
+                div(class="sessionbtn")
+                    a(href='/session/' + rooms.name + '/' + page) セッションページへ
+                div(class="editor")
+                    a(href='/editor?name='+ rooms.name ) 編集
+            else 
+                div(class="sessionbtn2")
+                    a(href='/session/' + rooms.name + '/' + page) セッションページへ
+
             if idid == 0
                 div(class="apply")
                     div(class="apply_contents")
@@ -86,4 +95,4 @@ html(lang="ja")
                                         input(class="applybtn" type="submit" value="参加する")
 
         script(type="text/javascript" src="js/icon.js") 
-        script(type="text/javascript" src="js/session.js")                           
+                                  

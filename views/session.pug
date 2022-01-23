@@ -4,7 +4,11 @@ html(lang="ja")
         meta(charset="utf-8")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
+        script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")
+        script(src="/js/pagination.js")
+        
     body 
+        - const perPage = 20;
         if character == null 
             - character = {}
 
@@ -16,6 +20,7 @@ html(lang="ja")
         - var solo = 0
         - var anonymous = 0
         - var audience = 0
+        - var viewcomments = []
         each comment in comments
             case comment.section
                 when "nomal"
@@ -24,42 +29,59 @@ html(lang="ja")
                         - comment.articleNum = audience 
                         if character.permission == "audience" || room.status == "終了" || room.ownerId == you
                             - all++
-                            - comment.articleNumAll = all
+                            - viewcomments.push(comment)
                     else
                         - nomal++
                         - comment.articleNum = nomal 
                         - all++
-                        - comment.articleNumAll = all
+                        - viewcomments.push(comment)
                 when "secret"
                     - secret++
                     - comment.articleNum = secret 
                     if comment.send_to == character.character_name || comment.memberId == character.memberId || room.status == "終了"|| room.ownerId == you
                         - all++
-                        - comment.articleNumAll = all
+                        - viewcomments.push(comment)
                 when "solo"
                     - solo++
                     - comment.articleNum = solo 
                     if comment.character_name == character.character_name || room.status == "終了"|| room.ownerId == you
                         - all++
-                        - comment.articleNumAll = all
+                        - viewcomments.push(comment)
                 when "anonymous"
                     - anonymous++
                     - comment.articleNum = anonymous
                     - all++
-                    - comment.articleNumAll = all
+                    - viewcomments.push(comment)
                 when "action"
                     - all++
-                    - comment.articleNumAll = all
+                    - viewcomments.push(comment)
+        - console.log("----------------------------------------")
+        //- console.log(viewcomments)
+    
+        
+            //- ページ送りリンクをつける関数
+        - var allPageNum = Math.ceil(all / perPage)
+        - var dispnum = pageNum
+        - var sendnum = String(allPageNum)
+        //-console.log(sendnum)
+        
+        if pageNum > allPageNum
+            //- console.log("通った")
+            div(id="red" title=room.name) #{sendnum}
 
-        //- ページ送りリンクをつける関数
-        - var allPageNum = Math.ceil(all / 20)
+        script.
+            var roomname = document.getElementById( 'red' ).title;
+            var allPageNum = document.getElementById('red').textContent;
+            window.location.href = '/session/'+ roomname + '/' + allPageNum ;
+     
+
         mixin pageset()
             - for(var p = 1; p <= allPageNum; p++)
-                if p == pageNum
-                    a #{p}｜
+                if p == dispnum
+                    a #{p}|
                     - continue
-                a(href="/session/" + room.name + "/" + p) #{p}
-                a ｜
+                a(href="/session/" + room.name + "/" + p id='#' + p) #{p}
+                a |
 
         div(class="session_main")
         
@@ -72,85 +94,77 @@ html(lang="ja")
             div(class="page")
                 +pageset()
 
-           
-            - console.log(all)
-            - console.log(comments.length)
-            if pageNum != 1
-                - dispNum.bigin = pageNum * 20 - 19
-                - dispNum.final = pageNum * 20
-            else
-                - dispNum.bigin = Number(pageNum)
-                - dispNum.final = pageNum * 20
-            - console.log(dispNum)
-            
-            each comment in comments
-                if comment.articleNumAll < dispNum.bigin
-                    - continue
-                else if comment.articleNumAll > dispNum.final
-                    - continue
+            - var pageId = 0
+            div(class="article")       
+                - for(let i = dispnum * perPage - perPage; pageId < perPage && i < all ; i++)
 
-                //- 終了後はすべてオープンする
-                if room.status != "終了" && room.ownerId != you
-                    - console.log("通らないはず")
-                    case comment.section
-                        when "secret"
-                            if comment.send_to != character.character_name && comment.memberId != character.memberId 
-                                - continue
-                        when "solo"
-                            if comment.character_name != character.character_name 
-                                - continue 
-                    if comment.permission == "audience"
-                        if character.permission != "audience"
-                            - continue
-
-                if comment.section == "action"
-                    div(class="action") #{comment.comment} 
-                    - continue 
-                    
-                div(class="preview")
-                    a 
-                        if comment.section == "anonymous"
-                            img(src="/images/anonymous.png" width="110" height="110")
-                        else 
-                            img(src="/images/upload_icon/" + comment.image width="110" height="110")
-                    div(class="speech_data" id="speechData")
-                        - var audienceTag = ""
-                        if comment.permission == "audience"
-                            - audienceTag = "(観戦)"
-                        case comment.section
-                            when "solo"
-                                a(id="-"+solo) -#{comment.articleNum}. #{comment.character_name} #{audienceTag}
-                            when "nomal"
-                                if audienceTag
-                                    a(id="!"+audience) !#{comment.articleNum}. #{comment.character_name} #{audienceTag} 
-                                else 
-                                    a(id=nomal) #{comment.articleNum}. #{comment.character_name} 
+                    //- console.log("I = "  + i + ":" + viewcomments[i].comment_at + " pageId: " + pageId)
+                    //- 終了後はすべてオープンする
+                    if room.status != "終了" && room.ownerId != you
+                        //- console.log("通らないはず")
+                        case viewcomments[i].section
                             when "secret"
-                                a(id="@"+secret) @#{comment.articleNum}. #{comment.character_name} #{audienceTag} → #{comment.send_to} 
-                            when "anonymous"
-                                a(id="?"+anonymous) ?#{comment.articleNum}. #{audienceTag}
+                                if viewcomments[i].send_to != character.character_name && viewcomments[i].memberId != character.memberId 
+                                    - continue
+                            when "solo"
+                                if viewcomments[i].character_name != character.character_name 
+                                    - continue 
+                        if viewcomments[i].permission == "audience"
+                            if character.permission != "audience"
+                                - continue
 
-                        a(class="date") #{comment.comment_at}
-                        div
-                            - var balloon = ""
-                            if comment.section == "nomal" && comment.permission == "audience"
-                                - balloon = "audience"
+                    if viewcomments[i].section == "action"
+                        - pageId++;
+                        div(class="action") #{viewcomments[i].comment} 
+                        - continue 
+                        
+                    div(class="preview")
+                        - pageId++;
+                        a 
+                            if viewcomments[i].section == "anonymous"
+                                img(src="/images/anonymous.png" width="110" height="110")
                             else 
-                                - balloon = comment.section
-                            case comment.comment_vol
-                                when "big"
-                                    div(class="speech_" + balloon)
-                                        big 
-                                            strong #{comment.comment} 
-                                when "small"
-                                    div(class="speech_" + balloon)
-                                        small 
-                                            font(color="gray") #{comment.comment} 
+                                img(src="/images/upload_icon/" + viewcomments[i].image width="110" height="110")
+                        div(class="speech_data" id="speechData")
+                            - var audienceTag = ""
+                            if viewcomments[i].permission == "audience"
+                                - audienceTag = "(観戦)"
+                            case viewcomments[i].section
+                                when "solo"
+                                    a(id="-"+solo) -#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag}
                                 when "nomal"
-                                    div(class="speech_" + balloon) #{comment.comment} 
+                                    if audienceTag
+                                        a(id="!"+audience) !#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} 
+                                    else 
+                                        a(id=nomal) #{viewcomments[i].articleNum}. #{viewcomments[i].character_name} 
+                                when "secret"
+                                    a(id="@"+secret) @#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} → #{viewcomments[i].send_to} 
+                                when "anonymous"
+                                    a(id="?"+anonymous) ?#{viewcomments[i].articleNum}. #{audienceTag}
+
+                            a(class="date") #{viewcomments[i].comment_at}
+                            div
+                                - var balloon = ""
+                                if viewcomments[i].section == "nomal" && viewcomments[i].permission == "audience"
+                                    - balloon = "audience"
+                                else 
+                                    - balloon = viewcomments[i].section
+                                case viewcomments[i].comment_vol
+                                    when "big"
+                                        div(class="speech_" + balloon)
+                                            big 
+                                                strong #{viewcomments[i].comment} 
+                                    when "small"
+                                        div(class="speech_" + balloon)
+                                            small 
+                                                font(color="gray") #{viewcomments[i].comment} 
+                                    when "nomal"
+                                        div(class="speech_" + balloon) #{viewcomments[i].comment} 
 
             div(class="page")
                 +pageset()
+
+            
 
             if character.character_name 
                 div(class="say_space")
@@ -167,21 +181,39 @@ html(lang="ja")
                             p(class="sayselect")
                                 label
                                     a 発言種別: 
-                                    select(name="say")
+                                    select(name="say" id="sayStatus")
                                         option(value="nomal") セリフ
                                         option(value="secret") 秘匿
                                         option(value="anonymous") 匿名
                                         option(value="action") アクション
                                         option(value="solo") 独り言
+                                
+                                //- 秘匿の送信相手を選択
                                 label
                                     a(class="to_sel") To:
-                                    select(name="to")
+                                    select(name="to" id="toStatus" disabled)
                                         option(value="GM") #{room.Owner}(GM)
                                         each member in members 
                                             if member.permission == character.permission
                                                 option(value=member.character_name) #{member.character_name}
+
+                            //- toStatusは秘匿のときのみ選択可能にする。
+                            script. 
+                                document.getElementById("sayStatus").addEventListener("change", function(){
+                                    var status_elem = document.getElementById("sayStatus");
+                                    var s_value = status_elem.options[status_elem.selectedIndex].value;
+                                    var box_elem = document.getElementById("toStatus");
+                                    
+                                    if(s_value == "secret"){
+                                        box_elem.disabled = false;
+                                    }else{
+                                        box_elem.disabled = true;
+                                    }
+                                }, false);
+
                             p
                                 textarea(name="comment" rows="10" cols="80" required)
+                                
                             p 
                                 label
                                     input(name="vol_size" value="nomal" type="radio" checked="checked") 
@@ -194,4 +226,8 @@ html(lang="ja")
                                     a 小声 
                             p(class="say_btn")
                                 input(class="say_submit" type="submit" value="発言")
+        
+
+      
+        
                     

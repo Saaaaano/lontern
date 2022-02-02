@@ -5,13 +5,15 @@ html(lang="ja")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
     body 
+        if passmatch == "ng"
+            script window.alert('パスワードが間違っています。');
         mixin itemSet(item, setting)
             tr 
                 td #{item}
                 td :
                 td 
                     if item == 'パスワード'
-                        if setting == null 
+                        if setting == null || setting == ""
                             a なし
                         else 
                             a あり
@@ -36,9 +38,9 @@ html(lang="ja")
                 +itemSet('セッション名', rooms.name)
                 +itemSet('システム', rooms.system)
                 +itemSet('主催者', rooms.Owner)
-                +itemSet('参加人数', rooms.personNum)
+                //- +itemSet('参加人数', rooms.personNum)
                 +itemSet('パスワード', rooms.pass)
-                +itemSet('観戦', rooms.spectator)
+                +itemSet('観戦', rooms.audience)
                 +itemSet('匿名発言', rooms.anonymous)
                 +itemSet('秘話発言', rooms.secret)
 
@@ -48,10 +50,13 @@ html(lang="ja")
             - var idid = 0
             - var didApply = 0
             - for(let i = 0; i < members.length; i++)
-                if members[i].memberId == you.id
+                if members[i].memberId == you.id 
                     - idid = 1
                     - didApply = 1
                     break 
+            if rooms.ownerId == you.id
+                - idid = 1
+                - didApply = 1
             if rooms.status == "進行中" || rooms.status == "終了"
                 - idid = 1
             
@@ -67,32 +72,38 @@ html(lang="ja")
             if idid == 0
                 div(class="apply")
                     div(class="apply_contents")
-                        form(class="inputinfo" action="/apply" method="post" enctype="multipart/form-data")
+                        form(class="inputinfo" action="/apply" method="post" enctype="multipart/form-data" onSubmit="return check();")
                             div(class="icon")
                                 label(class="uploadbtn")
                                     a(class="preview" id="preview")
                                         img(src="/images/Noimage.png" width="150px" height="150px")
-                                    input(type="file" id="icon" accept="image/*" name="icon" required)
+                                    input(type="file" id="icon" accept="image/*" name="icon" /*required*/)
                             div 
                                 label
                                     p 名前
-                                    input(name="character_name" size="22" required)
+                                    input(name="character_name" size="22" /*required*/)
                                 label 
                                     p 自己紹介(任意)
-                                    textarea(name="introduction" rows="4" cols="24") 
+                                    textarea(name="introduction" rows="4" cols="24") よろしくおねがいします。
                                     if members.length == rooms.personNum 
                                         a(class="atention")
                                             strong ※ 観戦での入室になります。
                                         a(class="kansen")
                                             input(type="checkbox" name="kansen" checked="checked" value="audience")
-                                    else
+                                    else if rooms.audience == 1
                                         p
                                             label
                                                 input(type="checkbox" name="kansen" value="audience")
                                                 a 観戦
-                                    input(class="sessionname" name="sessionname" size="22" value=rooms.name)
+                                    if rooms.pass != "" 
+                                        label
+                                            a pass 
+                                            input(id="pass" type="password" name="pass" size="15" )
+                                            
+                                    input(class="sessionname" name="sessionname" size="18" value=rooms.name)
                                     div(class="center")
                                         input(class="applybtn" type="submit" value="参加する")
+               
 
         script(type="text/javascript" src="js/icon.js") 
                                   

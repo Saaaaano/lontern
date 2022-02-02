@@ -4,6 +4,12 @@ html(lang="ja")
         meta(charset="utf-8")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
+        style(type="text/css").
+            body {
+                background-color: #FFFFFF;
+                color: #3e3a3a;
+            }
+
     body 
         div(class="login_main")
             div(class="login_logo")
@@ -21,3 +27,5 @@ html(lang="ja")
 
                     div(class="login_btn_space")
                         input(class="login_btn" type="submit" value="ログイン")
+            div(class="new")
+                a(href="/createAccount") 新規登録

@@ -4,6 +4,11 @@
   padding: 0px;
 }
 
+body {
+  background-color: #e6e5ef;
+  color: #3e3a3a;
+}
+
 .index_main {
   height: 100%;
   min-height: 100%;
@@ -98,23 +103,32 @@
   border: solid 1px #ced7dc;
   padding: 3px 10px;
   background-color: #ced7dc;
+  text-align: center;
 }
 
 .index_main .session_list th.session_name {
-  width: 300px;
-}
-
-.index_main .session_list th.session_num {
-  width: 50px;
+  width: 35%;
 }
 
 .index_main .session_list th.session_system {
-  width: 100px;
+  width: 17%;
+}
+
+.index_main .session_list th.session_GM {
+  width: 12%;
+}
+
+.index_main .session_list th.session_pass, .index_main .session_list th session_secret, .index_main .session_list th session_anonymous, .index_main .session_list th session_audience {
+  width: 9%;
 }
 
 .index_main .session_list td {
   border: solid 1px #ced7dc;
   padding: 3px 10px;
+}
+
+.index_main .session_list td.ce {
+  text-align: center;
 }
 
 .index_main .upbtn {
@@ -149,15 +163,19 @@
 }
 
 .login_main .login_logo {
-  margin: 0px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-left: 10px;
 }
 
 .login_main .login_space {
+  display: inline-block;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   background-color: #e6e5ef;
   width: 200px;
-  margin-left: 46%;
-  -webkit-transform: translate(-50%);
-          transform: translate(-50%);
   padding: 30px;
   border-radius: 20px;
   color: #3e3a3a;
@@ -190,6 +208,10 @@
           box-shadow: none;
   position: relative;
   top: 0.5px;
+}
+
+.login_main .new {
+  text-align: center;
 }
 
 .sessionIndex_main {
@@ -278,6 +300,7 @@
 }
 
 .sessionIndex_main .sessionbtn2 {
+  padding-bottom: 30px;
   margin-bottom: 5px;
 }
 
@@ -382,6 +405,7 @@
 
 .sessionIndex_main .apply_contents .center {
   text-align: right;
+  margin-top: 5px;
 }
 
 .sessionIndex_main .apply_contents .center .applybtn {
@@ -402,6 +426,10 @@
 }
 
 .sessionIndex_main .apply_contents .sessionname {
+  display: none;
+}
+
+.sessionIndex_main .apply_contents .roompass {
   display: none;
 }
 
@@ -452,8 +480,31 @@
   font-size: 80%;
 }
 
+.session_main .action a {
+  font-size: 8px;
+  color: gray;
+}
+
+.session_main .GMaction {
+  margin: 10px 150px;
+  padding: 15px 15px;
+  text-align: left;
+  background-color: #ced7dc;
+  border-radius: 10px;
+  white-space: pre-wrap;
+}
+
+.session_main .GMaction a {
+  font-size: 8px;
+  color: gray;
+}
+
 .session_main .article {
   padding-top: 50px;
+}
+
+.session_main .article .undisp {
+  display: none;
 }
 
 .session_main .preview {
@@ -463,11 +514,12 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  margin: 10px 50px;
+  margin-top: 15px;
 }
 
 .session_main .preview img {
-  margin-right: 30px;
+  margin-right: 20px;
+  margin-top: 5px;
 }
 
 .session_main .preview .speech_data {
@@ -504,6 +556,15 @@
   left: -20px;
   border: 7px solid transparent;
   border-right: 15px solid #FFFFFF;
+}
+
+.session_main .preview .GM {
+  background-color: #5996be;
+  color: white;
+}
+
+.session_main .preview .GM::before {
+  border-right: 15px solid #5996be;
 }
 
 .session_main .preview .speech_audience {
@@ -616,6 +677,37 @@
   top: 0.5px;
 }
 
+.session_main .ressdips {
+  background-color: #e6e5ef;
+}
+
+.session_main .sessionbigin {
+  margin-top: 60px;
+}
+
+.session_main .sessionbigin button {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+  font-weight: 600;
+  padding: 10px 20px;
+}
+
+.session_main .sessionbigin button:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.session_main .sessionbigin button.hidden {
+  display: none;
+}
+
 .session_main .say_space {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -623,8 +715,16 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  margin-top: 100px;
+  margin-top: 30px;
   padding-bottom: 30px;
+}
+
+.session_main .say_space ul {
+  list-style-type: none;
+}
+
+.session_main .say_space ul li:nth-of-type(n+2) {
+  display: none;
 }
 
 .session_main .say_space img {
@@ -664,6 +764,13 @@
 .session_main .say_space .name {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.session_main .say_space .name select {
+  border: none;
+  font-size: 15pt;
+  margin-bottom: 5px;
+  font-weight: 600;
 }
 
 .session_main .say_space textarea {
@@ -1095,6 +1202,10 @@
   top: 0.5px;
 }
 
+.editorMain .edsession .sessionname {
+  display: none;
+}
+
 .editorMain .apply {
   margin-top: 100px;
   padding-bottom: 30px;
@@ -1190,7 +1301,6 @@
 
 .editorMain .npcview .npccontents .icon {
   display: inline-block;
-  margin-right: 30px;
   margin-top: 20px;
 }
 
@@ -1200,6 +1310,7 @@
 
 .editorMain .npcview .npccontents .data .intro {
   margin-top: 30px;
+  margin-left: 30px;
   width: 500px;
   position: relative;
   display: inline-block;
@@ -1216,6 +1327,181 @@
 }
 
 .editorMain .npcview .npccontents .data .intro::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  border: 7px solid transparent;
+  border-right: 15px solid #FFFFFF;
+}
+
+.editorMain .sessionend {
+  margin: 100px;
+}
+
+.editorMain .sessionend button {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+  background-color: white;
+  padding: 10px 30px;
+  font-weight: 900;
+  font-size: 12pt;
+  border-radius: 30px;
+}
+
+.editorMain .sessionend button:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.editorMain .pcview {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding: 50px;
+}
+
+.editorMain .pcview .pccontents {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 30px;
+  text-align: left;
+}
+
+.editorMain .pcview .pccontents .icon {
+  display: inline-block;
+  margin-right: 30px;
+  margin-top: 0px;
+}
+
+.editorMain .pcview .pccontents .icon h3 {
+  text-align: center;
+}
+
+.editorMain .pcview .pccontents .data .intro {
+  margin-top: 30px;
+  width: 500px;
+  position: relative;
+  display: inline-block;
+  padding: 15px 20px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #555;
+  font-size: 14px;
+  background: #FFFFFF;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.editorMain .pcview .pccontents .data .intro::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  border: 7px solid transparent;
+  border-right: 15px solid #FFFFFF;
+}
+
+.editorMain .pcview .icon_edit {
+  display: none;
+}
+
+.editorMain .pcview .name_edit {
+  text-align: center;
+  padding: 5px 1px;
+}
+
+.editorMain .pcview .intro_edit {
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 3px;
+}
+
+.editorMain .pcview .editbtn {
+  padding-top: 10px;
+  text-align: right;
+}
+
+.editorMain .pcview .editbtn input {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+  background-color: #e6e5ef;
+}
+
+.editorMain .pcview .editbtn input:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.editorMain .pcview .sessionname {
+  display: none;
+}
+
+.editorMain .pcsview {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.editorMain .pcsview .pcscontents {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 30px;
+  text-align: left;
+}
+
+.editorMain .pcsview .pcscontents .icon {
+  display: inline-block;
+  margin-right: 30px;
+  margin-top: 15px;
+}
+
+.editorMain .pcsview .pcscontents .icon h3 {
+  text-align: center;
+}
+
+.editorMain .pcsview .pcscontents .data .intro {
+  margin-top: 30px;
+  width: 500px;
+  position: relative;
+  display: inline-block;
+  padding: 15px 20px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #555;
+  font-size: 14px;
+  background: #FFFFFF;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.editorMain .pcsview .pcscontents .data .intro::before {
   content: "";
   position: absolute;
   top: 20px;

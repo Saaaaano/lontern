@@ -4,10 +4,10 @@ html(lang="ja")
         meta(charset="utf-8")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
-        script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")
-        script(src="/js/pagination.js")
+        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
         
     body 
+        
         - const perPage = 20;
         if character == null 
             - character = {}
@@ -93,13 +93,24 @@ html(lang="ja")
 
             div(class="page")
                 +pageset()
+            
+            
 
             - var pageId = 0
             div(class="article")       
-                - for(let i = dispnum * perPage - perPage; pageId < perPage && i < all ; i++)
+                - for(let i = 0; pageId < perPage && i < all ; i++)
+                              
+                    if (viewcomments.length == 0)
+                        - break
+                    - var dispen = ""
+                    if i < dispnum * perPage - perPage
+                        - dispen = "undisp"
+                        - pageId--
+                    else 
+                        - dispen = ""
 
                     //- console.log("I = "  + i + ":" + viewcomments[i].comment_at + " pageId: " + pageId)
-                    //- 終了後はすべてオープンする
+                    //- 終了後はすべてオープンする。GMは最初からすべて閲覧可能
                     if room.status != "終了" && room.ownerId != you
                         //- console.log("通らないはず")
                         case viewcomments[i].section
@@ -115,58 +126,150 @@ html(lang="ja")
 
                     if viewcomments[i].section == "action"
                         - pageId++;
-                        div(class="action") #{viewcomments[i].comment} 
+                        if viewcomments[i].character_name == "GM"
+                            div(class="GMaction " + dispen) #{viewcomments[i].comment} 
+                                a(class="date") #{viewcomments[i].comment_at}
+                        else 
+                            div(class="action " + dispen) #{viewcomments[i].comment} 
+                                a(class="date") #{viewcomments[i].comment_at}
                         - continue 
-                        
-                    div(class="preview")
-                        - pageId++;
-                        a 
-                            if viewcomments[i].section == "anonymous"
-                                img(src="/images/anonymous.png" width="110" height="110")
+                    - var audienceTag = ""
+                        if viewcomments[i].permission == "audience"
+                            - audienceTag = "(観戦)"
+                    - var articleid = ""
+                    case viewcomments[i].section
+                        when "solo"
+                            - articleid="so"+viewcomments[i].articleNum
+                        when "nomal"
+                            if audienceTag
+                                - articleid="au"+viewcomments[i].articleNum
                             else 
-                                img(src="/images/upload_icon/" + viewcomments[i].image width="110" height="110")
+                                - articleid=viewcomments[i].articleNum
+                        when "secret"
+                            - articleid="se"+viewcomments[i].articleNum
+                        when "anonymous"
+                            - articleid="an"+viewcomments[i].articleNum
+                            
+                    div(class="preview " + dispen id=articleid)
+                        - pageId++;
+                        a  
+                            //- 匿名発言はiconを変更
+                            if viewcomments[i].section == "anonymous"
+                                img(src="/images/anonymous.png" width="80" height="80")
+                            else 
+                                img(src="/images/upload_icon/" + viewcomments[i].image width="80" height="80")
                         div(class="speech_data" id="speechData")
-                            - var audienceTag = ""
-                            if viewcomments[i].permission == "audience"
-                                - audienceTag = "(観戦)"
+                            //- 観戦は名前の横に(観戦)を表示する
+                            
+                            //- 番号と名前の表示
                             case viewcomments[i].section
                                 when "solo"
-                                    a(id="-"+solo) -#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag}
+                                    a -#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag}
                                 when "nomal"
                                     if audienceTag
-                                        a(id="!"+audience) !#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} 
+                                        a !#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} 
                                     else 
-                                        a(id=nomal) #{viewcomments[i].articleNum}. #{viewcomments[i].character_name} 
+                                        a #{viewcomments[i].articleNum}. #{viewcomments[i].character_name} 
                                 when "secret"
-                                    a(id="@"+secret) @#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} → #{viewcomments[i].send_to} 
+                                    a @#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} → #{viewcomments[i].send_to} 
                                 when "anonymous"
-                                    a(id="?"+anonymous) ?#{viewcomments[i].articleNum}. #{audienceTag}
-
+                                    a ?#{viewcomments[i].articleNum}. #{audienceTag}
+                            //- 日付追加
                             a(class="date") #{viewcomments[i].comment_at}
                             div
+                                //- 観戦の発言は色を変更するためクラスを付け足す
                                 - var balloon = ""
                                 if viewcomments[i].section == "nomal" && viewcomments[i].permission == "audience"
                                     - balloon = "audience"
                                 else 
                                     - balloon = viewcomments[i].section
+                                //- GMの発言は色を変更するためクラスを付け足す
+                                if viewcomments[i].character_name == "GM" && balloon == "nomal"
+                                    - balloon += " GM"
+                                //- 発言の表示
+                                
+                                //- ダイスとレスの処理
+                                mixin comment()
+                                    - var viewtext = viewcomments[i].comment
+                                    - while(viewtext.match(/\[.*\]/) || viewtext.match(/>>[-@?!]*[0-9]+/))
+                                        - var key = viewtext.match(/>>|\[/)
+                    
+                                        if key == ">>"
+                                            - var ress = String(viewtext.match(/>>[-@?!]*[0-9]+/))
+                                            //- console.log("ress = "+ ress)
+                                            - var comments = viewtext.split(/>>[-@?!]*[0-9]+/)
+                                            //- console.log("comments = "+ comments)
+                                            - var num = ress.replace(/>>/,'')
+                                            - var mark = num.match(/[-@?!]*/)
+                                            - var nameid = ""
+                                            if mark == '-'
+                                                - nameid = "so" + num.replace(/[-@?!]*/, "")
+                                            else if mark == "!"
+                                                - nameid = "au" + num.replace(/[-@?!]*/, "")
+                                            else if mark == "@"
+                                                - nameid = "se" + num.replace(/[-@?!]*/, "")
+                                            else if mark == "?"
+                                                - nameid = "an" + num.replace(/[-@?!]*/, "")
+                                            else if mark == ""
+                                                - nameid = num
+                                            a #{comments[0]}
+                                            a(href="#" + nameid class="onMouse" name=nameid) #{ress} 
+                                            - viewtext = viewtext.slice(viewtext.indexOf(">"))
+                                            - viewtext = viewtext.replace(/>>[-@?!]*[0-9]+/,"")
+                                            //- console.log("viewtext = " + viewtext)
+
+                                        else if key == "["
+                                            //- console.log("viewtext = " + viewtext)
+                                            - var comment = viewtext.split(/\[|\]/)
+                                            //- console.log("comment1 = "+comment)
+                                            - var dice = String(viewtext.match(/\[[0-9]+d[0-9]+,[0-9]+]/))
+                                            //- console.log("dice = " + dice)
+                                            - dice = String(dice.replace(/\[|\]/g, ""))
+
+                                            - var arraydice = dice.split(',')  
+                                            //- console.log("arraydice = " + arraydice)
+                                            - var answer = arraydice[1]
+                                            - var seed = arraydice[0]
+                                            a #{comment[0]}
+                                                u
+                                                    strong(title = seed) #{answer}
+                                            
+                                            - viewtext = viewtext.slice(viewtext.indexOf("]") + 1)
+
+                                            //- console.log("viewtext = " + viewtext)
+                                    a #{viewtext} 
+
+                                    
+                                    
+
                                 case viewcomments[i].comment_vol
                                     when "big"
                                         div(class="speech_" + balloon)
                                             big 
-                                                strong #{viewcomments[i].comment} 
+                                                strong 
+                                                    +comment()
                                     when "small"
                                         div(class="speech_" + balloon)
                                             small 
-                                                font(color="gray") #{viewcomments[i].comment} 
+                                                font(color="gray") 
+                                                    +comment()
                                     when "nomal"
-                                        div(class="speech_" + balloon) #{viewcomments[i].comment} 
-
+                                        div(class="speech_" + balloon) 
+                                            +comment()
+                                
+                    //-div(id="underdispID")
+                                
+            //- ページ送り
             div(class="page")
                 +pageset()
-
+                
+            div(id="ID" class="ressdips")
+            div(id="modal")
+                
+                
             
-
-            if character.character_name 
+            //--------------発言用ボックス--------------
+            if character.character_name && room.status != "終了" && room.ownerId != you
                 div(class="say_space")
                     img(src="/images/upload_icon/" + character.image width="110" height="110")
                     div(class="say_box")
@@ -183,19 +286,107 @@ html(lang="ja")
                                     a 発言種別: 
                                     select(name="say" id="sayStatus")
                                         option(value="nomal") セリフ
-                                        option(value="secret") 秘匿
-                                        option(value="anonymous") 匿名
+                                        if room.secret == 1
+                                            option(value="secret") 秘匿
+                                        if room.anonymous == 1
+                                            option(value="anonymous") 匿名
                                         option(value="action") アクション
                                         option(value="solo") 独り言
                                 
                                 //- 秘匿の送信相手を選択
+                                if room.secret == 1
+                                    label
+                                        a(class="to_sel") To:
+                                        select(name="to" id="toStatus" disabled)
+                                            option(value="GM") #{room.Owner}(GM)
+                                            each member in members 
+                                                if member.permission == character.permission
+                                                    option(value=member.character_name) #{member.character_name}
+
+                            //- toStatusは秘匿のときのみ選択可能にする。
+                            script. 
+                                document.getElementById("sayStatus").addEventListener("change", function(){
+                                    var status_elem = document.getElementById("sayStatus");
+                                    var s_value = status_elem.options[status_elem.selectedIndex].value;
+                                    var box_elem = document.getElementById("toStatus");
+                                    
+                                    if(s_value == "secret"){
+                                        box_elem.disabled = false;
+                                    }else{
+                                        box_elem.disabled = true;
+                                    }
+                                }, false);
+
+                            p
+                                textarea(name="comment" rows="10" cols="80" required)
+                                
+                            p 
                                 label
-                                    a(class="to_sel") To:
-                                    select(name="to" id="toStatus" disabled)
-                                        option(value="GM") #{room.Owner}(GM)
-                                        each member in members 
-                                            if member.permission == character.permission
-                                                option(value=member.character_name) #{member.character_name}
+                                    input(name="vol_size" value="nomal" type="radio" checked="checked") 
+                                    a 通常 
+                                label
+                                    input(name="vol_size" value="big" type="radio")
+                                    a 大声 
+                                label
+                                    input(name="vol_size" value="small" type="radio") 
+                                    a 小声 
+                            p(class="say_btn")
+                                input(class="say_submit" type="submit" value="発言")
+
+
+            if room.ownerId == you && room.status != "終了"
+                if room.status == "募集中"
+                    form(class="sessionbigin" method="post" action="/sessionStatus/" + room.name + "/bigin" onSubmit="return check()")
+                        button(id="btn" type="submit" name="endbtn" class="") セッションを開始する
+                script. 
+                    function check(){
+                        if(window.confirm('メンバー募集を終了し、セッションを開始します。')){ // 確認ダイアログを表示
+                            const btnhidden = document.getElementById('btn');
+                            btnhidden.classList.add('hidden');
+                            return true; // 「OK」時は送信を実行
+                        }
+                        else{ // 「キャンセル」時の処理
+                            //window.alert('キャンセルされました'); // 警告ダイアログを表示
+                            return false; // 送信を中止
+                        }
+                    }
+                div(class="say_space")
+                    div(class="charaicon" id="charaicon")
+                        ul 
+                            each member in members
+                                if member.attribute == "npc"
+                                    li(id=member.character_name)
+                                        img(src="/images/upload_icon/" + member.image width="110" height="110")
+                    div(class="say_box")
+                        form(action="/say/" + character.sessionname + "/" + pageNum method="post")
+                            a(class="name")
+                                select(name="saycharacter" id="saychara")
+                                    each member in members 
+                                        if member.attribute == "npc"
+                                            option(value=member.character_name) #{member.character_name}
+                            
+                            
+
+                            p(class="sayselect")
+                                label
+                                    a 発言種別: 
+                                    select(name="say" id="sayStatus")
+                                        option(value="nomal") セリフ
+                                        if room.secret == 1
+                                            option(value="secret") 秘匿
+                                        if room.anonymous == 1
+                                            option(value="anonymous") 匿名
+                                        option(value="action") アクション
+                                        option(value="solo") 独り言
+                                
+                                //- 秘匿の送信相手を選択
+                                if room.secret == 1
+                                    label
+                                        a(class="to_sel") To:
+                                        select(name="to" id="toStatus" disabled)
+                                            each member in members 
+                                                if member.permission == character.permission
+                                                    option(value=member.character_name) #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。
                             script. 
@@ -227,7 +418,8 @@ html(lang="ja")
                             p(class="say_btn")
                                 input(class="say_submit" type="submit" value="発言")
         
-
+        script(src="/js/sessionGMicon.js")
+        script(src="/js/PopUp.js")
       
         
                     

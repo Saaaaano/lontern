@@ -5,13 +5,29 @@ html(lang="ja")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
     body 
+        mixin itemSet(item, setting)
+            if item == 'パスワード'
+                if setting == null || setting == ""
+                    a なし
+                else 
+                    a あり
+            else if item == '観戦' || item == '匿名' || item == '秘話'
+                if setting == 0
+                    img(src="/images/batu.png" width="10px")
+                else 
+                    a  ◯
+            else 
+
         //- テーブルに値をセットする関数
         mixin tableset(status)
             tr 
                 th(class="session_name") セッション名
                 th(class="session_system") システム
-                th(class="session_num") 人数
-                th(class="session_participant") 参加者
+                th(class="session_GM") GM
+                th(class="session_pass") PASS 
+                th(class="session_audience") 観戦 
+                th(class="session_anonymous") 匿名
+                th(class="session_secret") 秘話 
             each room in rooms 
                 - var i = 0;
                 if room.status == status 
@@ -20,16 +36,17 @@ html(lang="ja")
                             a(href="/sessionIndex?sessionname=" + room.name) #{room.name}
                         td 
                             a #{room.system}
-                        each sessionmember in sessionmembers 
-                            if sessionmember.sessionname == room.name && sessionmember.permission != 'audience'
-                                - i++
-                        td #{i}/#{room.personNum}人
-                        td #{room.Owner}(GM)
-                            each sessionmember in sessionmembers 
-                                if sessionmember.sessionname == room.name 
-                                    a , #{sessionmember.name}
-                                    if sessionmember.permission =='audience'
-                                        a (観戦)
+                        td 
+                            a #{room.Owner}
+                        td(class="ce")
+                            +itemSet('パスワード', room.pass)
+                        td(class="ce")  
+                            +itemSet('観戦', room.audience)
+                        td(class="ce") 
+                            +itemSet('匿名', room.anonymous)
+                        td(class="ce")
+                            +itemSet('秘話', room.secret)
+                            
                                     
         
         div(class="index_main")

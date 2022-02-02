@@ -12,121 +12,212 @@ html(lang="ja")
                 div(class="topbtn")
                     a(href="/index") 
                         img(src="/images/lontern_logo_w.png" width="100px")
+            if ownername == room.ownerId 
+                ul(class="tab")
+                    li
+                        a(href="#room") ルーム編集
+                    li
+                        a(href="#pclist") PC一覧
+                    li
+                        a(href="#npc") NPC設定
+                    
+                    if room.status != '終了'
+                        li
+                            a(href="#status") セッション終了
 
-            ul(class="tab")
-                li
-                    a(href="#room") ルーム編集
-                li
-                    a(href="#npc") NPC設定
+                div(class="area is-active" id="room" )
+                    form(class="edsession" action="/updateSession" method="post")
+                        div(class="inputarea")
+                            label(for="sessionName" class="inputlabel")
+                                a セッション名
+                            input(name="sessionName" id="sessionName" type="text" value=room.name required)
+                            br
+                            label(for="systemName" class="inputlabel")
+                                a システム
+                            input(name="systemName" id="systemName" type="text" value=room.system required)
+                            br
+                            label(for="personNum" class="inputlabel")
+                                a 参加人数
+                            input(name="personNum" id="personNum" type="number" value=room.personNum required)
+                            a 人
+                            br
+                            label(for="password" class="inputlabel")
+                                a パスワード
+                            input(name="password" id="password" type="text" value=room.pass)
+                            br
+                            small 　※ 未入力でパスワードなしとなります。
+                            br
+                            - var checkedt = ""
+                            - var checkedf = ""
+                            if room.audience == 1
+                                - checkedt = "checked"
+                                - checkedf = false
+                            else
+                                - checkedf = "checked"
+                                - checkedt = false
+                            label(class="inputlabel")
+                                a 観戦
+                            input(name="audience" id="audience_t" type="radio" value="1" checked=checkedt)
+                            label(for="audience_t")
+                                a(class="radiolabel") 許可
+                            input(name="audience" id="audience_f" type="radio" value="0" checked=checkedf)
+                            label(for="audience_f") 
+                                a(class="radiolabel") 不可
+                            br
+                            if room.anonymous == 1
+                                - checkedt = "checked"
+                                - checkedf = false
+                            else
+                                - checkedf = "checked"
+                                - checkedt = false
+                            label(class="inputlabel")
+                                a 匿名発言
+                            input(name="anonymous" id="anonymous_t" type="radio" value="1"  checked=checkedt)
+                            label(for="anonymous_t")
+                                a(class="radiolabel") 許可
+                            input(name="anonymous" id="anonymous_f" type="radio" value="0" checked=checkedf)
+                            label(for="anonymous_f") 
+                                a(class="radiolabel") 不可
+                            br
+                            if room.secret == 1
+                                - checkedt = "checked"
+                                - checkedf = false
+                            else
+                                - checkedf = "checked"
+                                - checkedt = false
+                            label(class="inputlabel")
+                                a 秘話発言
+                            input(name="secret" id="secret_t" type="radio" value="1" checked=checkedt)
+                            label(for="secret_t")
+                                a(class="radiolabel") 許可
+                            input(name="secret" id="secret_f" type="radio" value="0" checked=checkedf)
+                            label(for="secret_f") 
+                                a(class="radiolabel") 不可
+                        br
+                        div(class="overviwew")
+                            label(for="sessionOverView" class="textarealabel")
+                                a セッション概要
+                            br
+                            textarea(name="sessionOverView", id="sessionOverView" cols="100", rows="30") #{room.overview}
+                            input(class="sessionname" name="sessionname" size="22" value=room.name)
+                        div(class="center")
+                            input(class="applybtn" type="submit" value="変更する")
 
-            div(class="area is-active" id="room" )
-                form(class="edsession" action="/updateSession" method="post")
-                    div(class="inputarea")
-                        label(for="sessionName" class="inputlabel")
-                            a セッション名
-                        input(name="sessionName" id="sessionName" type="text" value=room.name required)
-                        br
-                        label(for="systemName" class="inputlabel")
-                            a システム
-                        input(name="systemName" id="systemName" type="text" value=room.system required)
-                        br
-                        label(for="personNum" class="inputlabel")
-                            a 参加人数
-                        input(name="personNum" id="personNum" type="number" value=room.personNum required)
-                        a 人
-                        br
-                        label(for="password" class="inputlabel")
-                            a パスワード
-                        input(name="password" id="password" type="text" value=room.pass)
-                        br
-                        small 　※ 未入力でパスワードなしとなります。
-                        br
-                        - var checkedt = ""
-                        - var checkedf = ""
-                        if room.audience == 1
-                            - checkedt = "checked"
-                            - checkedf = false
-                        else
-                            - checkedf = "checked"
-                            - checkedt = false
-                        label(class="inputlabel")
-                            a 観戦
-                        input(name="audience" id="audience_t" type="radio" value="1" checked=checkedt)
-                        label(for="audience_t")
-                            a(class="radiolabel") 許可
-                        input(name="audience" id="audience_f" type="radio" value="0" checked=checkedf)
-                        label(for="audience_f") 
-                            a(class="radiolabel") 不可
-                        br
-                        if room.anonymous == 1
-                            - checkedt = "checked"
-                            - checkedf = false
-                        else
-                            - checkedf = "checked"
-                            - checkedt = false
-                        label(class="inputlabel")
-                            a 匿名発言
-                        input(name="anonymous" id="anonymous_t" type="radio" value="1"  checked=checkedt)
-                        label(for="anonymous_t")
-                            a(class="radiolabel") 許可
-                        input(name="anonymous" id="anonymous_f" type="radio" value="0" checked=checkedf)
-                        label(for="anonymous_f") 
-                            a(class="radiolabel") 不可
-                        br
-                        if room.secret == 1
-                            - checkedt = "checked"
-                            - checkedf = false
-                        else
-                            - checkedf = "checked"
-                            - checkedt = false
-                        label(class="inputlabel")
-                            a 秘話発言
-                        input(name="secret" id="secret_t" type="radio" value="1" checked=checkedt)
-                        label(for="secret_t")
-                            a(class="radiolabel") 許可
-                        input(name="secret" id="secret_f" type="radio" value="0" checked=checkedf)
-                        label(for="secret_f") 
-                            a(class="radiolabel") 不可
-                    br
-                    div(class="overviwew")
-                        label(for="sessionOverView" class="textarealabel")
-                            a セッション概要
-                        br
-                        textarea(name="sessionOverView", id="sessionOverView" cols="100", rows="30") #{room.overview}
-                    div(class="center")
-                        input(class="applybtn" type="submit" value="変更する")
-            
-            div(class="area" id="npc")
-                each npc in npcs 
-                    div(class="npcview")
-                        div(class="npccontents")
-                            div(class="icon")
-                                img(src="/images/upload_icon/" + npc.image width="100px" height="100px")
-                                h3 #{npc.character_name}
-                            div(class="data")
+                div(class="area" id="pclist")
+                    - var audience = ""
+                    each pc in pcdata 
+                        if pc.character_name == "GM"
+                            - continue
+                        if pc.permission == "audience"
+                            - audience = "(観戦)"
+                        else 
+                            - audience = ""
+                        div(class="pcsview")
+                            div(class="pcscontents")
+                                div(class="icon")
+                                    img(src="/images/upload_icon/" + pc.image width="100px" height="100px")
+                                    h3 #{pc.character_name} #{audience}
+                                div(class="data")
+                                        
+                                    div(class="intro") 
+                                        h5 自己紹介
+                                        hr
+                                        a #{pc.introduction}
+                
+                div(class="area" id="npc")
+                    each npc in npcs 
+                        if npc.character_name == "GM"
+                            - continue
+                        div(class="npcview")
+                            div(class="npccontents")
+                                div(class="icon")
+                                    img(src="/images/upload_icon/" + npc.image width="100px" height="100px")
+                                    h3 #{npc.character_name}
+                                div(class="data")
+                                    div(class="intro") 
+                                        h5 自己紹介
+                                        hr
+                                        a #{npc.introduction}
+                    div(class="apply")
+                        div(class="apply_contents")
+                            form(class="inputinfo" action="/npcApply" method="post" enctype="multipart/form-data")
+                                div(class="icon")
+                                    label(class="uploadbtn")
+                                        a(class="preview" id="preview")
+                                            img(src="/images/Noimage.png" width="150px" height="150px")
+                                        input(type="file" id="icon" accept="image/*" name="icon" required)
+                                div 
+                                    label
+                                        p 名前
+                                        input(name="character_name" size="22" required)
+                                    label 
+                                        p 自己紹介(任意)
+                                        textarea(name="introduction" rows="4" cols="24") よろしくおねがいします。
                                     
-                                div(class="intro") 
-                                    h5 自己紹介
-                                    a #{npc.introduction}
-                div(class="apply")
-                    div(class="apply_contents")
-                        form(class="inputinfo" action="/npcApply" method="post" enctype="multipart/form-data")
-                            div(class="icon")
-                                label(class="uploadbtn")
-                                    a(class="preview" id="preview")
-                                        img(src="/images/Noimage.png" width="150px" height="150px")
-                                    input(type="file" id="icon" accept="image/*" name="icon" required)
-                            div 
-                                label
-                                    p 名前
-                                    input(name="character_name" size="22" required)
-                                label 
-                                    p 自己紹介(任意)
-                                    textarea(name="introduction" rows="4" cols="24") 
-                                   
-                                input(class="sessionname" name="sessionname" size="22" value=room.name)
-                                div(class="center")
-                                    input(class="applybtn" type="submit" value="追加する")
-        
+                                    input(class="sessionname" name="sessionname" size="22" value=room.name)
+                                    div(class="center")
+                                        input(class="applybtn" type="submit" value="追加する")
+                if room.status != '終了'
+                    div(class="area" id="status")
+                        form(class="sessionend" method="post" action="/sessionStatus/"+ room.name + "/end" onSubmit="return check()")
+                            button(type="submit" name="endbtn") セッションを終了する
+                    script. 
+                        function check(){
+                            if(window.confirm('終了すると一切の発言ができなくなります。本当に終了しますか？')){ // 確認ダイアログを表示
+                                return true; // 「OK」時は送信を実行
+                            }
+                            else{ // 「キャンセル」時の処理
+                                //window.alert('キャンセルされました'); // 警告ダイアログを表示
+                                return false; // 送信を中止
+                            }
+                        }
+            else 
+                ul(class="tab")
+                    li
+                        a(href="#pclist") PC一覧
+                    li
+                        a(href="#pc") PC編集
+
+                div(class="area" id="pc" )
+                    form(class="edit" method="post" action="/mydataEdit" enctype="multipart/form-data")
+                        div(class="pcview")
+                            div(class="pccontents")
+                                div(class="icon")
+                                    label(class="uploadbtn")
+                                        a(class="preview" id="preview")
+                                            img(src="/images/upload_icon/" + mydata.image width="150px" height="150px")
+                                        input(class="icon_edit" type="file" id="icon" accept="image/*" name="icon")
+                                    //h3 #{mydata.character_name}
+                                    input(class="name_edit" id="name_edit" name="character_name" type="text" value=mydata.character_name cols="5")
+                                div(class="data")     
+                                    div(class="intro") 
+                                        h4 自己紹介
+                                        hr
+                                        //a(class="introduction" id="introduction") #{mydata.introduction}
+                                        textarea(class="intro_edit" name="introduction" rows="10" cols="70") #{mydata.introduction}
+                                        input(class="sessionname" name="sessionname" size="22" value=room.name)
+                                    div(class="editbtn")
+                                        input(type="submit" value="変更する")
+                div(class="area is-active" id="pclist")
+                    - var audience = ""
+                    each pc in pcdata 
+                        if pc.character_name == "GM"
+                            - continue
+                        if pc.permission == "audience"
+                            - audience = "(観戦)"
+                        else 
+                            - audience = ""
+                        div(class="pcsview")
+                            div(class="pcscontents")
+                                div(class="icon")
+                                    img(src="/images/upload_icon/" + pc.image width="100px" height="100px")
+                                    h3 #{pc.character_name} #{audience}
+                                div(class="data")
+                                        
+                                    div(class="intro") 
+                                        h5 自己紹介
+                                        hr
+                                        a #{pc.introduction}
+
         script(src="js/editor.js")
         script(src="js/icon.js")

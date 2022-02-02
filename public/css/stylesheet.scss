@@ -8,6 +8,10 @@ $pointcolor:#ced7dc;
     margin: 0px;
     padding: 0px;
 }
+body{
+    background-color: $basecolor;
+    color: $subcolor;
+}
 
 .index_main {
     @include main_set;
@@ -60,19 +64,27 @@ $pointcolor:#ced7dc;
             border:solid 1px $pointcolor;
             padding: 3px 10px;
             background-color: $pointcolor;
+            text-align: center;
             &.session_name {
-            width: 300px;  
-            }
-            &.session_num{
-            width:50px;
+            width: 35%;  
             }
             &.session_system{
-                width: 100px;
+                width: 17%;
             }
+            &.session_GM{
+                width: 12%;
+            }
+            &.session_pass, session_secret, session_anonymous, session_audience{
+                width: 9%;
+            }
+            
         }
         td{
             border:solid 1px $pointcolor;
             padding: 3px 10px;
+            &.ce{
+                text-align: center;
+            }
         }
     }
     .upbtn{
@@ -92,13 +104,17 @@ $pointcolor:#ced7dc;
     left:50%;
     transform: translate(-50%, -50%);
     .login_logo{
-        margin: 0px;
+        //display: inline-block;
+        justify-content: center;
+        margin-left: 10px;
     }
     .login_space{
+        display: inline-block;
+        justify-content: center;
         background-color: $basecolor;
         width: 200px;
-        margin-left: 46%;
-        transform: translate(-50%);
+        //margin-left: 46%;
+        //transform: translate(-50%);
         padding: 30px;
         border-radius: 20px;
         color: $subcolor;
@@ -118,7 +134,9 @@ $pointcolor:#ced7dc;
         }
         
     }
-   
+    .new{
+        text-align: center;
+    }
     
 }
 
@@ -175,6 +193,7 @@ $pointcolor:#ced7dc;
             @include btn;
             text-decoration: none;
        }
+       padding-bottom: 30px;
        margin-bottom: 5px;
     }
 
@@ -240,6 +259,7 @@ $pointcolor:#ced7dc;
         }
         .center{
             text-align: right;
+            margin-top: 5px;
             .applybtn{
                 @include btn;
             }
@@ -247,7 +267,7 @@ $pointcolor:#ced7dc;
         .sessionname{
             display: none;
         }
-        
+        .roompass{display: none;}
     }
 }
 
@@ -269,17 +289,42 @@ $pointcolor:#ced7dc;
         padding:3px 10px;
         text-align: left;
         font-size: 80%;
+        a{
+            font-size: 8px;
+            color: gray;
+        }
     }
+
+    .GMaction{
+        margin: 10px 150px;
+        padding:15px 15px;
+        text-align: left;
+        //font-size: 80%;
+        background-color: $pointcolor;
+        border-radius: 10px;
+        //font-weight: 600;
+        white-space: pre-wrap;
+        //font-family: serif;
+        a{
+            font-size: 8px;
+            color: gray;
+        }
+    }
+
     .article{
         padding-top: 50px;
+        .undisp{
+            display: none;
+        }
     }
     .preview{
         display: flex;
         justify-content: center;
-        margin: 10px 50px;
+        margin-top: 15px;
         
         img {
-            margin-right: 30px;
+            margin-right: 20px;
+            margin-top: 5px;
         }
         
         .speech_data{
@@ -296,6 +341,14 @@ $pointcolor:#ced7dc;
             white-space: pre-wrap;
             &::before{
             @include bubble_before;
+            }
+        }
+
+        .GM{
+            background-color: rgb(89, 150, 190);
+            color:white;
+            &::before{
+                border-right: 15px solid rgb(89, 150, 190);
             }
         }
 
@@ -345,11 +398,33 @@ $pointcolor:#ced7dc;
             }
         }
     }
+
+    .ressdips{
+        background-color: $basecolor;
+    }
+
+    .sessionbigin{
+        margin-top: 60px;
+        button{
+            @include btn;
+            font-weight: 600;
+            padding: 10px 20px;
+            &.hidden{
+                display:none;
+            }
+        }
+    }
     .say_space{
         display: flex;
         justify-content: center;
-        margin-top: 100px;
+        margin-top: 30px;
         padding-bottom: 30px;
+        ul{
+            list-style-type:none;
+        }
+        ul li:nth-of-type(n+2){ 
+            display: none; 
+        }   
         img{
             margin-right: 30px;
             margin-top: 60px;
@@ -368,6 +443,12 @@ $pointcolor:#ced7dc;
         .name {
             margin-top: 5px;
             margin-bottom: 5px;
+            select{
+                border: none;
+                font-size: 15pt;
+                margin-bottom: 5px;
+                font-weight: 600;
+            }
         }
         textarea{
             border-radius: 5px;
@@ -383,6 +464,7 @@ $pointcolor:#ced7dc;
                 @include btn;
             }
         }
+        
         
     }
     
@@ -529,8 +611,7 @@ $pointcolor:#ced7dc;
             text-decoration: none;
             color: $subcolor;
             border-radius: 5px 5px 0px 0px;
-            
-            
+          
         }
         li.active a{
             background:$pointcolor;
@@ -603,6 +684,9 @@ $pointcolor:#ced7dc;
                 background-color: $basecolor;
             }
         }
+        .sessionname{
+            display: none;
+        }
     }
     .apply {
         margin-top: 100px;
@@ -665,8 +749,53 @@ $pointcolor:#ced7dc;
             .icon{
                 display: inline-block;
                 //text-align: center;
-                margin-right: 30px;
+                //margin-right: 20px;
                 margin-top: 20px;
+                h3{
+                    text-align: center;
+                }
+            }
+            .data{   
+                .intro{
+                    margin-top: 30px;
+                    margin-left: 30px;
+                    width: 500px;
+                    @include bubble;
+                    &::before{
+                        @include bubble_before;
+                    }
+                }
+            }
+        }
+        
+    }
+    .sessionend{
+        margin: 100px;
+        button{
+            @include btn;
+            background-color: white;
+            padding: 10px 30px;
+            //color: red;
+            font-weight: 900;
+            font-size: 12pt;
+            border-radius: 30px;
+        }
+    }
+    .pcview{
+        //padding-bottom: 0px;
+        display: flex;
+        justify-content: space-evenly;
+        padding: 50px;
+        .pccontents{
+            display: flex;
+            padding: 0px 30px;
+            //
+            text-align: left;
+            .icon{
+                display: inline-block;
+                //text-align: center;
+                margin-right: 30px;
+                margin-top: 0px;
                 h3{
                     text-align: center;
                 }
@@ -682,6 +811,55 @@ $pointcolor:#ced7dc;
                 }
             }
         }
-        
+        .icon_edit{display:none}
+        .name_edit{
+            text-align: center;
+            padding:5px 1px;
+            //border-radius: 5px;
+        }
+        .intro_edit{
+            border-radius: 5px;
+            padding: 5px;
+            margin-top: 3px;
+        }
+        .editbtn{
+            padding-top: 10px;
+            text-align: right;
+            input{
+                @include btn;
+                background-color: $basecolor;
+            }
+        }
+        .sessionname{display: none;}
+    }
+    .pcsview{
+        //padding-bottom: 0px;
+        display: flex;
+        justify-content: space-evenly;
+        .pcscontents{
+            display: flex;
+            padding: 0px 30px;
+            //
+            text-align: left;
+            .icon{
+                display: inline-block;
+                //text-align: center;
+                margin-right: 30px;
+                margin-top: 15px;
+                h3{
+                    text-align: center;
+                }
+            }
+            .data{   
+                .intro{
+                    margin-top: 30px;
+                    width: 500px;
+                    @include bubble;
+                    &::before{
+                        @include bubble_before;
+                    }
+                }
+            }
+        }
     }
 }

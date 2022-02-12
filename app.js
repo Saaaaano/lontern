@@ -134,7 +134,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/signup', (req, res) => {
-    res.render('newAccount.pug');
+    res.render('signup.pug');
 });
 
 // ログインボタンを押したら

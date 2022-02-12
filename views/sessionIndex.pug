@@ -4,6 +4,8 @@ html(lang="ja")
         meta(charset="utf-8")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
+        link(rel="icon" href="/images/favicon.png")
+        link(rel="apple-touch-icon" href="/images/favicon.png")
     body 
         if passmatch == "ng"
             script window.alert('パスワードが間違っています。');
@@ -62,12 +64,12 @@ html(lang="ja")
             
             if didApply == 1
                 div(class="sessionbtn")
-                    a(href='/session/' + rooms.name + '/' + page) セッションページへ
+                    a(href='/session/' + rooms.name + '?pageNum=' + page) セッションページへ
                 div(class="editor")
                     a(href='/editor?name='+ rooms.name ) 編集
             else 
                 div(class="sessionbtn2")
-                    a(href='/session/' + rooms.name + '/' + page) セッションページへ
+                    a(href='/session/' + rooms.name + '?pageNum=' + page) セッションページへ
 
             if idid == 0
                 div(class="apply")

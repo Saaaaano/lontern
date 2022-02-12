@@ -4,6 +4,8 @@ html(lang="ja")
         meta(charset="utf-8")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
+        link(rel="icon" href="/images/favicon.png")
+        link(rel="apple-touch-icon" href="/images/favicon.png")
         script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")
     body 
         div(class="editorMain")
@@ -117,6 +119,8 @@ html(lang="ja")
                                 div(class="icon")
                                     img(src="/images/upload_icon/" + pc.image width="100px" height="100px")
                                     h3 #{pc.character_name} #{audience}
+                                    if room.status == "終了"
+                                        a(class="plname") [#{pc.name}]
                                 div(class="data")
                                         
                                     div(class="intro") 
@@ -212,6 +216,8 @@ html(lang="ja")
                                 div(class="icon")
                                     img(src="/images/upload_icon/" + pc.image width="100px" height="100px")
                                     h3 #{pc.character_name} #{audience}
+                                    if room.status == "終了"
+                                        a(class="plname") [#{pc.name}]
                                 div(class="data")
                                         
                                     div(class="intro") 

@@ -19,6 +19,9 @@ var fs = require('fs');
 const res = require('express/lib/response');
 
 
+//app.use(express.favicon(path.join(__dirname + '/public/images/favicon.png')));
+
+
 // mysqlへの接続情報
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
@@ -77,6 +80,33 @@ passport.deserializeUser(function (user, done) {
     done(null, user);
 });
 
+passport.use('local-signup', new LocalStrategy(
+    function (username, password, done) {
+        connection.query(
+            'SELECT login_id, pass FROM members',
+            (error, results) => {
+                if (error) { return done(error); }
+                // usernameで検索
+                for (let i = 0; i < results.length; i++) {
+                    // console.log(results[i].login_id);
+                    // console.log(results[i].pass);
+                    // ユーザー登録済み
+                    if (results[i].login_id == username) {
+                        return done(null, false, { message: '既に登録されているIDです。' });
+                    } 
+                }
+                var date = { "login_id": username, "pass": password};
+                connection.query(
+                    'INSERT INTO members SET ?', [date],
+                    function (error, results, fields) {
+                        return done(null, false);
+                })
+                
+            }
+        );
+    }
+));
+
 // ページのリクエストを貰ったとき認証済か確認する関数
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {  // 認証済
@@ -86,6 +116,8 @@ function isAuthenticated(req, res, next) {
         res.redirect('/login');  // ログイン画面に遷移
     }
 }
+
+
 
 const http = require('http');
 
@@ -101,16 +133,26 @@ app.get('/', (req, res) => {
     res.render('login.pug');
 });
 
+app.get('/signup', (req, res) => {
+    res.render('newAccount.pug');
+});
 
 // ログインボタンを押したら
 app.post('/login',
     passport.authenticate('local', {
-        failureRedirect:'/login', //認証に失敗した場合
-    }),
-    (req, res) => {
-        res.redirect('/index');
+        successRedirect: '/index',
+        failureRedirect: '/login',
+        session: true
     }
-);
+));
+
+app.post('/signup', 
+    passport.authenticate('local-signup', {
+        successRedirect: '/index',
+        failureRedirect: '/signup',
+        session: true
+    }
+));
 
 /*------------------------------------------------------------ */
 // トップページ
@@ -194,7 +236,7 @@ app.post('/apply', (req, res) => {
 
                                         pageNum = Math.ceil(results[1].length / perPage);
                                         //console.log(all + " & " + pageNum)
-                                        return res.redirect('/session/' + req.body.sessionname + '/' + pageNum);
+                                        return res.redirect('/session/' + req.body.sessionname + '?pageNum=' + pageNum);
                                     }
                                 );
                             });
@@ -336,7 +378,7 @@ app.post('/sessionStatus/:sessionname/:status', (req, res)=>{
 
 
 // セッションページ
-app.get('/session/:session/:pageNum', isAuthenticated, (req, res) => {
+app.get('/session/:session/', isAuthenticated, (req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, nameid)=>{
@@ -345,7 +387,12 @@ app.get('/session/:session/:pageNum', isAuthenticated, (req, res) => {
                 'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM sessionmembers WHERE sessionname = ?; SELECT * FROM rooms WHERE name = ?',
                 [req.params.session, req.params.session, nameid[0].id, req.params.session, req.params.session, req.params.session],
                 (error, results) => {
-                    res.render('session.pug', { comments: results[0], character: results[1][0], members: results[2], room: results[3][0], pageNum: req.params.pageNum, you: nameid[0].id, preArticleId:req.query.articleId});
+                    console.log(req.query.search);
+                    var saynum = 0;
+                    if (req.query.id != null){
+                        saynum = req.query.id;
+                    }
+                    res.render('session.pug', { comments: results[0], character: results[1][0], members: results[2], room: results[3][0], pageNum: req.query.pageNum, you: nameid[0].id, preArticleId: req.query.articleId, search: req.query.search, searchtag: req.query.tag, saynum: saynum});
                 }
             )
         }
@@ -386,11 +433,21 @@ app.post('/say/:session/:articleNum', (req, res) => {
                                 dice1 += (Math.floor(Math.random() * times[1]) + 1);
                                 //console.log(dice1);
                             }
-                            comment = comment.replace(/\[[0-9]+d[0-9]+\]/, "[" + dd + "," + dice1 + "]");
+                            comment = comment.replace(/\[[0-9]+d[0-9]+\]/, "[" + dd + ":" + dice1 + "]");
                         });
                     };
                     //1d100<=10 (1D100<=10) ＞ 14 ＞ 失敗
-                    
+
+                    var choice = comment.match(/\[c(\S+)\]/g);
+                    if (choice) {
+                        choice.forEach((cc) => {
+                            cc = String(cc.replace(/\[c\(/, ''));
+                            cc = cc.replace(/\)\]/, '');
+                            var choices = cc.split(/,/);
+                            var index = (Math.floor(Math.random() * choices.length));
+                            comment = comment.replace(/\[c(\S+)\]/, "[" + cc + ":" + choices[index] + "]");
+                        });
+                    }
 
 
                     //console.log(tagAllay);
@@ -416,7 +473,7 @@ app.post('/say/:session/:articleNum', (req, res) => {
                         'INSERT INTO sessioncomment SET ?', data,
                         (error, result)=> {
                             //console.log(data);
-                            res.redirect('/session/' + req.params.session + '/' + req.params.articleNum);
+                            res.redirect('/session/' + req.params.session + '?pageNum=' + req.params.articleNum);
                         }
                     );
                 }

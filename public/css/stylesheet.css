@@ -7,6 +7,7 @@
 body {
   background-color: #e6e5ef;
   color: #3e3a3a;
+  height: 100%;
 }
 
 .index_main {
@@ -469,7 +470,9 @@ body {
   margin-top: 10px;
   padding-top: 30px;
   text-align: left;
-  padding-left: 150px;
+  padding-left: 50px;
+  padding-right: 50px;
+  overflow-wrap: break-word;
 }
 
 .session_main .action {
@@ -835,6 +838,38 @@ body {
 .session_main .pagination .navi-active {
   background-color: #ced7dc;
   border-radius: 50%;
+}
+
+.session_main #glayLayer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: black;
+  opacity: 0.60;
+  filter: alpha(opacity=60);
+}
+
+.session_main #overLayer {
+  display: none;
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  margin-left: -325px;
+  background-color: #e6e5ef;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.session_main #overLayer img.close {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
 }
 
 .say_preview_main {
@@ -1471,7 +1506,6 @@ body {
   display: -ms-flexbox;
   display: flex;
   padding: 0px 30px;
-  text-align: left;
 }
 
 .editorMain .pcsview .pcscontents .icon {
@@ -1481,6 +1515,10 @@ body {
 }
 
 .editorMain .pcsview .pcscontents .icon h3 {
+  text-align: center;
+}
+
+.editorMain .pcsview .pcscontents .icon .plname {
   text-align: center;
 }
 

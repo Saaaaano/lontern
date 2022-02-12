@@ -4,6 +4,8 @@ html(lang="ja")
         meta(charset="utf-8")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
+        link(rel="icon" href="/images/favicon.png")
+        link(rel="apple-touch-icon" href="/images/favicon.png")
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
         
     body 
@@ -21,6 +23,7 @@ html(lang="ja")
         - var anonymous = 0
         - var audience = 0
         - var viewcomments = []
+        - var allTagNum = 0
         each comment in comments
             case comment.section
                 when "nomal"
@@ -55,12 +58,27 @@ html(lang="ja")
                 when "action"
                     - all++
                     - viewcomments.push(comment)
+            if comment.comment.match("#" + searchtag)
+                    - allTagNum++
         - console.log("----------------------------------------")
         //- console.log(viewcomments)
     
         
             //- ページ送りリンクをつける関数
-        - var allPageNum = Math.ceil(all / perPage)
+        - var allpage = all
+        case search
+            when "secret"
+                - allpage = secret
+            when "solo"
+                - allpage = solo
+            when "anonymous"
+                - allpage = anonymous
+        if searchtag != null 
+            - allpage = allTagNum
+
+        - var allPageNum = Math.ceil(allpage / perPage)
+        
+        
         - var dispnum = pageNum
         - var sendnum = String(allPageNum)
         //-console.log(sendnum)
@@ -72,16 +90,23 @@ html(lang="ja")
         script.
             var roomname = document.getElementById( 'red' ).title;
             var allPageNum = document.getElementById('red').textContent;
-            window.location.href = '/session/'+ roomname + '/' + allPageNum ;
+            window.location.href = '/session/'+ roomname + '?pageNum=' + allPageNum ;
      
 
         mixin pageset()
+            hr
             - for(var p = 1; p <= allPageNum; p++)
+                - let url = "?pageNum=" + p
+                if search != null 
+                    - url += "&search=" + search
+                if searchtag != null 
+                    - url += "&tag=" + searchtag 
                 if p == dispnum
                     a #{p}|
                     - continue
-                a(href="/session/" + room.name + "/" + p id='#' + p) #{p}
+                a(href=url id='#' + p) #{p}
                 a |
+            hr
 
         div(class="session_main")
         
@@ -93,21 +118,45 @@ html(lang="ja")
 
             div(class="page")
                 +pageset()
-            
+                p
+                a(href="?pageNum=" + pageNum ) 全
+                a |
+                a(href="?pageNum=1&search=secret") 秘
+                a |
+                a(href="?pageNum=1&search=solo") 独
+                a |
+                a(href="?pageNum=1&search=anonymous") 匿 
             
 
             - var pageId = 0
+            - var tagnum = 0
             div(class="article")       
                 - for(let i = 0; pageId < perPage && i < all ; i++)
-                              
+                    //- console.log(searchtag+ ","+viewcomments[i].comment.match(searchtag))
                     if (viewcomments.length == 0)
                         - break
+
                     - var dispen = ""
-                    if i < dispnum * perPage - perPage
+                    if i < dispnum * perPage - perPage || (tagnum != 0 && tagnum < dispnum * perPage - perPage)
+                        //- console.log("通った1")
+                        - dispen = "undisp"
+                        - pageId--
+                    else if search != null && viewcomments[i].section != search 
+                        //- console.log("通った2")
+                        - dispen = "undisp"
+                        - pageId--
+                    else if searchtag != null && viewcomments[i].comment.match("#" + searchtag) == null 
+                        //- console.log("通った3") 
+                        - dispen = "undisp"
+                        - pageId--
+                    else if search != null && viewcomments[i].articleNum <= dispnum * perPage - perPage 
                         - dispen = "undisp"
                         - pageId--
                     else 
                         - dispen = ""
+                    
+                    if searchtag != null && viewcomments[i].comment.match("#" + searchtag) != null 
+                        - tagnum++
 
                     //- console.log("I = "  + i + ":" + viewcomments[i].comment_at + " pageId: " + pageId)
                     //- 終了後はすべてオープンする。GMは最初からすべて閲覧可能
@@ -188,12 +237,13 @@ html(lang="ja")
                                     - balloon += " GM"
                                 //- 発言の表示
                                 
-                                //- ダイスとレスの処理
+                                //- ダイス・レス・タグの処理
                                 mixin comment()
                                     - var viewtext = viewcomments[i].comment
-                                    - while(viewtext.match(/\[.*\]/) || viewtext.match(/>>[-@?!]*[0-9]+/))
-                                        - var key = viewtext.match(/>>|\[/)
-                    
+                                    //- console.log("viewtext = "+ viewtext)
+                                    - while(viewtext.match(/\[.*\]/) || viewtext.match(/>>[-@?!]*[0-9]+/)|| viewtext.match(/#/))
+                                        - var key = viewtext.match(/>>|\[|\#/)
+                                        //- console.log("key = "+ key)
                                         if key == ">>"
                                             - var ress = String(viewtext.match(/>>[-@?!]*[0-9]+/))
                                             //- console.log("ress = "+ ress)
@@ -217,24 +267,33 @@ html(lang="ja")
                                             - viewtext = viewtext.slice(viewtext.indexOf(">"))
                                             - viewtext = viewtext.replace(/>>[-@?!]*[0-9]+/,"")
                                             //- console.log("viewtext = " + viewtext)
-
                                         else if key == "["
                                             //- console.log("viewtext = " + viewtext)
                                             - var comment = viewtext.split(/\[|\]/)
                                             //- console.log("comment1 = "+comment)
-                                            - var dice = String(viewtext.match(/\[[0-9]+d[0-9]+,[0-9]+]/))
+                                            - var dice = String(viewtext.match(/\[.*\:.*\]/))
                                             //- console.log("dice = " + dice)
                                             - dice = String(dice.replace(/\[|\]/g, ""))
-
-                                            - var arraydice = dice.split(',')  
+                                            - var arraydice = dice.split(':')  
                                             //- console.log("arraydice = " + arraydice)
                                             - var answer = arraydice[1]
                                             - var seed = arraydice[0]
                                             a #{comment[0]}
                                                 u
                                                     strong(title = seed) #{answer}
-                                            
                                             - viewtext = viewtext.slice(viewtext.indexOf("]") + 1)
+                                        else if key == "#"
+                                            - var tag = String(viewtext.match(/\#\S+/))
+                                            - var comment = [] 
+                                            - comment.push(viewtext.substring(0, viewtext.indexOf("#")))
+                                            - comment.push(viewtext.substring(viewtext.indexOf("#")+tag.length), -1)
+                                            - let url = "?pageNum=1"
+                                            if search != null 
+                                                - url += "&search=" + search
+                                            - url += "&tag="
+                                            a #{comment[0]}
+                                            a(href=url + tag.replace("#","")) #{tag}
+                                            - viewtext = comment[1]
 
                                             //- console.log("viewtext = " + viewtext)
                                     a #{viewtext} 
@@ -262,9 +321,19 @@ html(lang="ja")
             //- ページ送り
             div(class="page")
                 +pageset()
+                p
+                a(href="?pageNum=" + pageNum ) 全
+                a |
+                a(href="?pageNum=1&search=secret") 秘
+                a |
+                a(href="?pageNum=1&search=solo") 独
+                a |
+                a(href="?pageNum=1&search=anonymous") 匿
+                a |
                 
             div(id="ID" class="ressdips")
-            div(id="modal")
+            div(id="glayLayer")
+            div(id="overLayer")
                 
                 
             
@@ -300,7 +369,7 @@ html(lang="ja")
                                         select(name="to" id="toStatus" disabled)
                                             option(value="GM") #{room.Owner}(GM)
                                             each member in members 
-                                                if member.permission == character.permission
+                                                if member.permission == character.permission &&  member.memberId == you.id
                                                     option(value=member.character_name) #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。
@@ -333,7 +402,7 @@ html(lang="ja")
                             p(class="say_btn")
                                 input(class="say_submit" type="submit" value="発言")
 
-
+            //-------------GM用発言スペース---------------
             if room.ownerId == you && room.status != "終了"
                 if room.status == "募集中"
                     form(class="sessionbigin" method="post" action="/sessionStatus/" + room.name + "/bigin" onSubmit="return check()")
@@ -365,8 +434,6 @@ html(lang="ja")
                                         if member.attribute == "npc"
                                             option(value=member.character_name) #{member.character_name}
                             
-                            
-
                             p(class="sayselect")
                                 label
                                     a 発言種別: 
@@ -386,7 +453,7 @@ html(lang="ja")
                                         select(name="to" id="toStatus" disabled)
                                             each member in members 
                                                 if member.permission == character.permission
-                                                    option(value=member.character_name) #{member.character_name}
+                                                    option(value=member.character_name class="to_content") #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。
                             script. 
@@ -397,10 +464,51 @@ html(lang="ja")
                                     
                                     if(s_value == "secret"){
                                         box_elem.disabled = false;
+                                       
                                     }else{
                                         box_elem.disabled = true;
-                                    }
+                                    };
+
                                 }, false);
+
+                                document.getElementById("saychara").addEventListener("change", function(){
+                                    var status_name = document.getElementById("saychara");
+                                    var n_value = status_name.options[status_name.selectedIndex].value;
+                                    var box_elem = document.getElementById("toStatus");
+                                    var b_value = [];
+
+                                    for(let i = 0; i < box_elem.length; i++){
+                                    
+                                        b_value.push(box_elem.options[i].value);
+                                        box_elem.options[i].style.display = "";
+                                          
+                                    };
+                                    
+                                    var index = b_value.indexOf(n_value)
+                                    box_elem.options[index].style.display = "none";
+
+                                }, false);
+
+                                //- webページ読み込み時に起動
+                                window.onload = onLoad;
+                                function onLoad(){
+                                    var status_name = document.getElementById("saychara");
+                                    var n_value = status_name.options[status_name.selectedIndex].value;
+                                    var box_elem = document.getElementById("toStatus");
+                                    var b_value = [];
+
+                                    for(let i = 0; i < box_elem.length; i++){
+                                    
+                                        b_value.push(box_elem.options[i].value);
+                                        box_elem.options[i].style.display = "";
+                                          
+                                    };
+                                    
+                                    var index = b_value.indexOf(n_value)
+                                    box_elem.options[index].style.display = "none";
+
+                                };
+
 
                             p
                                 textarea(name="comment" rows="10" cols="80" required)

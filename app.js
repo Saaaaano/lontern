@@ -553,4 +553,4 @@ app.post('/createSession', (req, res) => {
 })
 
 // サーバーを起動するコードを貼り付けてください
-app.listen(5000);
+app.listen(process.env.PORT || 3000);

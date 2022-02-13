@@ -29,7 +29,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '2wffBxQjNHa9',
-    database: 'lontern',
+    database: 'lontern_db',
     multipleStatements: true
 });
 // mysqlへ接続ができていないときにエラーを表示する。

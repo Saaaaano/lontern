@@ -2,6 +2,7 @@ doctype html
 html(lang="ja")
     head 
         meta(charset="utf-8")
+        meta(name="robots" content="noindex,nofollow")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
         link(rel="icon" href="/images/favicon.png")
@@ -58,7 +59,7 @@ html(lang="ja")
                 div(class="newSession")
                     button(onclick="location.href='/sessionCreate'") 新規セッション
                 div(class="user")
-                    a #{members.name}
+                    a(href="/mypage") #{members.name}
                     button(onclick="location.href='/logout'") ログアウト
             div(class="band")
                 a 募集中

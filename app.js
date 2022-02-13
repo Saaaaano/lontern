@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+
 const mysql = require('mysql'); // mysql読み込み
 // ログイン認証用モジュール
 const passport = require('passport')
@@ -17,7 +18,6 @@ require('date-utils');
 const path = require('path');
 var fs = require('fs');
 const res = require('express/lib/response');
-
 
 //app.use(express.favicon(path.join(__dirname + '/public/images/favicon.png')));
 
@@ -41,6 +41,7 @@ connection.connect((err) => {
     console.log('success');
 });
 
+
 // IDとパスワードによる認証
 passport.use(new LocalStrategy(
     (username, password, done) => {
@@ -49,16 +50,16 @@ passport.use(new LocalStrategy(
             'SELECT login_id, pass FROM members',
             (error, results) => {
                 if (error) { return done(error); }
-                for (let i = 0; i < results.length; i++){
+                for (let i = 0; i < results.length; i++) {
                     // console.log(results[i].login_id);
                     // console.log(results[i].pass);
-                    if(results[i].login_id == username && results[i].pass == password){
+                    if (results[i].login_id == username && results[i].pass == password) {
                         return done(null, username);
-                    } else if (results[i].login_id == username){
+                    } else if (results[i].login_id == username) {
                         return done(null, false);
-                    } else if (results[i].pass == password){
+                    } else if (results[i].pass == password) {
                         return done(null, false);
-                    } 
+                    }
                 }
                 return done(null, false);
             }
@@ -92,14 +93,15 @@ passport.use('local-signup', new LocalStrategy(
                     // console.log(results[i].pass);
                     // ユーザー登録済み
                     if (results[i].login_id == username) {
-                        return done(null, false, { message: '既に登録されているIDです。' });
+                        return done(null, false);
                     } 
                 }
+                console.log(username);
                 var date = { "login_id": username, "pass": password};
                 connection.query(
                     'INSERT INTO members SET ?', [date],
-                    function (error, results, fields) {
-                        return done(null, false);
+                    (error, results) => {
+                        return done(null, username);
                 })
                 
             }
@@ -138,21 +140,44 @@ app.get('/signup', (req, res) => {
 });
 
 // ログインボタンを押したら
-app.post('/login',
+app.post('/login',  
     passport.authenticate('local', {
         successRedirect: '/index',
         failureRedirect: '/login',
         session: true
-    }
-));
+    })
+);
 
+// 会員登録
 app.post('/signup', 
     passport.authenticate('local-signup', {
-        successRedirect: '/index',
+        successRedirect: '/nameset',
         failureRedirect: '/signup',
         session: true
-    }
-));
+    })
+);
+
+app.get('/nameset', isAuthenticated, (req,res)=> {
+    res.render('namesetting.pug')
+});
+
+app.post('/nameset', (req,res)=> {
+    var date = { "name": req.body.name };
+    connection.query(
+        'UPDATE members SET ? WHERE login_id = ?', [date, req.session.passport.user],
+        (error, results) => {
+            res.redirect('/index');
+        })
+});
+
+app.post('/nameedit', (req, res) => {
+    var date = { "name": req.body.name };
+    connection.query(
+        'UPDATE members SET ? WHERE login_id = ?', [date, req.session.passport.user],
+        (error, results) => {
+            res.redirect('/mypage');
+        })
+});
 
 /*------------------------------------------------------------ */
 // トップページ
@@ -165,6 +190,25 @@ app.get('/index', isAuthenticated, (req, res) => {
         }
     )    
 });
+
+app.get('/mypage', isAuthenticated, (req,res)=>{
+    connection.query(
+        'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
+        (error, nameid) => {
+            console.log(nameid);
+            connection.query(
+                'SELECT sessionmembers.character_name, sessionmembers.permission, sessionmembers.image, rooms.name, rooms.status, rooms.Owner, rooms.system ' +
+                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionname = rooms.name WHERE sessionmembers.memberId = ? AND sessionmembers.attribute = "character";'
+                , [nameid[0].id],
+                (error, results) => {
+                    console.log(results);
+                    res.render('mypage.pug', { rooms: results, you:nameid[0].name});
+                }
+            ) 
+        }
+    )
+       
+})
 
 // ログアウト
 app.get('/logout', function (req, res) {

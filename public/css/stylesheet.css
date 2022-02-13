@@ -22,6 +22,26 @@ body {
   min-height: 100%;
 }
 
+.index_main .header {
+  background-color: #3e3a3a;
+  color: #ced7dc;
+  padding: 5px 20px;
+  position: fixed;
+  top: 0px;
+  width: 960px;
+  margin: 0 auto;
+  z-index: 1000;
+}
+
+.index_main .header .pagetitle {
+  text-align: left;
+  float: left;
+}
+
+.index_main .header .topbtn {
+  text-align: right;
+}
+
 .index_main .title_logo {
   text-align: left;
   margin-left: 50px;
@@ -1546,5 +1566,227 @@ body {
   left: -20px;
   border: 7px solid transparent;
   border-right: 15px solid #FFFFFF;
+}
+
+.signup_main .input_space {
+  margin-top: 30px;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0%);
+          transform: translate(-50%, 0%);
+}
+
+.signup_main h1 {
+  text-align: center;
+  font-family: "游ゴシック";
+}
+
+.signup_main form {
+  margin-top: 30px;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0%);
+          transform: translate(-50%, 0%);
+}
+
+.signup_main form input {
+  text-align: left;
+}
+
+.signup_main .signup_btn_space {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.signup_main .signup_btn_space .signup_btn {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+}
+
+.signup_main .signup_btn_space .signup_btn:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.maypage_main {
+  height: 100%;
+  min-height: 100%;
+  width: 1000px;
+  margin: 0 auto;
+  padding: 0 auto;
+  background-color: #e6e5ef;
+  text-align: center;
+  color: #3e3a3a;
+  min-height: 100%;
+}
+
+.maypage_main .header {
+  background-color: #3e3a3a;
+  color: #ced7dc;
+  padding: 5px 20px;
+  position: fixed;
+  top: 0px;
+  width: 960px;
+  margin: 0 auto;
+  z-index: 1000;
+}
+
+.maypage_main .header .pagetitle {
+  text-align: left;
+  float: left;
+}
+
+.maypage_main .header .topbtn {
+  text-align: right;
+}
+
+.maypage_main .title_logo {
+  text-align: left;
+  margin-left: 50px;
+  top: 0px;
+}
+
+.maypage_main .session_list {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0%);
+          transform: translate(-50%, 0%);
+}
+
+.maypage_main .session_list .band {
+  text-align: left;
+  color: #3e3a3a;
+  padding: 3px;
+  margin-top: 100px;
+  font-family: "游ゴシック";
+}
+
+.maypage_main .session_list .band h3 {
+  position: relative;
+  padding-bottom: 1px;
+  width: 300px;
+  border-bottom: 3px solid #3e3a3a;
+}
+
+.maypage_main .session_list .band h3:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 70px;
+  height: 3px;
+  background-color: #ced7dc;
+}
+
+.maypage_main .session_list .session_table {
+  border: inset 1px #ced7dc;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.maypage_main .session_list .session_table th {
+  border: solid 1px #ced7dc;
+  padding: 3px 10px;
+  background-color: #ced7dc;
+  text-align: center;
+}
+
+.maypage_main .session_list .session_table th.session_name {
+  width: 35%;
+}
+
+.maypage_main .session_list .session_table th.session_system {
+  width: 17%;
+}
+
+.maypage_main .session_list .session_table th.session_GM {
+  width: 12%;
+}
+
+.maypage_main .session_list .session_table th.session_pass, .maypage_main .session_list .session_table th session_secret, .maypage_main .session_list .session_table th session_anonymous, .maypage_main .session_list .session_table th session_audience {
+  width: 9%;
+}
+
+.maypage_main .session_list .session_table td {
+  border: solid 1px #ced7dc;
+  padding: 3px 10px;
+}
+
+.maypage_main .session_list .session_table td.ce {
+  text-align: center;
+}
+
+.maypage_main .session_list .input_space {
+  text-align: left;
+  color: #3e3a3a;
+  padding: 3px;
+  margin-top: 10px;
+  font-family: "游ゴシック";
+}
+
+.maypage_main .session_list .input_space h3 {
+  position: relative;
+  padding-bottom: 1px;
+  width: 300px;
+  border-bottom: 3px solid #3e3a3a;
+}
+
+.maypage_main .session_list .input_space h3:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 70px;
+  height: 3px;
+  background-color: #ced7dc;
+}
+
+.maypage_main .session_list .input_space input {
+  margin-top: 10px;
+}
+
+.maypage_main .session_list .input_space .signup_btn {
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+  margin-left: 10px;
+}
+
+.maypage_main .session_list .input_space .signup_btn:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
+}
+
+.maypage_main button {
+  margin-top: 10px;
+  background-color: #ced7dc;
+  border: none;
+  border-radius: 5px;
+  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
+          box-shadow: 0.5px 0.5px 2px #3e3a3a;
+  padding: 2px 5px;
+  color: #3e3a3a;
+}
+
+.maypage_main button:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  position: relative;
+  top: 0.5px;
 }
 /*# sourceMappingURL=stylesheet.css.map */

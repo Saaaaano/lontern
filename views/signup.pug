@@ -2,10 +2,30 @@ doctype html
 html(lang="ja")
     head 
         meta(charset="utf-8")
+        meta(name="robots" content="noindex,nofollow")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
         link(rel="icon" href="/images/favicon.png")
         link(rel="apple-touch-icon" href="/images/favicon.png")
     body 
         div(class="signup_main")
-            
+            div(class="input_space")
+                h1 新規登録
+                small すでに登録されたログインIDの場合は登録できません。
+                form(action="/signup" method="post")
+                    label 
+                        p ID
+                            small (半角英数字)
+                            a :
+                        p 
+                            input(type="text" name="username" value="" pattern="^[0-9a-zA-Z]+$" size="24" required)
+                    label
+                        p PASS:
+                        p
+                            input(type="password" name="password" value="" size="24" required)
+                    //-label
+                        p ユーザーネーム:
+                        p
+                            input(type="text" name="name" value="" size="24" required)
+                    div(class="signup_btn_space")
+                        input(class="signup_btn" type="submit" value="作成する")    

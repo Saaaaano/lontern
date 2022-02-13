@@ -17,7 +17,9 @@ body{
 .index_main {
     @include main_set;
     min-height: 100%;
-
+    .header{
+        @include header;
+    }
     .title_logo {
         text-align: left;
         margin-left: 50px;
@@ -899,4 +901,145 @@ body{
             }
         }
     }
+}
+
+.signup_main{
+    .input_space{
+        margin-top:30px;
+        position: absolute;
+        left:50%;
+        transform: translate(-50%,0%);
+    }
+    h1{
+        text-align: center;
+        font-family: "游ゴシック";
+    }
+    form{
+        margin-top:30px;
+        position: absolute;
+        left:50%;
+        transform: translate(-50%,0%);
+        input{
+        text-align: left;
+        }
+    }
+    
+    .signup_btn_space{
+        text-align: center;
+        margin-top: 20px;
+        .signup_btn{
+            @include btn;
+            //padding: 10px;
+        }
+    }
+}
+
+.maypage_main{
+    @include main_set;
+    min-height: 100%;
+    .header{
+        @include header;
+    }
+    .title_logo {
+        text-align: left;
+        margin-left: 50px;
+        top: 0px;
+    }
+    
+    .session_list{
+        position: absolute;
+        left:50%;
+        transform: translate(-50%, 0%);
+        .band {
+            text-align: left;
+            color: $subcolor;
+            padding: 3px;
+            margin-top: 100px;
+            font-family: "游ゴシック";
+            h3{
+                position: relative;
+                padding-bottom: 1px;
+                width:300px;
+                border-bottom: 3px solid $subcolor;
+                &:after{
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    width: 70px;
+                    height: 3px;
+                    background-color: $pointcolor;
+                }
+            }
+        }
+        .session_table{
+            border: inset 1px $pointcolor;
+            text-align: left;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 10px;
+            
+            
+            th {
+                border:solid 1px $pointcolor;
+                padding: 3px 10px;
+                background-color: $pointcolor;
+                text-align: center;
+                &.session_name {
+                    width: 35%;  
+                }
+                &.session_system{
+                    width: 17%;
+                }
+                &.session_GM{
+                    width: 12%;
+                }
+                &.session_pass, session_secret, session_anonymous, session_audience{
+                    width: 9%;
+                }
+                
+            }
+            td{
+                border:solid 1px $pointcolor;
+                padding: 3px 10px;
+                &.ce{
+                    text-align: center;
+                }
+            }
+        }
+        .input_space{
+            text-align: left;
+            color: $subcolor;
+            padding: 3px;
+            margin-top: 10px;
+            font-family: "游ゴシック";
+            h3{
+                position: relative;
+                padding-bottom: 1px;
+                width:300px;
+                border-bottom: 3px solid $subcolor;
+                &:after{
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    width: 70px;
+                    height: 3px;
+                    background-color: $pointcolor;
+                }
+            }
+            input{
+                margin-top: 10px;
+            }
+            .signup_btn{
+                @include btn;
+                margin-left: 10px;
+            }
+        }
+    }
+    button{
+        margin-top: 10px;
+        @include btn;
+    }
+   
 }

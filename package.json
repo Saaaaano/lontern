@@ -16,15 +16,16 @@
   },
   "name": "lontern",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Saaaaano/lontern.git"
   },
-  "author": "",
+  "author": "sano",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Saaaaano/lontern/issues"
@@ -33,5 +34,9 @@
     "node": "16.13.0"
   },
   "homepage": "https://github.com/Saaaaano/lontern#readme",
-  "description": ""
+  "description": "app.js",
+  "devDependencies": {},
+  "keywords": [
+    "heroku"
+  ]
 }

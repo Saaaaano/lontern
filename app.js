@@ -536,7 +536,7 @@ app.post('/say/:session/:articleNum', (req, res) => {
                         character_name = results[0].character_name;
                         var data = {
                             'name': results[0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
-                            'comment': comment, 'comment_vol': req.body.vol_size, 'tag': tag, 'comment_at': time, 'memberId': results[0].memberId, 'sessionname': req.params.session
+                            'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0].memberId, 'sessionname': req.params.session
                         };
                     }
                     

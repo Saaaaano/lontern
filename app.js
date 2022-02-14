@@ -19,22 +19,22 @@ const path = require('path');
 var fs = require('fs');
 const res = require('express/lib/response');
 
+
 // mysqlへの接続情報
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
-
-var db_config = {
-    host: 'us-cdbr-east-05.cleardb.net',
-    user: 'bba56b01de6ce8',
-    password: '2bf43e78',
-    database: 'heroku_28ad3d49484e5e8',
-};
 
 var connection;
 
 function handleDisconnect() {
     console.log('INFO.CONNECTION_DB: ');
-    connection = mysql.createConnection(db_config);
+    connection = mysql.createConnection({
+        host: 'us-cdbr-east-05.cleardb.net',
+        user: 'bba56b01de6ce8',
+        password: '2bf43e78',
+        database: 'heroku_28ad3d49484e5e8',
+        multipleStatements: true
+    });
 
     //connection取得
     connection.connect(function (err) {
@@ -58,16 +58,10 @@ function handleDisconnect() {
 
 handleDisconnect();
 
-/*
-const connection = mysql.createConnection({
-    host: 'us-cdbr-east-05.cleardb.net',
-    user: 'bba56b01de6ce8',
-    password: '2bf43e78',
-    database: 'heroku_28ad3d49484e5e8',
-    multipleStatements: true
-});
+
+
 // mysqlへ接続ができていないときにエラーを表示する。
-connection.connect((err) => {
+/*connection.connect((err) => {
     if (err) {
         console.log('error connecting: ' + err.stack);
         return;
@@ -75,6 +69,7 @@ connection.connect((err) => {
     console.log('success');
 });
 */
+
 
 // IDとパスワードによる認証
 passport.use(new LocalStrategy(

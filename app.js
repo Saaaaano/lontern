@@ -19,9 +19,6 @@ const path = require('path');
 var fs = require('fs');
 const res = require('express/lib/response');
 
-//app.use(express.favicon(path.join(__dirname + '/public/images/favicon.png')));
-
-
 // mysqlへの接続情報
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));

@@ -490,7 +490,7 @@ app.post('/say/:session/:articleNum', (req, res) => {
                         if (req.body.saycharacter){
                             comment = req.body.saycharacter + "は、" + comment;
                         }else{
-                            comment = results[0].character_name + "は、" + comment;
+                            comment = results[0][0].character_name + "は、" + comment;
                         }
                     }
                     
@@ -527,19 +527,13 @@ app.post('/say/:session/:articleNum', (req, res) => {
                     var character_name = "";
                     if (nameid[0].id == results[1][0].ownerId){
                         character_name = req.body.saycharacter;
-                        var data = {
-                            'name': results[0][0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
-                            'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0][0].memberId, 'sessionname': req.params.session
-                        };
-
                     }else{
-                        character_name = results[0].character_name;
-                        var data = {
-                            'name': results[0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
-                            'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0].memberId, 'sessionname': req.params.session
-                        };
+                        character_name = results[0][0].character_name;   
                     }
-                    
+                    var data = {
+                        'name': results[0][0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
+                        'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0][0].memberId, 'sessionname': req.params.session
+                    };
                     //var data = {'name': results[0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
                     //            'comment': comment, 'comment_vol': req.body.vol_size, 'tag': tag, 'comment_at': time, 'memberId': results[0].memberId, 'sessionname': req.params.session };
                     connection.query(

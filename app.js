@@ -22,6 +22,43 @@ const res = require('express/lib/response');
 // mysqlへの接続情報
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
+
+var db_config = {
+    host: 'us-cdbr-east-05.cleardb.net',
+    user: 'bba56b01de6ce8',
+    password: '2bf43e78',
+    database: 'heroku_28ad3d49484e5e8',
+};
+
+var connection;
+
+function handleDisconnect() {
+    console.log('INFO.CONNECTION_DB: ');
+    connection = mysql.createConnection(db_config);
+
+    //connection取得
+    connection.connect(function (err) {
+        if (err) {
+            console.log('ERROR.CONNECTION_DB: ', err);
+            setTimeout(handleDisconnect, 1000);
+        }
+    });
+
+    //error('PROTOCOL_CONNECTION_LOST')時に再接続
+    connection.on('error', function (err) {
+        console.log('ERROR.DB: ', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            console.log('ERROR.CONNECTION_LOST: ', err);
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
+}
+
+handleDisconnect();
+
+/*
 const connection = mysql.createConnection({
     host: 'us-cdbr-east-05.cleardb.net',
     user: 'bba56b01de6ce8',
@@ -37,7 +74,7 @@ connection.connect((err) => {
     }
     console.log('success');
 });
-
+*/
 
 // IDとパスワードによる認証
 passport.use(new LocalStrategy(

@@ -1,11 +1,9 @@
 {
   "dependencies": {
     "body-parser": "^1.19.1",
-    "connect-flash": "^0.1.1",
     "date-utils": "^1.2.21",
-    "ejs": "^3.1.6",
     "express": "^4.17.2",
-    "express-fileupload": "^1.2.1",
+    "express-fileupload": "^1.3.1",
     "express-session": "^1.17.2",
     "fs": "^0.0.1-security",
     "jquery": "^3.6.0",
@@ -23,18 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Saaaaano/lontern.git"
+    "url": "https://github.com/heroku/lontern"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Saaaaano/lontern/issues"
-  },
+  "license": "MIT",
   "engines": {
     "node": "16.13.0"
   },
-  "homepage": "https://github.com/Saaaaano/lontern#readme",
-  "devDependencies": {},
   "keywords": [
     "heroku"
   ]

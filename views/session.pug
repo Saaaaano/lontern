@@ -61,6 +61,7 @@ html(lang="ja")
                     - viewcomments.push(comment)
             if comment.comment.match("#" + searchtag)
                     - allTagNum++
+        
         - console.log("----------------------------------------")
         //- console.log(viewcomments)
     
@@ -133,6 +134,67 @@ html(lang="ja")
             - var tagnum = 0
             div(class="article")       
                 - for(let i = 0; pageId < perPage && i < all ; i++)
+                    
+                    //- ダイス・レス・タグの処理
+                    mixin comment()
+                        - var viewtext = viewcomments[i].comment
+                        //- console.log("viewtext = "+ viewtext)
+                        - while(viewtext.match(/\[.*\]/) || viewtext.match(/>>[-@?!]*[0-9]+/)|| viewtext.match(/#/))
+                            - var key = viewtext.match(/>>|\[|\#/)
+                            //- console.log("key = "+ key)
+                            if key == ">>"
+                                - var ress = String(viewtext.match(/>>[-@?!]*[0-9]+/))
+                                //- console.log("ress = "+ ress)
+                                - var comments = viewtext.split(/>>[-@?!]*[0-9]+/)
+                                //- console.log("comments = "+ comments)
+                                - var num = ress.replace(/>>/,'')
+                                - var mark = num.match(/[-@?!]*/)
+                                - var nameid = ""
+                                if mark == '-'
+                                    - nameid = "so" + num.replace(/[-@?!]*/, "")
+                                else if mark == "!"
+                                    - nameid = "au" + num.replace(/[-@?!]*/, "")
+                                else if mark == "@"
+                                    - nameid = "se" + num.replace(/[-@?!]*/, "")
+                                else if mark == "?"
+                                    - nameid = "an" + num.replace(/[-@?!]*/, "")
+                                else if mark == ""
+                                    - nameid = num
+                                a #{comments[0]}
+                                a(href="#" + nameid class="onMouse" name=nameid) #{ress} 
+                                - viewtext = viewtext.slice(viewtext.indexOf(">"))
+                                - viewtext = viewtext.replace(/>>[-@?!]*[0-9]+/,"")
+                                //- console.log("viewtext = " + viewtext)
+                            else if key == "["
+                                //- console.log("viewtext = " + viewtext)
+                                - var comment = viewtext.split(/\[|\]/)
+                                //- console.log("comment1 = "+comment)
+                                - var dice = String(viewtext.match(/\[.*\:.*\]/))
+                                //- console.log("dice = " + dice)
+                                - dice = String(dice.replace(/\[|\]/g, ""))
+                                - var arraydice = dice.split(':')  
+                                //- console.log("arraydice = " + arraydice)
+                                - var answer = arraydice[1]
+                                - var seed = arraydice[0]
+                                a #{comment[0]}
+                                    u
+                                        strong(title = seed) #{answer}
+                                - viewtext = viewtext.slice(viewtext.indexOf("]") + 1)
+                            else if key == "#"
+                                - var tag = String(viewtext.match(/\#\S+/))
+                                - var comment = [] 
+                                - comment.push(viewtext.substring(0, viewtext.indexOf("#")))
+                                - comment.push(viewtext.substring(viewtext.indexOf("#")+tag.length), -1)
+                                - let url = "?pageNum=1"
+                                if search != null 
+                                    - url += "&search=" + search
+                                - url += "&tag="
+                                a #{comment[0]}
+                                a(href=url + tag.replace("#","")) #{tag}
+                                - viewtext = comment[1]
+                                //- console.log("viewtext = " + viewtext)
+                        a #{viewtext} 
+                        
                     //- console.log(searchtag+ ","+viewcomments[i].comment.match(searchtag))
                     if (viewcomments.length == 0)
                         - break
@@ -177,10 +239,12 @@ html(lang="ja")
                     if viewcomments[i].section == "action"
                         - pageId++;
                         if viewcomments[i].character_name == "GM"
-                            div(class="GMaction " + dispen) #{viewcomments[i].comment} 
+                            div(class="GMaction " + dispen) 
+                                +comment()
                                 a(class="date") #{viewcomments[i].comment_at}
                         else 
-                            div(class="action " + dispen) #{viewcomments[i].comment} 
+                            div(class="action " + dispen)
+                                +comment() 
                                 a(class="date") #{viewcomments[i].comment_at}
                         - continue 
                     - var audienceTag = ""
@@ -236,72 +300,7 @@ html(lang="ja")
                                 //- GMの発言は色を変更するためクラスを付け足す
                                 if viewcomments[i].character_name == "GM" && balloon == "nomal"
                                     - balloon += " GM"
-                                //- 発言の表示
-                                
-                                //- ダイス・レス・タグの処理
-                                mixin comment()
-                                    - var viewtext = viewcomments[i].comment
-                                    //- console.log("viewtext = "+ viewtext)
-                                    - while(viewtext.match(/\[.*\]/) || viewtext.match(/>>[-@?!]*[0-9]+/)|| viewtext.match(/#/))
-                                        - var key = viewtext.match(/>>|\[|\#/)
-                                        //- console.log("key = "+ key)
-                                        if key == ">>"
-                                            - var ress = String(viewtext.match(/>>[-@?!]*[0-9]+/))
-                                            //- console.log("ress = "+ ress)
-                                            - var comments = viewtext.split(/>>[-@?!]*[0-9]+/)
-                                            //- console.log("comments = "+ comments)
-                                            - var num = ress.replace(/>>/,'')
-                                            - var mark = num.match(/[-@?!]*/)
-                                            - var nameid = ""
-                                            if mark == '-'
-                                                - nameid = "so" + num.replace(/[-@?!]*/, "")
-                                            else if mark == "!"
-                                                - nameid = "au" + num.replace(/[-@?!]*/, "")
-                                            else if mark == "@"
-                                                - nameid = "se" + num.replace(/[-@?!]*/, "")
-                                            else if mark == "?"
-                                                - nameid = "an" + num.replace(/[-@?!]*/, "")
-                                            else if mark == ""
-                                                - nameid = num
-                                            a #{comments[0]}
-                                            a(href="#" + nameid class="onMouse" name=nameid) #{ress} 
-                                            - viewtext = viewtext.slice(viewtext.indexOf(">"))
-                                            - viewtext = viewtext.replace(/>>[-@?!]*[0-9]+/,"")
-                                            //- console.log("viewtext = " + viewtext)
-                                        else if key == "["
-                                            //- console.log("viewtext = " + viewtext)
-                                            - var comment = viewtext.split(/\[|\]/)
-                                            //- console.log("comment1 = "+comment)
-                                            - var dice = String(viewtext.match(/\[.*\:.*\]/))
-                                            //- console.log("dice = " + dice)
-                                            - dice = String(dice.replace(/\[|\]/g, ""))
-                                            - var arraydice = dice.split(':')  
-                                            //- console.log("arraydice = " + arraydice)
-                                            - var answer = arraydice[1]
-                                            - var seed = arraydice[0]
-                                            a #{comment[0]}
-                                                u
-                                                    strong(title = seed) #{answer}
-                                            - viewtext = viewtext.slice(viewtext.indexOf("]") + 1)
-                                        else if key == "#"
-                                            - var tag = String(viewtext.match(/\#\S+/))
-                                            - var comment = [] 
-                                            - comment.push(viewtext.substring(0, viewtext.indexOf("#")))
-                                            - comment.push(viewtext.substring(viewtext.indexOf("#")+tag.length), -1)
-                                            - let url = "?pageNum=1"
-                                            if search != null 
-                                                - url += "&search=" + search
-                                            - url += "&tag="
-                                            a #{comment[0]}
-                                            a(href=url + tag.replace("#","")) #{tag}
-                                            - viewtext = comment[1]
-
-                                            //- console.log("viewtext = " + viewtext)
-                                    a #{viewtext} 
-
-                                    
-                                    
-
+                                //- 発言の表示  
                                 case viewcomments[i].comment_vol
                                     when "big"
                                         div(class="speech_" + balloon)
@@ -311,8 +310,7 @@ html(lang="ja")
                                     when "small"
                                         div(class="speech_" + balloon)
                                             small 
-                                                font(color="gray") 
-                                                    +comment()
+                                                +comment()
                                     when "nomal"
                                         div(class="speech_" + balloon) 
                                             +comment()

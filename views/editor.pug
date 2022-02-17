@@ -9,6 +9,7 @@ html(lang="ja")
         link(rel="apple-touch-icon" href="/images/favicon.png")
         script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")
     body 
+        - console.log("editor page")
         div(class="editorMain")
             div(class="header") 
                 div(class="pagetitle") 設定
@@ -17,7 +18,7 @@ html(lang="ja")
                         img(src="/images/lontern_logo_w.png" width="100px")
             if ownername == room.ownerId 
                 ul(class="tab")
-                    li
+                    //-li
                         a(href="#room") ルーム編集
                     li
                         a(href="#pclist") PC一覧
@@ -28,7 +29,7 @@ html(lang="ja")
                         li
                             a(href="#status") セッション終了
 
-                div(class="area is-active" id="room" )
+                //-div(class="area is-active" id="room" )
                     form(class="edsession" action="/updateSession" method="post")
                         div(class="inputarea")
                             label(for="sessionName" class="inputlabel")
@@ -106,7 +107,7 @@ html(lang="ja")
                         div(class="center")
                             input(class="applybtn" type="submit" value="変更する")
 
-                div(class="area" id="pclist")
+                div(class="area is-active" id="pclist")
                     - var audience = ""
                     each pc in pcdata 
                         if pc.character_name == "GM"
@@ -118,8 +119,9 @@ html(lang="ja")
                         div(class="pcsview")
                             div(class="pcscontents")
                                 div(class="icon")
-                                    img(src="/images/upload_icon/" + pc.image width="100px" height="100px")
+                                    img(src="https://mylonternbucket.s3.ap-northeast-1.amazonaws.com/" + pc.image width="100px" height="100px")
                                     h3 #{pc.character_name} #{audience}
+                                    small (#{pc.name})
                                     if room.status == "終了"
                                         a(class="plname") [#{pc.name}]
                                 div(class="data")
@@ -136,7 +138,7 @@ html(lang="ja")
                         div(class="npcview")
                             div(class="npccontents")
                                 div(class="icon")
-                                    img(src="/images/upload_icon/" + npc.image width="100px" height="100px")
+                                    img(src="https://mylonternbucket.s3.ap-northeast-1.amazonaws.com/" + npc.image width="100px" height="100px")
                                     h3 #{npc.character_name}
                                 div(class="data")
                                     div(class="intro") 
@@ -190,7 +192,7 @@ html(lang="ja")
                                 div(class="icon")
                                     label(class="uploadbtn")
                                         a(class="preview" id="preview")
-                                            img(src="/images/upload_icon/" + mydata.image width="150px" height="150px")
+                                            img(src="https://mylonternbucket.s3.ap-northeast-1.amazonaws.com/" + mydata.image width="150px" height="150px")
                                         input(class="icon_edit" type="file" id="icon" accept="image/*" name="icon")
                                     //h3 #{mydata.character_name}
                                     input(class="name_edit" id="name_edit" name="character_name" type="text" value=mydata.character_name cols="5")
@@ -215,7 +217,7 @@ html(lang="ja")
                         div(class="pcsview")
                             div(class="pcscontents")
                                 div(class="icon")
-                                    img(src="/images/upload_icon/" + pc.image width="100px" height="100px")
+                                    img(src="https://mylonternbucket.s3.ap-northeast-1.amazonaws.com/" +pc.image width="100px" height="100px")
                                     h3 #{pc.character_name} #{audience}
                                     if room.status == "終了"
                                         a(class="plname") [#{pc.name}]

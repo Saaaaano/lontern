@@ -8,6 +8,7 @@ html(lang="ja")
         link(rel="icon" href="/images/favicon.png")
         link(rel="apple-touch-icon" href="/images/favicon.png")
     body 
+        - console.log("index page")
         mixin itemSet(item, setting)
             if item == 'パスワード'
                 if setting == null || setting == ""

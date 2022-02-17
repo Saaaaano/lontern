@@ -33,13 +33,16 @@ html(lang="ja")
                             td 
                                 a #{room.system}
                             td 
-                                a #{room.character_name}
+                                if room.Owner == you
+                                    a -
+                                else
+                                    a #{room.character_name}
                             td 
                                 a #{room.Owner}
                             td 
                                 a #{room.status} 
                 
-                div(class="input_space")
+                //-div(class="input_space")
                     form(action="/nameedit" method="post")
                         h3 ユーザーネームの変更
                         table

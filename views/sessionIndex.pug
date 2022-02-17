@@ -8,6 +8,7 @@ html(lang="ja")
         link(rel="icon" href="/images/favicon.png")
         link(rel="apple-touch-icon" href="/images/favicon.png")
     body 
+        - console.log("session index page")
         if passmatch == "ng"
             script window.alert('パスワードが間違っています。');
         mixin itemSet(item, setting)

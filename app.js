@@ -18,6 +18,12 @@ require('date-utils');
 const path = require('path');
 var fs = require('fs');
 const res = require('express/lib/response');
+const AWS = require('aws-sdk');
+AWS.config.apiVersions = {
+    rekognition: '2016-06-27',
+};
+const credentials = new AWS.Credentials({ accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY })
+AWS.config.credentials = credentials
 
 
 // mysqlへの接続情報
@@ -29,10 +35,10 @@ var connection;
 function handleDisconnect() {
     console.log('INFO.CONNECTION_DB: ');
     connection = mysql.createConnection({
-        host: 'us-cdbr-east-05.cleardb.net',
-        user: 'bba56b01de6ce8',
-        password: '2bf43e78',
-        database: 'heroku_28ad3d49484e5e8',
+        host: process.env.DB_HOST,
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         multipleStatements: true
     });
 
@@ -149,6 +155,11 @@ function isAuthenticated(req, res, next) {
 }
 
 
+const s3 = new AWS.S3({
+    params: {
+        Region: "ap-northeast-1"
+    }
+});
 
 const http = require('http');
 
@@ -227,10 +238,10 @@ app.get('/mypage', isAuthenticated, (req,res)=>{
             console.log(nameid);
             connection.query(
                 'SELECT sessionmembers.character_name, sessionmembers.permission, sessionmembers.image, rooms.name, rooms.status, rooms.Owner, rooms.system ' +
-                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionname = rooms.name WHERE sessionmembers.memberId = ? AND sessionmembers.attribute = "character";'
-                , [nameid[0].id],
+                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionname = rooms.name WHERE sessionmembers.memberId = ? AND (sessionmembers.attribute = "character" OR rooms.ownerId = ?);'
+                , [nameid[0].id, nameid[0].id],
                 (error, results) => {
-                    console.log(results);
+                    //console.log(results);
                     res.render('mypage.pug', { rooms: results, you:nameid[0].name});
                 }
             ) 
@@ -287,39 +298,50 @@ app.post('/apply', (req, res) => {
                 //画像ファイル（アイコン）の拡張子を取り出し、時間とsession変数で名前をつけ直す。これによりuserが全く同じ名前のファイルをアップしてきても大丈夫
                 var icon_ext = path.extname(req.files.icon.name);
                 var new_iconname = time + req.files.icon.md5 + icon_ext;
-
-                //画像ファイルを保存するパスを設定
-                var target_path_i = './public/images/upload_icon/' + new_iconname;
-                //ファイルをサーバーに保存した後、ファイル名をDBの保存、今後ファイルを取り出す際はDBから名前を取ってきてサーバーに保存してある画像ファイルとひもづける
-                fs.writeFile(target_path_i, req.files.icon.data, (err) => {
-                    if (err) {
-                        throw err
-                    } else {
-                        connection.query(
-                            'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
-                            (error, nameid) => {
-
-
-                                var data = {
-                                    'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character',
-                                    'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
-                                };
-                                connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sessionname,],
-                                    function (error, results, fields) {
-
-                                        pageNum = Math.ceil(results[1].length / perPage);
-                                        //console.log(all + " & " + pageNum)
-                                        return res.redirect('/session/' + req.body.sessionname + '?pageNum=' + pageNum);
-                                    }
-                                );
-                            });
-                    }
-                });
+                
+                //画像のアップロード 
+                var s3file = req.files.icon.data;
+                console.log(new_iconname);
+                console.log(process.env.S3_BUCKET_NAME);
+                if(s3file){
+                    s3.putObject({
+                        Bucket: process.env.S3_BUCKET_NAME,
+                        Key: new_iconname,
+                        ContentType: "image/png",
+                        Body: s3file,
+                        ACL: "public-read"
+                    }, function (err, data) {
+                        if (data !== null) {
+                            console.log("upload completed");
+                        }
+                        if(err){
+                            console.log("upload error");
+                            console.log(err, err.stack);
+                        }
+                    });
+                }
             }
-        }
-    )
+            connection.query(
+                'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
+                (error, nameid) => {
 
-   
+
+                    var data = {
+                        'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character',
+                        'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
+                    };
+                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sessionname,],
+                        function (error, results, fields) {
+
+                            pageNum = Math.ceil(results[1].length / perPage);
+                            //console.log(all + " & " + pageNum)
+                            return res.redirect('/session/' + req.body.sessionname + '?pageNum=' + pageNum);
+                        }
+                    );
+                }
+            );
+        }
+    );
 });
 
 app.get('/editor', isAuthenticated, (req,res)=>{
@@ -328,7 +350,7 @@ app.get('/editor', isAuthenticated, (req,res)=>{
         (error, nameid) => {
             connection.query(
                 'SELECT * FROM rooms WHERE name = ?; SELECT * FROM sessionmembers WHERE sessionname = ? AND attribute = "npc";' + 
-                'SELECT * FROM sessionmembers WHERE memberId = ?;  SELECT * FROM sessionmembers WHERE sessionname = ?', [req.query.name, req.query.name, nameid[0].id, req.query.name],
+                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?;  SELECT * FROM sessionmembers WHERE sessionname = ?', [req.query.name, req.query.name, nameid[0].id, req.query.name, req.query.name],
                 (error, results) => {
                     res.render('editor.pug', { room: results[0][0], npcs: results[1], ownername: nameid[0].id, mydata:results[2][0], pcdata:results[3]});
                 }
@@ -368,29 +390,62 @@ app.post('/npcApply',(req,res)=>{
     var icon_ext = path.extname(req.files.icon.name);
     var new_iconname = time + req.files.icon.md5 + icon_ext;
 
-    //画像ファイルを保存するパスを設定
-    var target_path_i = './public/images/upload_icon/' + new_iconname;
-    //ファイルをサーバーに保存した後、ファイル名をDBの保存、今後ファイルを取り出す際はDBから名前を取ってきてサーバーに保存してある画像ファイルとひもづける
-    fs.writeFile(target_path_i, req.files.icon.data, (err) => {
-        if (err) {
-            throw err
-        } else {
-            connection.query(
-                'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
-                (error, nameid) => {
-                    var data = {
-                        'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'npc',
-                        'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
-                    };
-                    connection.query('INSERT INTO sessionmembers SET ?', [data],
-                        function (error, results, fields) {
-                            res.redirect('/editor?name=' + req.body.sessionname);
+    //画像のアップロード 
+                var s3file = req.files.icon.data;
+                console.log(new_iconname);
+                console.log(process.env.S3_BUCKET_NAME);
+                if(s3file){
+                    s3.putObject({
+                        Bucket: process.env.S3_BUCKET_NAME,
+                        Key: new_iconname,
+                        ContentType: "image/png",
+                        Body: s3file,
+                        ACL: "public-read"
+                    }, function (err, data) {
+                        if (data !== null) {
+                            console.log("upload completed");
                         }
-                    );
+                        if(err){
+                            console.log("upload error");
+                            console.log(err, err.stack);
+                        }
+                    });
+    }//画像のアップロード 
+    var s3file = req.files.icon.data;
+    console.log(new_iconname);
+    console.log(process.env.S3_BUCKET_NAME);
+    if (s3file) {
+        s3.putObject({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: new_iconname,
+            ContentType: "image/png",
+            Body: s3file,
+            ACL: "public-read"
+        }, function (err, data) {
+            if (data !== null) {
+                console.log("upload completed");
+            }
+            if (err) {
+                console.log("upload error");
+                console.log(err, err.stack);
+            }
+        });
+    }
+    connection.query(
+        'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
+        (error, nameid) => {
+            var data = {
+                'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'npc',
+                'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
+            };
+            connection.query('INSERT INTO sessionmembers SET ?', [data],
+                function (error, results, fields) {
+                    res.redirect('/editor?name=' + req.body.sessionname);
                 }
-            );
+            )
         }
-    });
+    )
+
 })
 
 app.post('/mydataEdit', isAuthenticated, (req, res) => {
@@ -402,42 +457,55 @@ app.post('/mydataEdit', isAuthenticated, (req, res) => {
         var icon_ext = path.extname(req.files.icon.name);
         var new_iconname = time + req.files.icon.md5 + icon_ext;
 
-        //画像ファイルを保存するパスを設定
-        var target_path_i = './public/images/upload_icon/' + new_iconname;
         //ファイルをサーバーに保存した後、ファイル名をDBの保存、今後ファイルを取り出す際はDBから名前を取ってきてサーバーに保存してある画像ファイルとひもづける
-
-        fs.writeFile(target_path_i, req.files.icon.data, (err) => {
-            connection.query(
-                'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
-                (error, nameid) => {
-                    var data = {
-                        'character_name': req.body.character_name,
-                        'image': new_iconname, 'introduction': req.body.introduction
-                    };
-                    connection.query('UPDATE sessionmembers SET ? WHERE memberId = ?', [data, nameid[0].id],
-                        function (error, results, fields) {
-                            res.redirect('/editor?name=' + req.body.sessionname);
-                        }
-                    );
-                }
-            );
-        });
-    }else{
-        connection.query(
-            'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
-            (error, nameid) => {
+        
+        //画像のアップロード 
+        var s3file = req.files.icon.data;
+        if (s3file){
+            console.log(new_iconname);
+            console.log(process.env.S3_BUCKET_NAME);
+            if(s3file){
+                s3.putObject({
+                    Bucket: process.env.S3_BUCKET_NAME,
+                    Key: new_iconname,
+                    ContentType: "image/png",
+                    Body: s3file,
+                    ACL: "public-read"
+                }, function (err, data) {
+                    if (data !== null) {
+                        console.log("upload completed");
+                    }
+                    if(err){
+                        console.log("upload error");
+                        console.log(err, err.stack);
+                    }
+                });
+            }
+        }
+    }
+    connection.query(
+        'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
+        (error, nameid) => {
+            if (req.files){
+                var data = {
+                    'character_name': req.body.character_name,
+                    'introduction': req.body.introduction,
+                    'image': new_iconname
+                };
+            }else{
                 var data = {
                     'character_name': req.body.character_name,
                     'introduction': req.body.introduction
                 };
-                connection.query('UPDATE sessionmembers SET ? WHERE memberId = ? AND sessionname = ?', [data, nameid[0].id, req.body.sessionname],
-                    function (error, results, fields) {
-                        res.redirect('/editor?name=' + req.body.sessionname);
-                    }
-                );
             }
-        );
-    }
+            
+            connection.query('UPDATE sessionmembers SET ? WHERE memberId = ? AND sessionname = ?', [data, nameid[0].id, req.body.sessionname],
+                function (error, results, fields) {
+                    res.redirect('/editor?name=' + req.body.sessionname);
+                }
+            );
+        }
+    );
 })
 
 app.post('/sessionStatus/:sessionname/:status', (req, res)=>{
@@ -449,18 +517,18 @@ app.post('/sessionStatus/:sessionname/:status', (req, res)=>{
     })
 })
 
-
 // セッションページ
-app.get('/session/:session/', isAuthenticated, (req, res) => {
+app.get('/session/:session/', isAuthenticated, async(req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
-        (error, nameid)=>{
+        async(error, nameid)=>{
             connection.query(
-                'SELECT * FROM sessioncomment JOIN sessionmembers ON sessionmembers.character_name = sessioncomment.character_name WHERE sessionmembers.sessionname = ? AND sessioncomment.sessionname = ?;' +
+                'SELECT * FROM sessioncomment JOIN sessionmembers ON sessionmembers.memberId = sessioncomment.memberId WHERE sessionmembers.sessionname = ? AND sessioncomment.sessionname = ?;' +
                 'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM sessionmembers WHERE sessionname = ?; SELECT * FROM rooms WHERE name = ?',
                 [req.params.session, req.params.session, nameid[0].id, req.params.session, req.params.session, req.params.session],
-                (error, results) => {
-                    console.log(req.query.search);
+                async (error, results) => {
+                    //console.log(req.query.search);
+                    
                     var saynum = 0;
                     if (req.query.id != null){
                         saynum = req.query.id;
@@ -531,7 +599,7 @@ app.post('/say/:session/:articleNum', (req, res) => {
                         character_name = results[0][0].character_name;   
                     }
                     var data = {
-                        'name': results[0][0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
+                        'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
                         'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0][0].memberId, 'sessionname': req.params.session
                     };
                     //var data = {'name': results[0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,

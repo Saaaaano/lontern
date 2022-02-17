@@ -498,8 +498,9 @@ app.post('/mydataEdit', isAuthenticated, (req, res) => {
                     'introduction': req.body.introduction
                 };
             }
+            var character_name = { 'character_name': req.body.character_name}
             
-            connection.query('UPDATE sessionmembers SET ? WHERE memberId = ? AND sessionname = ?', [data, nameid[0].id, req.body.sessionname],
+            connection.query('UPDATE sessionmembers SET ? WHERE memberId = ? AND sessionname = ?;UPDATE sessioncomment SET ? WHERE memberId = ? AND sessionname = ?', [data, nameid[0].id, req.body.sessionname, character_name, nameid[0].id, req.body.sessionname],
                 function (error, results, fields) {
                     res.redirect('/editor?name=' + req.body.sessionname);
                 }
@@ -523,7 +524,7 @@ app.get('/session/:session/', isAuthenticated, async(req, res) => {
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         async(error, nameid)=>{
             connection.query(
-                'SELECT * FROM sessioncomment JOIN sessionmembers ON sessionmembers.memberId = sessioncomment.memberId WHERE sessionmembers.sessionname = ? AND sessioncomment.sessionname = ?;' +
+                'SELECT * FROM sessioncomment JOIN sessionmembers ON sessionmembers.character_name = sessioncomment.character_name WHERE sessionmembers.sessionname = ? AND sessioncomment.sessionname = ?;' +
                 'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM sessionmembers WHERE sessionname = ?; SELECT * FROM rooms WHERE name = ?',
                 [req.params.session, req.params.session, nameid[0].id, req.params.session, req.params.session, req.params.session],
                 async (error, results) => {

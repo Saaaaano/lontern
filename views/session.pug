@@ -367,7 +367,9 @@ html(lang="ja")
                                             option(value="GM") #{room.Owner}(GM)
                                             each member in members 
                                                 if member.permission == character.permission
-                                                    option(value=member.character_name) #{member.character_name}
+                                                    if member.memberId == character.memberId 
+                                                    else
+                                                        option(value=member.character_name) #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。
                             script. 
@@ -449,7 +451,7 @@ html(lang="ja")
                                         a(class="to_sel") To:
                                         select(name="to" id="toStatus" disabled)
                                             each member in members 
-                                                if member.permission == character.permission
+                                                if member.permission == character.permission 
                                                     option(value=member.character_name class="to_content") #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。

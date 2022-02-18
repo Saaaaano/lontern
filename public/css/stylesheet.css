@@ -540,7 +540,7 @@ body {
   font-size: 80%;
 }
 
-.session_main .action a {
+.session_main .action .date {
   font-size: 8px;
   color: gray;
 }
@@ -554,7 +554,7 @@ body {
   white-space: pre-wrap;
 }
 
-.session_main .GMaction a {
+.session_main .GMaction .date {
   font-size: 8px;
   color: gray;
 }

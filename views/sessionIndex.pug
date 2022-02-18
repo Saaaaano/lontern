@@ -65,13 +65,17 @@ html(lang="ja")
                 - idid = 1
             
             if didApply == 1
-                div(class="sessionbtn")
-                    a(href='/session/' + rooms.name + '?pageNum=' + page) セッションページへ
-                div(class="editor")
-                    a(href='/editor?name='+ rooms.name ) 編集
+                div(class="menue")
+                    section(class="sessionbtn")
+                        a(class="buttoncontents" href='/session/' + rooms.name + '?pageNum=' + page) 
+                            strong セッションページへ
+                    section(class="sessionbtn")
+                        a(class="buttoncontents" href='/editor?name='+ rooms.name ) 
+                            strong 編集
             else 
-                div(class="sessionbtn2")
-                    a(href='/session/' + rooms.name + '?pageNum=' + page) セッションページへ
+                dsection(class="sessionbtn")
+                    a(href='/session/' + rooms.name + '?pageNum=' + page) 
+                        strong セッションページへ
 
             if idid == 0
                 div(class="apply")
@@ -81,11 +85,11 @@ html(lang="ja")
                                 label(class="uploadbtn")
                                     a(class="preview" id="preview")
                                         img(src="/images/Noimage.png" width="150px" height="150px")
-                                    input(type="file" id="icon" accept="image/*" name="icon" /*required*/)
+                                    input(type="file" id="icon" accept="image/*" name="icon" required)
                             div 
                                 label
                                     p 名前
-                                    input(name="character_name" size="22" /*required*/)
+                                    input(name="character_name" size="22" required)
                                 label 
                                     p 自己紹介(任意)
                                     textarea(name="introduction" rows="4" cols="24") よろしくおねがいします。

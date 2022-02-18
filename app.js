@@ -201,7 +201,7 @@ app.get('/nameset', isAuthenticated, (req,res)=> {
     res.render('namesetting.pug')
 });
 
-app.post('/nameset', (req,res)=> {
+app.post('/nameset', isAuthenticated, (req,res)=> {
     var date = { "name": req.body.name };
     connection.query(
         'UPDATE members SET ? WHERE login_id = ?', [date, req.session.passport.user],
@@ -210,7 +210,7 @@ app.post('/nameset', (req,res)=> {
         })
 });
 
-app.post('/nameedit', (req, res) => {
+app.post('/nameedit', isAuthenticated, (req, res) => {
     var date = { "name": req.body.name };
     connection.query(
         'UPDATE members SET ? WHERE login_id = ?', [date, req.session.passport.user],
@@ -282,7 +282,7 @@ app.get('/sessionIndex', isAuthenticated,function(req, res){
 })
 
 // 参加フォームの情報を受取る
-app.post('/apply', (req, res) => {
+app.post('/apply', isAuthenticated, (req, res) => {
     
     connection.query("SELECT pass FROM rooms WHERE name = ?", [req.body.sessionname],
         (error, roompass) => {
@@ -381,7 +381,7 @@ app.post('/updateSession', isAuthenticated, (req, res)=>{
     )
 })
 
-app.post('/npcApply',(req,res)=>{
+app.post('/npcApply', isAuthenticated,(req,res)=>{
     
     //画像の保存
     var now = new Date();
@@ -509,7 +509,7 @@ app.post('/mydataEdit', isAuthenticated, (req, res) => {
     );
 })
 
-app.post('/sessionStatus/:sessionname/:status', (req, res)=>{
+app.post('/sessionStatus/:sessionname/:status', isAuthenticated,(req, res)=>{
     var data = "";
     if(req.params.status == "end"){data = "終了"}
     else if (req.params.status == "bigin"){data = "進行中"}
@@ -544,7 +544,7 @@ app.get('/session/:session/', isAuthenticated, async(req, res) => {
     
 })
 
-app.post('/say/:session/:articleNum', (req, res) => {
+app.post('/say/:session/:articleNum', isAuthenticated,(req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, nameid) => {
@@ -580,14 +580,15 @@ app.post('/say/:session/:articleNum', (req, res) => {
                     };
                     //1d100<=10 (1D100<=10) ＞ 14 ＞ 失敗
 
-                    var choice = comment.match(/\[c(\S+)\]/g);
+                    var choice = comment.match(/\[c\([^\]]+/g);
+                    -console.log(choice);
                     if (choice) {
                         choice.forEach((cc) => {
                             cc = String(cc.replace(/\[c\(/, ''));
-                            cc = cc.replace(/\)\]/, '');
+                            cc = cc.replace(/\)/, '');
                             var choices = cc.split(/,/);
                             var index = (Math.floor(Math.random() * choices.length));
-                            comment = comment.replace(/\[c(\S+)\]/, "[" + cc + ":" + choices[index] + "]");
+                            comment = comment.replace(/\[c\([^\]]+\]/, "[" + cc + ":" + choices[index] + "]");
                         });
                     }
 
@@ -623,7 +624,7 @@ app.get('/sessionCreate', isAuthenticated,  (req, res) =>{
     res.render('sessionCreate.pug')
 })
 
-app.post('/createSession', (req, res) => {
+app.post('/createSession', isAuthenticated,(req, res) => {
     connection.query(
         'SELECT id, name FROM members WHERE login_id = ?',
         [req.session.passport.user],

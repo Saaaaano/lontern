@@ -31,7 +31,7 @@ html(lang="ja")
 
         div(class="sessionIndex_main")
             div(class="header") 
-                div(class="pagetitle") #{rooms.name}
+                div(class="pagetitle") #{rooms.sessionname}
                 div(class="topbtn")
                     a(href="/index") 
                         img(src="/images/lontern_logo_w.png" width="100px")
@@ -39,9 +39,9 @@ html(lang="ja")
                 colgroup 
                     col(width="100")
                     col(width="30")
-                +itemSet('セッション名', rooms.name)
+                +itemSet('セッション名', rooms.sessionname)
                 +itemSet('システム', rooms.system)
-                +itemSet('主催者', rooms.Owner)
+                +itemSet('主催者', rooms.owner)
                 //- +itemSet('参加人数', rooms.personNum)
                 +itemSet('パスワード', rooms.pass)
                 +itemSet('観戦', rooms.audience)
@@ -67,10 +67,10 @@ html(lang="ja")
             if didApply == 1
                 div(class="menue")
                     section(class="sessionbtn")
-                        a(class="buttoncontents" href='/session/' + rooms.name + '?pageNum=' + page) 
+                        a(class="buttoncontents" href='/session/' + rooms.id + '?pageNum=' + page) 
                             strong セッションページへ
                     section(class="sessionbtn")
-                        a(class="buttoncontents" href='/editor?name='+ rooms.name ) 
+                        a(class="buttoncontents" href='/editor?sid='+ rooms.id ) 
                             strong 編集
             else 
                 dsection(class="sessionbtn")
@@ -108,7 +108,7 @@ html(lang="ja")
                                             a pass 
                                             input(id="pass" type="password" name="pass" size="15" )
                                             
-                                    input(class="sessionname" name="sessionname" size="18" value=rooms.name)
+                                    input(class="sessionname" name="sid" size="18" value=rooms.id)
                                     div(class="center")
                                         input(class="applybtn" type="submit" value="参加する")
                

@@ -11,7 +11,7 @@ html(lang="ja")
         
     body 
         - console.log("session page")
-        - const perPage = 20;
+        - const perPage = 50;
         if character == null 
             - character = {}
 
@@ -42,7 +42,7 @@ html(lang="ja")
                 when "secret"
                     - secret++
                     - comment.articleNum = secret 
-                    if comment.send_to == character.character_name || comment.memberId == character.memberId || room.status == "終了"|| room.ownerId == you
+                    if comment.send_to == character.id || comment.memberId == character.memberId || room.status == "終了"|| room.ownerId == you
                         - all++
                         - viewcomments.push(comment)
                 when "solo"
@@ -79,6 +79,7 @@ html(lang="ja")
             - allpage = allTagNum
 
         - var allPageNum = Math.ceil(allpage / perPage)
+        //- console.log(allPageNum);
         
         
         - var dispnum = pageNum
@@ -87,13 +88,13 @@ html(lang="ja")
         
         if pageNum > allPageNum
             //- console.log("通った")
-            div(id="red" title=room.name) #{sendnum}
+            div(id="red" title=room.id) #{sendnum}
 
-        script.
-            var roomname = document.getElementById( 'red' ).title;
-            var allPageNum = document.getElementById('red').textContent;
-            window.location.href = '/session/'+ roomname + '?pageNum=' + allPageNum ;
-     
+            script.
+                var roomid = document.getElementById( 'red' ).title;
+                var allPageNum = document.getElementById('red').textContent;
+                window.location.href = '/session/'+ roomid + '?pageNum=' + allPageNum ;
+        
 
         mixin pageset()
             hr
@@ -111,9 +112,9 @@ html(lang="ja")
             hr
 
         div(class="session_main")
-        
+            //- console.log(room)
             div(class="header") 
-                div(class="pagetitle") #{room.name}
+                div(class="pagetitle") #{room.sessionname}
                 div(class="topbtn")
                     a(href="/index") 
                         img(src="/images/lontern_logo_w.png" width="100px")
@@ -227,7 +228,7 @@ html(lang="ja")
                         //- console.log("通らないはず")
                         case viewcomments[i].section
                             when "secret"
-                                if viewcomments[i].send_to != character.character_name && viewcomments[i].memberId != character.memberId 
+                                if viewcomments[i].send_to != character.id && viewcomments[i].memberId != character.memberId 
                                     - continue
                             when "solo"
                                 if viewcomments[i].character_name != character.character_name 
@@ -244,6 +245,8 @@ html(lang="ja")
                                 a(class="date") #{viewcomments[i].comment_at}
                         else 
                             div(class="action " + dispen)
+                                if viewcomments[i].character_name != "GM"
+                                    a #{viewcomments[i].character_name}は、
                                 +comment() 
                                 a(class="date") #{viewcomments[i].comment_at}
                         - continue 
@@ -285,7 +288,12 @@ html(lang="ja")
                                     else 
                                         a #{viewcomments[i].articleNum}. #{viewcomments[i].character_name} 
                                 when "secret"
-                                    a @#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} → #{viewcomments[i].send_to} 
+                                    - var sendwho
+                                    each pc in members 
+                                        if pc.id == viewcomments[i].send_to
+                                            - sendwho = pc.character_name
+                                            - break; 
+                                    a @#{viewcomments[i].articleNum}. #{viewcomments[i].character_name} #{audienceTag} → #{sendwho} 
                                 when "anonymous"
                                     a ?#{viewcomments[i].articleNum}. #{audienceTag}
                             //- 日付追加
@@ -339,7 +347,7 @@ html(lang="ja")
                 div(class="say_space")
                     img(src="https://mylonternbucket.s3.ap-northeast-1.amazonaws.com/" + character.image width="110" height="110")
                     div(class="say_box")
-                        form(action="/say/" + character.sessionname + "/" + pageNum method="post")
+                        form(action="/say/" + character.sessionId method="post")
                             a(class="name")
                                 big 
                                     strong #{character.character_name} 
@@ -364,12 +372,11 @@ html(lang="ja")
                                     label
                                         a(class="to_sel") To:
                                         select(name="to" id="toStatus" disabled)
-                                            option(value="GM") #{room.Owner}(GM)
                                             each member in members 
-                                                if member.permission == character.permission
+                                                if member.permission == character.permission || member.name == "GM"
                                                     if member.memberId == character.memberId 
                                                     else
-                                                        option(value=member.character_name) #{member.character_name}
+                                                        option(value=member.id) #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。
                             script. 
@@ -404,7 +411,7 @@ html(lang="ja")
             //-------------GM用発言スペース---------------
             if room.ownerId == you && room.status != "終了"
                 if room.status == "募集中"
-                    form(class="sessionbigin" method="post" action="/sessionStatus/" + room.name + "/bigin" onSubmit="return check()")
+                    form(class="sessionbigin" method="post" action="/sessionStatus/" + room.id + "/bigin" onSubmit="return check()")
                         button(id="btn" type="submit" name="endbtn" class="") セッションを開始する
                 script. 
                     function check(){
@@ -423,15 +430,15 @@ html(lang="ja")
                         ul 
                             each member in members
                                 if member.attribute == "npc"
-                                    li(id=member.character_name)
+                                    li(id=member.id)
                                         img(src="https://mylonternbucket.s3.ap-northeast-1.amazonaws.com/" + member.image width="110" height="110")
                     div(class="say_box")
-                        form(action="/say/" + character.sessionname + "/" + pageNum method="post")
+                        form(action="/say/" + character.sessionId method="post")
                             a(class="name")
                                 select(name="saycharacter" id="saychara")
                                     each member in members 
                                         if member.attribute == "npc"
-                                            option(value=member.character_name) #{member.character_name}
+                                            option(value=member.id) #{member.character_name}
                             
                             p(class="sayselect")
                                 label
@@ -452,7 +459,7 @@ html(lang="ja")
                                         select(name="to" id="toStatus" disabled)
                                             each member in members 
                                                 if member.permission == character.permission 
-                                                    option(value=member.character_name class="to_content") #{member.character_name}
+                                                    option(value=member.id class="to_content") #{member.character_name}
 
                             //- toStatusは秘匿のときのみ選択可能にする。
                             script. 

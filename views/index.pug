@@ -9,6 +9,7 @@ html(lang="ja")
         link(rel="apple-touch-icon" href="/images/favicon.png")
     body 
         - console.log("index page")
+        //- console.log(members);
         mixin itemSet(item, setting)
             if item == 'パスワード'
                 if setting == null || setting == ""
@@ -37,11 +38,11 @@ html(lang="ja")
                 if room.status == status 
                     tr
                         td 
-                            a(href="/sessionIndex?sessionname=" + room.name) #{room.name}
+                            a(href="/sessionIndex?sid=" + room.id) #{room.sessionname}
                         td 
                             a #{room.system}
                         td 
-                            a #{room.Owner}
+                            a #{room.owner}
                         td(class="ce")
                             +itemSet('パスワード', room.pass)
                         td(class="ce")  

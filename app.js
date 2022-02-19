@@ -223,7 +223,8 @@ app.post('/nameedit', isAuthenticated, (req, res) => {
 // トップページ
 app.get('/index', isAuthenticated, (req, res) => {
     connection.query(
-        'SELECT * FROM rooms; SELECT * FROM sessionmembers; SELECT name FROM members WHERE login_id = ?', [req.session.passport.user],
+        'SELECT rooms.*, members.name as owner FROM rooms JOIN members ON rooms.ownerId = members.id;' + 
+        'SELECT * FROM sessionmembers; SELECT name FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, results) => {
             //console.log(results[2], req.session.passport);
             res.render('index.pug', { rooms: results[0], sessionmembers: results[1], members: results[2][0]});
@@ -237,8 +238,8 @@ app.get('/mypage', isAuthenticated, (req,res)=>{
         (error, nameid) => {
             console.log(nameid);
             connection.query(
-                'SELECT sessionmembers.character_name, sessionmembers.permission, sessionmembers.image, rooms.name, rooms.status, rooms.Owner, rooms.system ' +
-                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionname = rooms.name WHERE sessionmembers.memberId = ? AND (sessionmembers.attribute = "character" OR rooms.ownerId = ?);'
+                'SELECT sessionmembers.character_name, sessionmembers.permission, sessionmembers.image, rooms.sessionname, rooms.status, rooms.system, members.name as owner ' +
+                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionId = rooms.id JOIN members ON rooms.ownerId =  members.id WHERE sessionmembers.memberId = ? AND (sessionmembers.attribute = "character" OR rooms.ownerId = ?);'
                 , [nameid[0].id, nameid[0].id],
                 (error, results) => {
                     //console.log(results);
@@ -256,16 +257,15 @@ app.get('/logout', function (req, res) {
     res.redirect('/login');
 });
 
-const perPage = 20;
+const perPage = 50;
 // セッションページのIndex
 app.get('/sessionIndex', isAuthenticated,function(req, res){
     connection.query(
-        'SELECT * FROM rooms WHERE name = (?); SELECT * FROM sessionmembers WHERE sessionname = (?); SELECT id FROM members WHERE login_id = ?;' +  
-        'SELECT id FROM sessioncomment WHERE sessionname = (?)',
-        [req.query.sessionname, req.query.sessionname, req.session.passport.user, req.query.sessionname],
+        'SELECT rooms.* , members.name as owner FROM rooms JOIN members ON members.id = rooms.ownerId WHERE rooms.id = ?; SELECT * FROM sessionmembers WHERE sessionid = ?;' + 
+        'SELECT id FROM members WHERE login_id = ?; SELECT id FROM sessioncomment WHERE sessionid = ?;',
+        [req.query.sid, req.query.sid, req.session.passport.user, req.query.sid],
         (error,results) => {
-            //console.log(results[1][0]);
-            
+            //console.log(results);  
             pageNum = Math.ceil(results[3].length / perPage);
             if(pageNum == 0){
                 pageNum = 1;
@@ -283,14 +283,13 @@ app.get('/sessionIndex', isAuthenticated,function(req, res){
 
 // 参加フォームの情報を受取る
 app.post('/apply', isAuthenticated, (req, res) => {
-    
-    connection.query("SELECT pass FROM rooms WHERE name = ?", [req.body.sessionname],
+    connection.query("SELECT pass FROM rooms WHERE id = ?", [req.body.sid],
         (error, roompass) => {
             console.log(roompass[0].pass.length);
             if (roompass[0].pass != null && roompass[0].pass.length != 0 && req.body.pass != roompass[0].pass) {
                 console.log('通った');
                 //window.alert('入室パスワードが間違っています。');
-                return res.redirect('/sessionIndex?sessionname=' + req.body.sessionname + '&passmatch=ng');
+                return res.redirect('/sessionIndex?sid=' + req.body.sid + '&passmatch=ng');
             }else{
                 //画像の保存
                 var now = new Date();
@@ -324,18 +323,19 @@ app.post('/apply', isAuthenticated, (req, res) => {
             connection.query(
                 'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
                 (error, nameid) => {
-
-
                     var data = {
                         'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character',
-                        'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
+                        'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sid
                     };
-                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sessionname,],
+                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sid,],
                         function (error, results, fields) {
 
                             pageNum = Math.ceil(results[1].length / perPage);
+                            if (pageNum == 0) {
+                                pageNum = 1;
+                            }
                             //console.log(all + " & " + pageNum)
-                            return res.redirect('/session/' + req.body.sessionname + '?pageNum=' + pageNum);
+                            return res.redirect('/session/' + req.body.sid + '?pageNum=' + pageNum);
                         }
                     );
                 }
@@ -349,8 +349,9 @@ app.get('/editor', isAuthenticated, (req,res)=>{
         'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
         (error, nameid) => {
             connection.query(
-                'SELECT * FROM rooms WHERE name = ?; SELECT * FROM sessionmembers WHERE sessionname = ? AND attribute = "npc";' + 
-                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?;  SELECT * FROM sessionmembers WHERE sessionname = ?', [req.query.name, req.query.name, nameid[0].id, req.query.name, req.query.name],
+                'SELECT rooms.*, members.name as owner FROM rooms JOIN members ON rooms.ownerId = members.id WHERE rooms.id = ?; SELECT * FROM sessionmembers WHERE sessionid = ? AND attribute = "npc";' + 
+                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionid = ?; SELECT sessionmembers.*, members.name FROM sessionmembers JOIN members ON sessionmembers.memberId = members.id WHERE sessionId = ?;'
+                , [req.query.sid, req.query.sid, nameid[0].id, req.query.sid, req.query.sid],
                 (error, results) => {
                     res.render('editor.pug', { room: results[0][0], npcs: results[1], ownername: nameid[0].id, mydata:results[2][0], pcdata:results[3]});
                 }
@@ -360,26 +361,23 @@ app.get('/editor', isAuthenticated, (req,res)=>{
 })
 
 app.post('/updateSession', isAuthenticated, (req, res)=>{
-    connection.query(
-        'SELECT id FROM rooms WHERE name = ?',
-        [req.body.sessionname],
-        (error, results) => {
-            //console.log(req.body)
-            var data = {
-                'name': req.body.sessionName, 'personNum': Number(req.body.personNum), 
-                'pass': req.body.password, 'anonymous': Number(req.body.anonymous), 'secret': Number(req.body.secret),
-                'system': req.body.systemName, 'overview': req.body.sessionOverView, 'audience': Number(req.body.audience)
-            };
-            //console.log(data);
-            connection.query(
-                'UPDATE rooms SET ? WHERE id = ?', [data, results[0].id],
-                (error, results) => {
-                    res.redirect('/editor?name=' + req.body.sessionName);
-                }
-            )
-        }
-    )
-})
+   
+        //console.log(req.body)
+        var data = {
+            'sessionname': req.body.sessionName, 'personNum': Number(req.body.personNum), 
+            'pass': req.body.password, 'anonymous': Number(req.body.anonymous), 'secret': Number(req.body.secret),
+            'system': req.body.systemName, 'overview': req.body.sessionOverView, 'audience': Number(req.body.audience)
+        };
+        //console.log(data);
+        connection.query(
+            'UPDATE rooms SET ? WHERE id = ?', [data, req.body.sid],
+            (error, results) => {
+                res.redirect('/editor?sid=' + req.body.sid);
+            }
+        )
+    }
+)
+
 
 app.post('/npcApply', isAuthenticated,(req,res)=>{
     
@@ -391,26 +389,6 @@ app.post('/npcApply', isAuthenticated,(req,res)=>{
     var new_iconname = time + req.files.icon.md5 + icon_ext;
 
     //画像のアップロード 
-                var s3file = req.files.icon.data;
-                console.log(new_iconname);
-                console.log(process.env.S3_BUCKET_NAME);
-                if(s3file){
-                    s3.putObject({
-                        Bucket: process.env.S3_BUCKET_NAME,
-                        Key: new_iconname,
-                        ContentType: "image/png",
-                        Body: s3file,
-                        ACL: "public-read"
-                    }, function (err, data) {
-                        if (data !== null) {
-                            console.log("upload completed");
-                        }
-                        if(err){
-                            console.log("upload error");
-                            console.log(err, err.stack);
-                        }
-                    });
-    }//画像のアップロード 
     var s3file = req.files.icon.data;
     console.log(new_iconname);
     console.log(process.env.S3_BUCKET_NAME);
@@ -435,12 +413,12 @@ app.post('/npcApply', isAuthenticated,(req,res)=>{
         'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
         (error, nameid) => {
             var data = {
-                'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'npc',
-                'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sessionname
+                'memberId': nameid[0].id, 'character_name': req.body.character_name, 'attribute': 'npc',
+                'image': new_iconname, 'introduction': req.body.introduction, 'sessionId': req.body.sid
             };
             connection.query('INSERT INTO sessionmembers SET ?', [data],
                 function (error, results, fields) {
-                    res.redirect('/editor?name=' + req.body.sessionname);
+                    res.redirect('/editor?sid=' + req.body.sid);
                 }
             )
         }
@@ -500,35 +478,36 @@ app.post('/mydataEdit', isAuthenticated, (req, res) => {
             }
             var character_name = { 'character_name': req.body.character_name}
             
-            connection.query('UPDATE sessionmembers SET ? WHERE memberId = ? AND sessionname = ?;UPDATE sessioncomment SET ? WHERE memberId = ? AND sessionname = ?', [data, nameid[0].id, req.body.sessionname, character_name, nameid[0].id, req.body.sessionname],
+            connection.query('UPDATE sessionmembers SET ? WHERE memberId = ? AND sessionId = ?;UPDATE sessioncomment SET ? WHERE memberId = ? AND sessionId = ?', [data, nameid[0].id, req.body.sid, character_name, nameid[0].id, req.body.sid],
                 function (error, results, fields) {
-                    res.redirect('/editor?name=' + req.body.sessionname);
+                    res.redirect('/editor?sid=' + req.body.sid);
                 }
             );
         }
     );
 })
 
-app.post('/sessionStatus/:sessionname/:status', isAuthenticated,(req, res)=>{
+app.post('/sessionStatus/:sid/:status', isAuthenticated,(req, res)=>{
     var data = "";
     if(req.params.status == "end"){data = "終了"}
     else if (req.params.status == "bigin"){data = "進行中"}
-    connection.query('UPDATE rooms SET status = ? WHERE name = ?', [data, req.params.sessionname],
+    connection.query('UPDATE rooms SET status = ? WHERE id = ?', [data, req.params.sid],
     (error,results) => {
+        res.redirect('/editor?sid=' + req.params.sid);
     })
 })
 
 // セッションページ
-app.get('/session/:session/', isAuthenticated, async(req, res) => {
+app.get('/session/:sid', isAuthenticated, async(req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         async(error, nameid)=>{
             connection.query(
-                'SELECT * FROM sessioncomment JOIN sessionmembers ON sessionmembers.character_name = sessioncomment.character_name WHERE sessionmembers.sessionname = ? AND sessioncomment.sessionname = ?;' +
-                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM sessionmembers WHERE sessionname = ?; SELECT * FROM rooms WHERE name = ?',
-                [req.params.session, req.params.session, nameid[0].id, req.params.session, req.params.session, req.params.session],
+                'SELECT * FROM sessioncomment JOIN sessionmembers ON sessionmembers.id = sessioncomment.charaId WHERE sessionmembers.sessionId = ? AND sessioncomment.sessionId = ?;' +
+                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionId = ?; SELECT * FROM sessionmembers WHERE sessionId = ?; SELECT * FROM rooms WHERE id = ?',
+                [req.params.sid, req.params.sid, nameid[0].id, req.params.sid, req.params.sid, req.params.sid],
                 async (error, results) => {
-                    //console.log(req.query.search);
+                    //console.log(results[3][0]);
                     
                     var saynum = 0;
                     if (req.query.id != null){
@@ -544,24 +523,22 @@ app.get('/session/:session/', isAuthenticated, async(req, res) => {
     
 })
 
-app.post('/say/:session/:articleNum', isAuthenticated,(req, res) => {
+app.post('/say/:sid', isAuthenticated,(req, res) => {
     connection.query(
         'SELECT id FROM members WHERE login_id = ?', [req.session.passport.user],
         (error, nameid) => {
             connection.query(
-                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionname = ?; SELECT * FROM rooms WHERE name = ?', [nameid[0].id, req.params.session, req.params.session],
+                'SELECT * FROM sessionmembers WHERE memberId = ? AND sessionId = ?; SELECT * FROM rooms WHERE id = ?;' + 
+                'SELECT id FROM sessioncomment WHERE sessionid = ?;', [nameid[0].id, req.params.sid, req.params.sid, req.params.sid],
                 (error,results) => {
+                    console.log("say post");
+                    var pageNum = Math.ceil(results[2].length / perPage);
+                    if (pageNum == 0) {
+                        pageNum = 1;
+                    }
                     var now = new Date();   //発言日時の出力
                     var time = now.toFormat('YYYY/MM/DD HH24:MI:SS');
                     var comment = req.body.comment;
-                    
-                    if (req.body.say == "action" && req.body.saycharacter != "GM"){
-                        if (req.body.saycharacter){
-                            comment = req.body.saycharacter + "は、" + comment;
-                        }else{
-                            comment = results[0][0].character_name + "は、" + comment;
-                        }
-                    }
                     
                     var dice = comment.match(/\[[0-9]+d[0-9]+\]/g);
                     if(dice){
@@ -594,23 +571,32 @@ app.post('/say/:session/:articleNum', isAuthenticated,(req, res) => {
 
 
                     //console.log(tagAllay);
-                    var character_name = "";
+                    var character= "";
+                    console.log(req.body.saycharacter);
+                    console.log(results[0][0].id);
+                    console.log(results[1][0].ownerId);
                     if (nameid[0].id == results[1][0].ownerId){
-                        character_name = req.body.saycharacter;
+                        character = req.body.saycharacter;
                     }else{
-                        character_name = results[0][0].character_name;   
+                        character = results[0][0].id;   
                     }
+                    var send_to
+                    if (req.body.to){
+                        send_to = Number(req.body.to);
+                    }
+
                     var data = {
-                        'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
-                        'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0][0].memberId, 'sessionname': req.params.session
+                        'charaId': character, 'section': req.body.say, 'send_to': send_to,
+                        'comment': comment, 'comment_vol': req.body.vol_size, 'comment_at': time, 'memberId': results[0][0].memberId, 'sessionId': req.params.sid
                     };
                     //var data = {'name': results[0].name, 'character_name': character_name, 'section': req.body.say, 'send_to': req.body.to,
                     //            'comment': comment, 'comment_vol': req.body.vol_size, 'tag': tag, 'comment_at': time, 'memberId': results[0].memberId, 'sessionname': req.params.session };
+                    console.log(data);
                     connection.query(
                         'INSERT INTO sessioncomment SET ?', data,
                         (error, result)=> {
                             //console.log(data);
-                            res.redirect('/session/' + req.params.session + '?pageNum=' + req.params.articleNum);
+                            res.redirect('/session/' + req.params.sid + '?pageNum=' + pageNum);
                         }
                     );
                 }
@@ -629,16 +615,22 @@ app.post('/createSession', isAuthenticated,(req, res) => {
         'SELECT id, name FROM members WHERE login_id = ?',
         [req.session.passport.user],
         (error, nameid) => {
-            var GMdata = { 'name': nameid[0].name, 'character_name': 'GM', 'attribute': "npc", 'image': 'GM.png', 'sessionname': req.body.sessionName, 'memberId': nameid[0].id};
+            
             //console.log(req.body)
-            var data = { 'name': req.body.sessionName, 'status': '募集中', 'personNum': Number(req.body.personNum), 'Owner': nameid[0].name,
-                        'OwnerId': nameid[0].id, 'pass': req.body.password, 'anonymous': Number(req.body.anonymous), 'secret': Number(req.body.secret), 
+            var data = {'sessionname': req.body.sessionName, 'status': '募集中', 'personNum': Number(req.body.personNum), 
+                        'ownerId': nameid[0].id, 'pass': req.body.password, 'anonymous': Number(req.body.anonymous), 'secret': Number(req.body.secret), 
                         'system': req.body.systemName, 'overview': req.body.sessionOverView, 'audience': Number(req.body.audience) };
             console.log(data);
             connection.query(
-                'INSERT INTO rooms SET ?; INSERT INTO sessionmembers SET ?;', [data, GMdata],
+                'INSERT INTO rooms SET ?; SELECT id FROM rooms WHERE sessionname = ?', [data, req.body.sessionName],
                 (error, results) => {
-                    res.redirect('/index');
+                    var GMdata = { 'character_name': 'GM', 'attribute': "npc", 'image': 'GM.png', 'sessionId': results[1][0].id, 'memberId': nameid[0].id };
+                    connection.query(
+                        'INSERT INTO sessionmembers SET ?;', [GMdata],
+                        (error,results) => {
+                            res.redirect('/index');
+                        }
+                    )
                 }
             )
         }

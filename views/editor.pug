@@ -18,7 +18,7 @@ html(lang="ja")
                         img(src="/images/lontern_logo_w.png" width="100px")
             if ownername == room.ownerId 
                 ul(class="tab")
-                    //-li
+                    li
                         a(href="#room") ルーム編集
                     li
                         a(href="#pclist") PC一覧
@@ -29,12 +29,12 @@ html(lang="ja")
                         li
                             a(href="#status") セッション終了
 
-                //-div(class="area is-active" id="room" )
+                div(class="area is-active" id="room" )
                     form(class="edsession" action="/updateSession" method="post")
                         div(class="inputarea")
                             label(for="sessionName" class="inputlabel")
                                 a セッション名
-                            input(name="sessionName" id="sessionName" type="text" value=room.name required)
+                            input(name="sessionName" id="sessionName" type="text" value=room.sessionname required)
                             br
                             label(for="systemName" class="inputlabel")
                                 a システム
@@ -103,11 +103,11 @@ html(lang="ja")
                                 a セッション概要
                             br
                             textarea(name="sessionOverView", id="sessionOverView" cols="100", rows="30") #{room.overview}
-                            input(class="sessionname" name="sessionname" size="22" value=room.name)
+                            input(class="sessionname" name="sid" size="22" value=room.id)
                         div(class="center")
                             input(class="applybtn" type="submit" value="変更する")
 
-                div(class="area is-active" id="pclist")
+                div(class="area" id="pclist")
                     - var audience = ""
                     each pc in pcdata 
                         if pc.character_name == "GM"
@@ -161,12 +161,12 @@ html(lang="ja")
                                         p 自己紹介(任意)
                                         textarea(name="introduction" rows="4" cols="24") よろしくおねがいします。
                                     
-                                    input(class="sessionname" name="sessionname" size="22" value=room.name)
+                                    input(class="sessionname" name="sid" size="22" value=room.id)
                                     div(class="center")
                                         input(class="applybtn" type="submit" value="追加する")
                 if room.status != '終了'
                     div(class="area" id="status")
-                        form(class="sessionend" method="post" action="/sessionStatus/"+ room.name + "/end" onSubmit="return check()")
+                        form(class="sessionend" method="post" action="/sessionStatus/"+ room.id + "/end" onSubmit="return check()")
                             button(type="submit" name="endbtn") セッションを終了する
                     script. 
                         function check(){
@@ -202,7 +202,7 @@ html(lang="ja")
                                         hr
                                         //a(class="introduction" id="introduction") #{mydata.introduction}
                                         textarea(class="intro_edit" name="introduction" rows="10" cols="70") #{mydata.introduction}
-                                        input(class="sessionname" name="sessionname" size="22" value=room.name)
+                                        input(class="sessionname" name="sid" size="22" value=room.id)
                                     div(class="editbtn")
                                         input(type="submit" value="変更する")
                 div(class="area is-active" id="pclist")

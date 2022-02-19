@@ -29,7 +29,7 @@ html(lang="ja")
                     each room in rooms 
                         tr
                             td 
-                                a(href="/sessionIndex?sessionname=" + room.name) #{room.name}
+                                a(href="/sessionIndex?sid=" + room.id) #{room.sessionname}
                             td 
                                 a #{room.system}
                             td 
@@ -38,11 +38,11 @@ html(lang="ja")
                                 else
                                     a #{room.character_name}
                             td 
-                                a #{room.Owner}
+                                a #{room.owner}
                             td 
                                 a #{room.status} 
                 
-                //-div(class="input_space")
+                div(class="input_space")
                     form(action="/nameedit" method="post")
                         h3 ユーザーネームの変更
                         table

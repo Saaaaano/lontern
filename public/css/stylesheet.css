@@ -721,7 +721,7 @@ body {
 
 @media screen and (max-width: 767px) {
   .session_main .GMaction {
-    margin: 5px;
+    margin: 15px;
   }
 }
 
@@ -795,6 +795,7 @@ body {
   text-align: left;
   width: 500px;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .session_main .preview .speech_data .speech::before {
@@ -811,7 +812,6 @@ body {
     max-width: 250px;
     padding-left: 10px;
     padding-right: 10px;
-    font-size: 10px;
   }
 }
 

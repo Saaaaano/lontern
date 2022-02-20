@@ -403,7 +403,7 @@ body{
             color: gray;
         }
         @include mobile{
-            margin: 5px;
+            margin: 15px;
         }
     }
 
@@ -449,6 +449,7 @@ body{
                 @include bubble;
                 width: 500px;
                 white-space: pre-wrap;
+                word-break: break-all;
                 &::before{
                     @include bubble_before;
                 }
@@ -456,7 +457,7 @@ body{
                     max-width: 250px;
                     padding-left: 10px;
                     padding-right: 10px;
-                    font-size: 10px;
+                    //font-size: 10px;
                 }
             }
 

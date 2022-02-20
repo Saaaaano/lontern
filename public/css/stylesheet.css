@@ -279,12 +279,6 @@ body {
   border-radius: 2px;
 }
 
-@media screen and (max-width: 767px) {
-  .login_main .login_space input {
-    left: 50%;
-  }
-}
-
 .login_main .login_space .login_btn_space {
   text-align: center;
 }

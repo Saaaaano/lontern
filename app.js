@@ -325,9 +325,9 @@ app.post('/apply', isAuthenticated, (req, res) => {
                 (error, nameid) => {
                     var data = {
                         'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character',
-                        'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionname': req.body.sid
+                        'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionId': req.body.sid
                     };
-                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionname = ?', [data, req.body.sid,],
+                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionId = ?', [data, req.body.sid,],
                         function (error, results, fields) {
 
                             pageNum = Math.ceil(results[1].length / perPage);

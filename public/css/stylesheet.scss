@@ -7,12 +7,16 @@ $pointcolor:#ced7dc;
 * {
     margin: 0px;
     padding: 0px;
+    
 }
 body{
     background-color: $basecolor;
     color: $subcolor;
     height: 100%;
     font-family: '游ゴシック', sans-serif;
+    @include mobile{
+        font-size: 18px;
+    }
 }
 
 
@@ -21,11 +25,23 @@ body{
     min-height: 100%;
     .header{
         @include header;
+        
     }
     .title_logo {
         text-align: left;
         margin-left: 50px;
         top: 0px;
+        @include mobile{
+            margin-left: 0px;
+            padding: 0px;
+        }
+        img{
+            @include mobile{
+                width: 100%;
+
+            }
+        }
+        
     }
     .menu{
         display: flex;
@@ -36,6 +52,10 @@ body{
             button{
                 @include btn;
                 margin-left: 10px;
+                @include mobile{
+                    margin-bottom: 10px;
+                    font-size: 14pt;
+                }
             }
         }
         .user {
@@ -64,14 +84,17 @@ body{
         text-align: left;
         border-collapse: collapse;
         font-size: 14px;
-        
+        @include mobile{
+            width: 100%;
+            font-size: 14px;
+        }
         th {
             border:solid 1px $pointcolor;
             padding: 3px 10px;
             background-color: $pointcolor;
             text-align: center;
             &.session_name {
-            width: 35%;  
+                width: 35%;  
             }
             &.session_system{
                 width: 17%;
@@ -79,8 +102,11 @@ body{
             &.session_GM{
                 width: 12%;
             }
-            &.session_pass, session_secret, session_anonymous, session_audience{
+            &.session_pass, &.session_secret, &.session_anonymous, &.session_audience{
                 width: 9%;
+                @include mobile{
+                    display: none;
+                }
             }
             
         }
@@ -89,7 +115,11 @@ body{
             padding: 3px 10px;
             &.ce{
                 text-align: center;
+                @include mobile{
+                    display: none;
+                }
             }
+            
         }
     }
     .upbtn{
@@ -112,6 +142,7 @@ body{
         //display: inline-block;
         justify-content: center;
         margin-left: 10px;
+        
     }
     .login_space{
         display: inline-block;
@@ -147,19 +178,38 @@ body{
 
 .sessionIndex_main{
     @include main_set;
+    @include mobile{
+        font-size: 12pt;
+
+    }
     .header{
         @include header;
+        @include mobile{
+            width: 100%;
+        }
+        a{
+            @include mobile{
+                text-align: right;
+                margin-right: 25px;
+            }
+        }
     }
     table{
         margin-top: 30px;
         margin-left: 50px;
         text-align: left;
         padding-top: 30px;
+        @include mobile{
+            margin-left: 10px;
+        }
     }
     .overview{
         
         text-align: left;
         margin: 20px 50px;
+        @include mobile{
+            margin: 20px 10px;
+        }
         a {
             margin-left: 20px;
             margin-bottom: 5px;
@@ -315,6 +365,10 @@ body{
         padding-left: 50px;
         padding-right: 50px;
         overflow-wrap:  break-word; 
+        @include mobile{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
     }
     .action{
         border:1px solid #3E3A3A;
@@ -325,6 +379,9 @@ body{
         .date{
             font-size: 8px;
             color: gray;
+        }
+        @include mobile{
+            margin: 5px;
         }
     }
 
@@ -342,6 +399,9 @@ body{
             font-size: 8px;
             color: gray;
         }
+        @include mobile{
+            margin: 5px;
+        }
     }
 
     .article{
@@ -354,10 +414,16 @@ body{
         display: flex;
         justify-content: center;
         margin-top: 15px;
+        @include mobile{
+            width: 100%;
+        }
         
         img {
             margin-right: 20px;
             margin-top: 5px;
+            @include mobile{
+                
+            }
         }
         
         .speech_data{

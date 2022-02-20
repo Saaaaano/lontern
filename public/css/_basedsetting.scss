@@ -1,4 +1,10 @@
 
+$mb:767px;
+@mixin mobile{
+    @media screen and (max-width: $mb){
+        @content;
+    }
+}
 
 @mixin main_set{
     height: 100%;
@@ -9,6 +15,9 @@
     background-color: $basecolor;
     text-align: center;
     color: $subcolor;
+    @include mobile{
+        width:100%;
+    }
 }
 
 @mixin btn{
@@ -35,8 +44,8 @@
     margin: 0 auto;
     z-index: 1000;
     .pagetitle{
-            text-align: left;
-            float: left;
+        text-align: left;
+        float: left;
     }
     .topbtn{
         text-align: right;           

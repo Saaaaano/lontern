@@ -11,6 +11,12 @@ body {
   font-family: '游ゴシック', sans-serif;
 }
 
+@media screen and (max-width: 767px) {
+  body {
+    font-size: 18px;
+  }
+}
+
 .index_main {
   height: 100%;
   min-height: 100%;
@@ -21,6 +27,12 @@ body {
   text-align: center;
   color: #3e3a3a;
   min-height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main {
+    width: 100%;
+  }
 }
 
 .index_main .header {
@@ -47,6 +59,19 @@ body {
   text-align: left;
   margin-left: 50px;
   top: 0px;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .title_logo {
+    margin-left: 0px;
+    padding: 0px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .title_logo img {
+    width: 100%;
+  }
 }
 
 .index_main .menu {
@@ -79,6 +104,13 @@ body {
           box-shadow: none;
   position: relative;
   top: 0.5px;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .menu .newSession button {
+    margin-bottom: 10px;
+    font-size: 14pt;
+  }
 }
 
 .index_main .menu .user {
@@ -121,6 +153,13 @@ body {
   font-size: 14px;
 }
 
+@media screen and (max-width: 767px) {
+  .index_main .session_list {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
 .index_main .session_list th {
   border: solid 1px #ced7dc;
   padding: 3px 10px;
@@ -140,8 +179,14 @@ body {
   width: 12%;
 }
 
-.index_main .session_list th.session_pass, .index_main .session_list th session_secret, .index_main .session_list th session_anonymous, .index_main .session_list th session_audience {
+.index_main .session_list th.session_pass, .index_main .session_list th.session_secret, .index_main .session_list th.session_anonymous, .index_main .session_list th.session_audience {
   width: 9%;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .session_list th.session_pass, .index_main .session_list th.session_secret, .index_main .session_list th.session_anonymous, .index_main .session_list th.session_audience {
+    display: none;
+  }
 }
 
 .index_main .session_list td {
@@ -151,6 +196,12 @@ body {
 
 .index_main .session_list td.ce {
   text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .session_list td.ce {
+    display: none;
+  }
 }
 
 .index_main .upbtn {
@@ -247,6 +298,18 @@ body {
   color: #3e3a3a;
 }
 
+@media screen and (max-width: 767px) {
+  .sessionIndex_main {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main {
+    font-size: 12pt;
+  }
+}
+
 .sessionIndex_main .header {
   background-color: #3e3a3a;
   color: #ced7dc;
@@ -267,6 +330,19 @@ body {
   text-align: right;
 }
 
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .header {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .header a {
+    text-align: right;
+    margin-right: 25px;
+  }
+}
+
 .sessionIndex_main table {
   margin-top: 30px;
   margin-left: 50px;
@@ -274,9 +350,21 @@ body {
   padding-top: 30px;
 }
 
+@media screen and (max-width: 767px) {
+  .sessionIndex_main table {
+    margin-left: 10px;
+  }
+}
+
 .sessionIndex_main .overview {
   text-align: left;
   margin: 20px 50px;
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .overview {
+    margin: 20px 10px;
+  }
 }
 
 .sessionIndex_main .overview a {
@@ -502,6 +590,12 @@ body {
   color: #3e3a3a;
 }
 
+@media screen and (max-width: 767px) {
+  .session_main {
+    width: 100%;
+  }
+}
+
 .session_main .header {
   background-color: #3e3a3a;
   color: #ced7dc;
@@ -532,6 +626,13 @@ body {
   overflow-wrap: break-word;
 }
 
+@media screen and (max-width: 767px) {
+  .session_main .page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
 .session_main .action {
   border: 1px solid #3E3A3A;
   margin: 10px 150px;
@@ -543,6 +644,12 @@ body {
 .session_main .action .date {
   font-size: 8px;
   color: gray;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .action {
+    margin: 5px;
+  }
 }
 
 .session_main .GMaction {
@@ -557,6 +664,12 @@ body {
 .session_main .GMaction .date {
   font-size: 8px;
   color: gray;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .GMaction {
+    margin: 5px;
+  }
 }
 
 .session_main .article {
@@ -575,6 +688,12 @@ body {
       -ms-flex-pack: center;
           justify-content: center;
   margin-top: 15px;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .preview {
+    width: 100%;
+  }
 }
 
 .session_main .preview img {
@@ -941,6 +1060,12 @@ body {
   padding-bottom: 30px;
 }
 
+@media screen and (max-width: 767px) {
+  .say_preview_main {
+    width: 100%;
+  }
+}
+
 .say_preview_main .header {
   background-color: #3e3a3a;
   color: #ced7dc;
@@ -1045,6 +1170,12 @@ body {
   padding-bottom: 30px;
 }
 
+@media screen and (max-width: 767px) {
+  .sessionCreateMain {
+    width: 100%;
+  }
+}
+
 .sessionCreateMain .header {
   background-color: #3e3a3a;
   color: #ced7dc;
@@ -1145,6 +1276,12 @@ body {
   /*tabの形状*/
   /*エリアの表示非表示と形状*/
   /*areaにis-activeというクラスがついた時の形状*/
+}
+
+@media screen and (max-width: 767px) {
+  .editorMain {
+    width: 100%;
+  }
 }
 
 .editorMain .header {
@@ -1662,6 +1799,12 @@ body {
   text-align: center;
   color: #3e3a3a;
   min-height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .maypage_main {
+    width: 100%;
+  }
 }
 
 .maypage_main .header {

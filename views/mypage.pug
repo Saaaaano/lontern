@@ -5,7 +5,7 @@ html(lang="ja")
         meta(name="robots" content="noindex,nofollow")
         title lontern 
         link(rel="stylesheet" href="/css/stylesheet.css")
-        //-meta(name="viewport" content="width=device-width,initial-scale=1")
+        meta(name="viewport" content="width=device-width,initial-scale=1")
     body
         div(class="maypage_main")
             div(class="header") 
@@ -25,7 +25,7 @@ html(lang="ja")
                     th(class="session_system") システム
                     th(class="session_anonymous") PC名
                     th(class="session_GM") GM
-                    th(class="session_status") ステータス
+                    th(class="session_status") 状態
 
                     each room in rooms 
                         tr
@@ -38,7 +38,7 @@ html(lang="ja")
                                     a -
                                 else
                                     a #{room.character_name}
-                            td 
+                            td(class="ce") 
                                 a #{room.owner}
                             td 
                                 a #{room.status} 
@@ -55,3 +55,4 @@ html(lang="ja")
                                     input(class="signup_btn" type="submit" value="変更する")    
 
                 //-button(onclick="location.href='/index'") 上部に戻る
+                button(onclick="location.href='/logout'") ログアウト

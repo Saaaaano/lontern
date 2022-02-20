@@ -11,12 +11,6 @@ body {
   font-family: '游ゴシック', sans-serif;
 }
 
-@media screen and (max-width: 767px) {
-  body {
-    font-size: 18px;
-  }
-}
-
 .index_main {
   height: 100%;
   min-height: 100%;
@@ -46,9 +40,29 @@ body {
   z-index: 1000;
 }
 
+@media screen and (max-width: 767px) {
+  .index_main .header {
+    width: 100%;
+    padding: 5px 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .header a {
+    text-align: right;
+    padding-right: 25px;
+  }
+}
+
 .index_main .header .pagetitle {
   text-align: left;
   float: left;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .header .pagetitle {
+    margin-right: 5px;
+  }
 }
 
 .index_main .header .topbtn {
@@ -109,7 +123,6 @@ body {
 @media screen and (max-width: 767px) {
   .index_main .menu .newSession button {
     margin-bottom: 10px;
-    font-size: 14pt;
   }
 }
 
@@ -165,6 +178,12 @@ body {
   padding: 3px 10px;
   background-color: #ced7dc;
   text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .index_main .session_list th {
+    font-size: 14px;
+  }
 }
 
 .index_main .session_list th.session_name {
@@ -260,6 +279,12 @@ body {
   border-radius: 2px;
 }
 
+@media screen and (max-width: 767px) {
+  .login_main .login_space input {
+    left: 50%;
+  }
+}
+
 .login_main .login_space .login_btn_space {
   text-align: center;
 }
@@ -321,38 +346,45 @@ body {
   z-index: 1000;
 }
 
-.sessionIndex_main .header .pagetitle {
-  text-align: left;
-  float: left;
-}
-
-.sessionIndex_main .header .topbtn {
-  text-align: right;
-}
-
 @media screen and (max-width: 767px) {
   .sessionIndex_main .header {
     width: 100%;
+    padding: 5px 5px;
   }
 }
 
 @media screen and (max-width: 767px) {
   .sessionIndex_main .header a {
     text-align: right;
-    margin-right: 25px;
+    padding-right: 25px;
   }
 }
 
+.sessionIndex_main .header .pagetitle {
+  text-align: left;
+  float: left;
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .header .pagetitle {
+    margin-right: 5px;
+  }
+}
+
+.sessionIndex_main .header .topbtn {
+  text-align: right;
+}
+
 .sessionIndex_main table {
-  margin-top: 30px;
   margin-left: 50px;
   text-align: left;
-  padding-top: 30px;
+  padding-top: 10px;
 }
 
 @media screen and (max-width: 767px) {
   .sessionIndex_main table {
     margin-left: 10px;
+    font-size: 12px;
   }
 }
 
@@ -381,6 +413,12 @@ body {
           box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 3px;
   white-space: pre-wrap;
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .overview .overview_main {
+    font-size: 12px;
+  }
 }
 
 .sessionIndex_main .sessionbtn {
@@ -446,28 +484,6 @@ body {
   border-right: 2px solid #3e3a3a;
 }
 
-.sessionIndex_main .sessionbtn2 {
-  padding-bottom: 30px;
-}
-
-.sessionIndex_main .sessionbtn2 a {
-  background-color: #ced7dc;
-  border: none;
-  border-radius: 5px;
-  -webkit-box-shadow: 0.5px 0.5px 2px #3e3a3a;
-          box-shadow: 0.5px 0.5px 2px #3e3a3a;
-  padding: 2px 5px;
-  color: #3e3a3a;
-  text-decoration: none;
-}
-
-.sessionIndex_main .sessionbtn2 a:active {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-  position: relative;
-  top: 0.5px;
-}
-
 .sessionIndex_main .editor {
   padding-bottom: 30px;
 }
@@ -514,6 +530,12 @@ body {
   text-align: left;
 }
 
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .apply_contents {
+    margin: 10px 10px 0px;
+  }
+}
+
 .sessionIndex_main .apply_contents .inputinfo {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -524,6 +546,13 @@ body {
   display: inline-block;
   text-align: center;
   margin-right: 30px;
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .apply_contents .icon {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
 }
 
 .sessionIndex_main .apply_contents .icon .preview {
@@ -552,6 +581,12 @@ body {
 .sessionIndex_main .apply_contents .center {
   text-align: right;
   margin-top: 5px;
+}
+
+@media screen and (max-width: 767px) {
+  .sessionIndex_main .apply_contents .center {
+    margin-top: 1px;
+  }
 }
 
 .sessionIndex_main .apply_contents .center .applybtn {
@@ -605,7 +640,20 @@ body {
   width: 960px;
   margin: 0 auto;
   z-index: 1000;
-  margin-bottom: 30px;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .header {
+    width: 100%;
+    padding: 5px 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .header a {
+    text-align: right;
+    padding-right: 25px;
+  }
 }
 
 .session_main .header .pagetitle {
@@ -613,13 +661,18 @@ body {
   float: left;
 }
 
+@media screen and (max-width: 767px) {
+  .session_main .header .pagetitle {
+    margin-right: 5px;
+  }
+}
+
 .session_main .header .topbtn {
   text-align: right;
 }
 
 .session_main .page {
-  margin-top: 10px;
-  padding-top: 30px;
+  padding-top: 10px;
   text-align: left;
   padding-left: 50px;
   padding-right: 50px;
@@ -673,7 +726,7 @@ body {
 }
 
 .session_main .article {
-  padding-top: 50px;
+  padding-top: 30px;
 }
 
 .session_main .article .undisp {
@@ -692,13 +745,23 @@ body {
 
 @media screen and (max-width: 767px) {
   .session_main .preview {
-    width: 100%;
+    margin-top: 5px;
+    margin-right: 0px;
   }
 }
 
 .session_main .preview img {
   margin-right: 20px;
   margin-top: 5px;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .preview img {
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+    margin-top: 25px;
+  }
 }
 
 .session_main .preview .speech_data {
@@ -711,7 +774,13 @@ body {
   color: gray;
 }
 
-.session_main .preview .speech_nomal, .session_main .preview .speech_anonymous {
+@media screen and (max-width: 767px) {
+  .session_main .preview .speech_data {
+    margin-right: 10px;
+  }
+}
+
+.session_main .preview .speech_data .speech {
   position: relative;
   display: inline-block;
   padding: 15px 20px;
@@ -728,7 +797,7 @@ body {
   white-space: pre-wrap;
 }
 
-.session_main .preview .speech_nomal::before, .session_main .preview .speech_anonymous::before {
+.session_main .preview .speech_data .speech::before {
   content: "";
   position: absolute;
   top: 20px;
@@ -737,99 +806,48 @@ body {
   border-right: 15px solid #FFFFFF;
 }
 
-.session_main .preview .GM {
+@media screen and (max-width: 767px) {
+  .session_main .preview .speech_data .speech {
+    max-width: 250px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 10px;
+  }
+}
+
+.session_main .preview .speech_data .GM {
   background-color: #5996be;
   color: white;
 }
 
-.session_main .preview .GM::before {
+.session_main .preview .speech_data .GM::before {
   border-right: 15px solid #5996be;
 }
 
-.session_main .preview .speech_audience {
-  position: relative;
-  display: inline-block;
-  padding: 15px 20px;
-  min-width: 120px;
-  max-width: 100%;
-  color: #555;
-  font-size: 14px;
-  background: #FFFFFF;
-  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  text-align: left;
-  width: 500px;
-  white-space: pre-wrap;
+.session_main .preview .speech_data .audience {
   color: #FFFFFF;
   background: #8b6827;
 }
 
-.session_main .preview .speech_audience::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  left: -20px;
-  border: 7px solid transparent;
-  border-right: 15px solid #FFFFFF;
+.session_main .preview .speech_data .audience::before {
   border-right: 15px solid #8b6827;
 }
 
-.session_main .preview .speech_solo {
-  position: relative;
-  display: inline-block;
-  padding: 15px 20px;
-  min-width: 120px;
-  max-width: 100%;
-  color: #555;
-  font-size: 14px;
-  background: #FFFFFF;
-  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  text-align: left;
-  width: 500px;
-  white-space: pre-wrap;
+.session_main .preview .speech_data .solo {
   background: gray;
   color: #FFFFFF;
 }
 
-.session_main .preview .speech_solo::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  left: -20px;
-  border: 7px solid transparent;
-  border-right: 15px solid #FFFFFF;
+.session_main .preview .speech_data .solo::before {
   border-right: 15px solid gray;
 }
 
-.session_main .preview .speech_secret {
-  position: relative;
-  display: inline-block;
-  padding: 15px 20px;
-  min-width: 120px;
-  max-width: 100%;
-  color: #555;
-  font-size: 14px;
-  background: #FFFFFF;
-  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  text-align: left;
-  width: 500px;
-  white-space: pre-wrap;
+.session_main .preview .speech_data .secret {
   background: #932e44;
   color: #FFFFFF;
 }
 
-.session_main .preview .speech_secret::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  left: -20px;
-  border: 7px solid transparent;
-  border-right: 15px solid #FFFFFF;
+.session_main .preview .speech_data .secret::before {
   border-right: 15px solid #932e44;
 }
 
@@ -911,6 +929,12 @@ body {
   margin-top: 60px;
 }
 
+@media screen and (max-width: 767px) {
+  .session_main .say_space img {
+    display: none;
+  }
+}
+
 .session_main .say_space .say_box {
   position: relative;
   display: inline-block;
@@ -926,6 +950,13 @@ body {
   text-align: left;
 }
 
+@media screen and (max-width: 767px) {
+  .session_main .say_space .say_box {
+    padding: 20px 10px;
+    margin: 10px;
+  }
+}
+
 .session_main .say_space .say_box:before {
   content: "";
   position: absolute;
@@ -934,6 +965,12 @@ body {
   border: 7px solid transparent;
   border-right: 15px solid #FFFFFF;
   top: 40%;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main .say_space .say_box:before {
+    display: none;
+  }
 }
 
 .session_main .say_space .to_sel {
@@ -952,9 +989,14 @@ body {
   font-weight: 600;
 }
 
-.session_main .say_space textarea {
+.session_main .say_space .sayarea {
+  text-align: center;
+}
+
+.session_main .say_space .sayarea textarea {
   border-radius: 5px;
   padding: 5px;
+  max-width: 95%;
 }
 
 .session_main .say_space .say_btn {
@@ -1077,9 +1119,29 @@ body {
   z-index: 1000;
 }
 
+@media screen and (max-width: 767px) {
+  .say_preview_main .header {
+    width: 100%;
+    padding: 5px 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .say_preview_main .header a {
+    text-align: right;
+    padding-right: 25px;
+  }
+}
+
 .say_preview_main .header .pagetitle {
   text-align: left;
   float: left;
+}
+
+@media screen and (max-width: 767px) {
+  .say_preview_main .header .pagetitle {
+    margin-right: 5px;
+  }
 }
 
 .say_preview_main .header .topbtn {
@@ -1187,9 +1249,29 @@ body {
   z-index: 1000;
 }
 
+@media screen and (max-width: 767px) {
+  .sessionCreateMain .header {
+    width: 100%;
+    padding: 5px 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .sessionCreateMain .header a {
+    text-align: right;
+    padding-right: 25px;
+  }
+}
+
 .sessionCreateMain .header .pagetitle {
   text-align: left;
   float: left;
+}
+
+@media screen and (max-width: 767px) {
+  .sessionCreateMain .header .pagetitle {
+    margin-right: 5px;
+  }
 }
 
 .sessionCreateMain .header .topbtn {
@@ -1295,9 +1377,29 @@ body {
   z-index: 1000;
 }
 
+@media screen and (max-width: 767px) {
+  .editorMain .header {
+    width: 100%;
+    padding: 5px 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .editorMain .header a {
+    text-align: right;
+    padding-right: 25px;
+  }
+}
+
 .editorMain .header .pagetitle {
   text-align: left;
   float: left;
+}
+
+@media screen and (max-width: 767px) {
+  .editorMain .header .pagetitle {
+    margin-right: 5px;
+  }
 }
 
 .editorMain .header .topbtn {
@@ -1818,9 +1920,29 @@ body {
   z-index: 1000;
 }
 
+@media screen and (max-width: 767px) {
+  .maypage_main .header {
+    width: 100%;
+    padding: 5px 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .maypage_main .header a {
+    text-align: right;
+    padding-right: 25px;
+  }
+}
+
 .maypage_main .header .pagetitle {
   text-align: left;
   float: left;
+}
+
+@media screen and (max-width: 767px) {
+  .maypage_main .header .pagetitle {
+    margin-right: 5px;
+  }
 }
 
 .maypage_main .header .topbtn {
@@ -1873,6 +1995,12 @@ body {
   margin-top: 10px;
 }
 
+@media screen and (max-width: 767px) {
+  .maypage_main .session_list .session_table {
+    font-size: 8px;
+  }
+}
+
 .maypage_main .session_list .session_table th {
   border: solid 1px #ced7dc;
   padding: 3px 10px;
@@ -1884,16 +2012,31 @@ body {
   width: 35%;
 }
 
+@media screen and (max-width: 767px) {
+  .maypage_main .session_list .session_table th.session_name {
+    width: 35%;
+  }
+}
+
 .maypage_main .session_list .session_table th.session_system {
   width: 17%;
+}
+
+@media screen and (max-width: 767px) {
+  .maypage_main .session_list .session_table th.session_system {
+    width: 25%;
+  }
 }
 
 .maypage_main .session_list .session_table th.session_GM {
   width: 12%;
 }
 
-.maypage_main .session_list .session_table th.session_pass, .maypage_main .session_list .session_table th session_secret, .maypage_main .session_list .session_table th session_anonymous, .maypage_main .session_list .session_table th session_audience {
-  width: 9%;
+@media screen and (max-width: 767px) {
+  .maypage_main .session_list .session_table th.session_GM {
+    display: none;
+    width: 10%;
+  }
 }
 
 .maypage_main .session_list .session_table td {
@@ -1903,6 +2046,12 @@ body {
 
 .maypage_main .session_list .session_table td.ce {
   text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .maypage_main .session_list .session_table td.ce {
+    display: none;
+  }
 }
 
 .maypage_main .session_list .input_space {
@@ -1953,7 +2102,7 @@ body {
 }
 
 .maypage_main button {
-  margin-top: 10px;
+  margin-top: 50px;
   background-color: #ced7dc;
   border: none;
   border-radius: 5px;
@@ -1961,6 +2110,7 @@ body {
           box-shadow: 0.5px 0.5px 2px #3e3a3a;
   padding: 2px 5px;
   color: #3e3a3a;
+  margin-bottom: 30px;
 }
 
 .maypage_main button:active {

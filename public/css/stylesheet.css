@@ -712,6 +712,7 @@ body {
   background-color: #ced7dc;
   border-radius: 10px;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .session_main .GMaction .date {

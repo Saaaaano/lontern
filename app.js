@@ -330,9 +330,9 @@ app.post('/apply', isAuthenticated, (req, res) => {
                     };
                     connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionId = ?', [data, req.body.sid],
                         function (error, results, fields) {
-                            console.log("----------");
-                            console.log(data);
-                            console.log(results);
+                            //console.log("----------");
+                            //console.log(data);
+                            //console.log(results);
                             pageNum = Math.ceil(results[1].length / perPage);
                             if (pageNum == 0) {
                                 pageNum = 1;

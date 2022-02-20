@@ -285,7 +285,8 @@ app.get('/sessionIndex', isAuthenticated,function(req, res){
 app.post('/apply', isAuthenticated, (req, res) => {
     connection.query("SELECT pass FROM rooms WHERE id = ?", [req.body.sid],
         (error, roompass) => {
-            console.log(roompass[0].pass.length);
+            console.log("apply");
+            //console.log(roompass[0].pass.length);
             if (roompass[0].pass != null && roompass[0].pass.length != 0 && req.body.pass != roompass[0].pass) {
                 console.log('通った');
                 //window.alert('入室パスワードが間違っています。');
@@ -300,8 +301,8 @@ app.post('/apply', isAuthenticated, (req, res) => {
                 
                 //画像のアップロード 
                 var s3file = req.files.icon.data;
-                console.log(new_iconname);
-                console.log(process.env.S3_BUCKET_NAME);
+                //console.log(new_iconname);
+                //console.log(process.env.S3_BUCKET_NAME);
                 if(s3file){
                     s3.putObject({
                         Bucket: process.env.S3_BUCKET_NAME,
@@ -324,12 +325,14 @@ app.post('/apply', isAuthenticated, (req, res) => {
                 'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
                 (error, nameid) => {
                     var data = {
-                        'memberId': nameid[0].id, 'name': nameid[0].name, 'character_name': req.body.character_name, 'attribute': 'character',
+                        'memberId': nameid[0].id, 'character_name': req.body.character_name, 'attribute': 'character',
                         'permission': req.body.kansen, 'image': new_iconname, 'introduction': req.body.introduction, 'sessionId': req.body.sid
                     };
-                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionId = ?', [data, req.body.sid,],
+                    connection.query('INSERT INTO sessionmembers SET ?; SELECT id FROM sessioncomment WHERE sessionId = ?', [data, req.body.sid],
                         function (error, results, fields) {
-
+                            console.log("----------");
+                            console.log(data);
+                            console.log(results);
                             pageNum = Math.ceil(results[1].length / perPage);
                             if (pageNum == 0) {
                                 pageNum = 1;

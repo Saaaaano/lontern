@@ -141,7 +141,8 @@ html(lang="ja")
                         - var viewtext = viewcomments[i].comment
                         //- console.log("viewtext = "+ viewtext)
                         - while(viewtext.match(/\[.*\]/) || viewtext.match(/>>[-@?!]*[0-9]+/)|| viewtext.match(/#/))
-                            - var key = viewtext.match(/>>|\[|\#/)
+                            - var key = String(viewtext.match(/>>|\[.*\]|\#/))
+                            - var ck = key.match(/\[/)
                             //- console.log("key = "+ key)
                             if key == ">>"
                                 - var ress = String(viewtext.match(/>>[-@?!]*[0-9]+/))
@@ -166,7 +167,7 @@ html(lang="ja")
                                 - viewtext = viewtext.slice(viewtext.indexOf(">"))
                                 - viewtext = viewtext.replace(/>>[-@?!]*[0-9]+/,"")
                                 //- console.log("viewtext = " + viewtext)
-                            else if key == "["
+                            else if ck == "["
                                 //- console.log("viewtext = " + viewtext)
                                 - var comment = viewtext.split(/\[|\]/)
                                 //- console.log("comment1 = "+comment)

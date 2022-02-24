@@ -871,6 +871,8 @@ body {
 
 .session_main .ressdips {
   background-color: #e6e5ef;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .session_main .sessionbigin {
@@ -1074,6 +1076,19 @@ body {
   background-color: #e6e5ef;
   padding: 10px;
   border-radius: 3px;
+  z-index: 2000;
+}
+
+@media screen and (max-width: 767px) {
+  .session_main #overLayer {
+    top: 5%;
+    left: 0%;
+    margin-left: 0;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    width: 100%;
+  }
 }
 
 .session_main #overLayer img.close {

@@ -374,7 +374,9 @@ html(lang="ja")
                                         a(class="to_sel") To:
                                         select(name="to" id="toStatus" disabled)
                                             each member in members 
-                                                if member.permission == character.permission || member.name == "GM"
+                                                if member.character_name == "GM"
+                                                    option(value=member.id class="to_content") #{member.character_name}
+                                                else if member.permission == character.permission
                                                     if member.memberId == character.memberId 
                                                     else
                                                         option(value=member.id) #{member.character_name}
@@ -407,7 +409,7 @@ html(lang="ja")
                                     a 小声 
                             p(class="say_btn")
                                 input(class="say_submit" type="submit" value="発言")
-
+            //- console.log(members)
             //-------------GM用発言スペース---------------
             if room.ownerId == you && room.status != "終了"
                 if room.status == "募集中"
@@ -453,11 +455,13 @@ html(lang="ja")
                                         option(value="solo") 独り言
                                 
                                 //- 秘匿の送信相手を選択
+                               
                                 if room.secret == 1
                                     label
                                         a(class="to_sel") To:
                                         select(name="to" id="toStatus" disabled)
                                             each member in members 
+                                               
                                                 if member.permission == character.permission 
                                                     option(value=member.id class="to_content") #{member.character_name}
 

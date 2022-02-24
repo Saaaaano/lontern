@@ -236,11 +236,11 @@ app.get('/mypage', isAuthenticated, (req,res)=>{
     connection.query(
         'SELECT id, name FROM members WHERE login_id = ?; ', [req.session.passport.user],
         (error, nameid) => {
-            console.log(nameid);
+            //console.log(nameid);
             connection.query(
-                'SELECT sessionmembers.character_name, sessionmembers.permission, sessionmembers.image, rooms.sessionname, rooms.status, rooms.system, members.name as owner ' +
-                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionId = rooms.id JOIN members ON rooms.ownerId =  members.id WHERE sessionmembers.memberId = ? AND (sessionmembers.attribute = "character" OR rooms.ownerId = ?);'
-                , [nameid[0].id, nameid[0].id],
+                'SELECT sessionmembers.character_name, sessionmembers.permission, sessionmembers.image, rooms.id, rooms.sessionname, rooms.status, rooms.system, members.name as owner ' +
+                'FROM sessionmembers JOIN rooms ON sessionmembers.sessionId = rooms.id JOIN members ON rooms.ownerId =  members.id WHERE sessionmembers.memberId = ? AND (sessionmembers.attribute = "character" OR sessionmembers.character_name = "GM");'
+                , [nameid[0].id],
                 (error, results) => {
                     //console.log(results);
                     res.render('mypage.pug', { rooms: results, you:nameid[0].name});

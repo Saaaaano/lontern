@@ -2024,7 +2024,7 @@ body {
 }
 
 .maypage_main .session_list .session_table th.session_GM {
-  width: 12%;
+  width: 15%;
 }
 
 @media screen and (max-width: 767px) {
@@ -2037,10 +2037,6 @@ body {
 .maypage_main .session_list .session_table td {
   border: solid 1px #ced7dc;
   padding: 3px 10px;
-}
-
-.maypage_main .session_list .session_table td.ce {
-  text-align: center;
 }
 
 @media screen and (max-width: 767px) {

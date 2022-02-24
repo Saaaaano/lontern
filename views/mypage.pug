@@ -34,7 +34,7 @@ html(lang="ja")
                             td 
                                 a #{room.system}
                             td 
-                                if room.Owner == you
+                                if room.character_name == "GM"
                                     a -
                                 else
                                     a #{room.character_name}

@@ -88,11 +88,11 @@ html(lang="ja")
         
         if pageNum > allPageNum
             //- console.log("通った")
-            div(id="red" title=room.id) #{sendnum}
+            div(id="red" title=room.id class=sendnum)
 
             script.
                 var roomid = document.getElementById( 'red' ).title;
-                var allPageNum = document.getElementById('red').textContent;
+                var allPageNum = document.getElementById('red').className;
                 window.location.href = '/session/'+ roomid + '?pageNum=' + allPageNum ;
         
 

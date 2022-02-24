@@ -1114,7 +1114,7 @@ body{
                     }
                 }
                 &.session_GM{
-                    width: 12%;
+                    width: 15%;
                     @include mobile{
                         display: none;
                         width: 10%;
@@ -1127,7 +1127,7 @@ body{
                 border:solid 1px $pointcolor;
                 padding: 3px 10px;
                 &.ce{
-                    text-align: center;
+                    //text-align: center;
                     @include mobile{
                         display: none;
                     }
